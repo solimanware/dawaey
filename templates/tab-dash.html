@@ -1,0 +1,18 @@
+<ion-view view-title="Dashboard">
+  <ion-content>
+    <button class="button" ng-click="selectAll()">Select All</button>
+      <ion-list>
+        <ion-item>
+          <label class="item item-input">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" ng-model="input.filterUser" placeholder="Search">
+          </label>
+        </ion-item>
+          <ion-item class="item-avatar" ng-repeat="user in groups | filter:input.filterUser">
+            <img ng-src="{{user.avatar}}">
+            <h2>{{firstname}}</h2>
+            <p>{{lastname}}</p>
+          </ion-item>
+      </ion-list>
+    </ion-content>
+</ion-view>
