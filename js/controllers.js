@@ -1,13 +1,11 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $cordovaSQLite) {
-  $scope.firstname = [(result.rows.item(i).firstname)];
-  $scope.lastname = [(result.rows.item(i).lastname)];
 
   $scope.selectAll = function() {
     var db = $cordovaSQLite.openDB({name:"populated.db", location:'default'});
     $scope.results=[];
-    var query="SELECT * FROM people WHERE firstname Like '%$scope.input.filterUser%'" ;
+    var query="SELECT * FROM people" ;
 
     // Execute SELECT statement to load message from database.
         $cordovaSQLite.execute(db, query,[])
