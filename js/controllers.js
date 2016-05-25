@@ -1,12 +1,12 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $cordovaSQLite) {
-  var searchfunc = function() {
+  $scope.searchfunc = function() {
     var db = $cordovaSQLite.openDB({
       name: "populated.db",
       location: 'default'
     });
-    var query = "SELECT * FROM people WHERE  firstname LIKE " + $scope.search;
+    var query = "SELECT * FROM people where firstname like ('%"+ $scope.search + "%')";
     $cordovaSQLite.execute(db, query, [])
       .then(
         function(result) {
