@@ -5,9 +5,9 @@
         <ion-item>
           <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
-            <input type="search" ng-model="search" placeholder="Search" ng-focus="searchFocused = true" ng-blur="searchFocused = false">
+            <input type="search" ng-model="data.val" placeholder="Search" ng-focus="searchFocused = true" ng-blur="searchFocused = false">
           </label>
-          <button type="button" class="button button-block button-calm" ng-click="searchfunc()" name="button">Search Me</button>
+          <button type="button" class="button button-block button-calm" ng-click="searchfunc(data)" name="button">Search Me</button>
         </ion-item>
           <ion-item class="item-avatar" ng-repeat="user in groups | filter:input.filterUser">
             <img ng-src="{{user.avatar}}">

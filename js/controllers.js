@@ -1,19 +1,19 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $cordovaSQLite) {
-  $scope.searchfunc = function() {
+  //for real testing
+  $scope.searchfunc = function(data) {
     var db = $cordovaSQLite.openDB({
-      name: "populated.db",
+      name: "drug.db",
       location: 'default'
     });
-    var query = "SELECT * FROM people where firstname like ('%"+ $scope.search + "%')";
+    var query = "SELECT * FROM drug WHERE tradename LIKE ('%"+ data.val + "%')";
     $cordovaSQLite.execute(db, query, [])
       .then(
         function(result) {
           if (result.rows.length > 0) {
             console.log("Database loaded successfully, cheers!");
-            console.log(result.rows.item(0).firstname);
-            console.log(result.rows.item(0).lastname);
+            console.log(result.rows.item(0).field1);
           }
         },
         function(error) {
@@ -22,6 +22,7 @@ angular.module('starter.controllers', [])
       );
 
   };
+  //for test
   $scope.viewDB = function() {
     var db = $cordovaSQLite.openDB({
       name: "populated.db",
@@ -37,7 +38,6 @@ angular.module('starter.controllers', [])
           if (result.rows.length > 0) {
             console.log("Database loaded successfully, cheers!");
             console.log(result.rows.item(0).firstname);
-            console.log(result.rows.item(0).lastname);
           }
         },
         function(error) {
