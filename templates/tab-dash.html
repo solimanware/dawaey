@@ -1,12 +1,13 @@
 <ion-view view-title="Dashboard">
   <ion-content>
-    <button class="button" ng-click="selectAll()">Select All</button>
+    <button class="button button-block button-assertive" ng-click="viewDB()">View items in database</button>
       <ion-list>
         <ion-item>
           <label class="item item-input">
             <i class="icon ion-search placeholder-icon"></i>
-            <input type="text" ng-model="input.filterUser" placeholder="Search">
+            <input type="search" ng-model="search" placeholder="Search" ng-focus="searchFocused = true" ng-blur="searchFocused = false">
           </label>
+          <button type="button" class="button button-block button-calm" ng-click="searchfunc()" name="button">Search Me</button>
         </ion-item>
           <ion-item class="item-avatar" ng-repeat="user in groups | filter:input.filterUser">
             <img ng-src="{{user.avatar}}">

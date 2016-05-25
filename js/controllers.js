@@ -1,28 +1,49 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $cordovaSQLite) {
+  var searchfunc = function() {
+    var db = $cordovaSQLite.openDB({
+      name: "populated.db",
+      location: 'default'
+    });
+    var query = "SELECT * FROM people WHERE  firstname LIKE " + $scope.search;
+    $cordovaSQLite.execute(db, query, [])
+      .then(
+        function(result) {
+          if (result.rows.length > 0) {
+            console.log("Database loaded successfully, cheers!");
+            console.log(result.rows.item(0).firstname);
+            console.log(result.rows.item(0).lastname);
+          }
+        },
+        function(error) {
+          console.log("Error on loading: " + error.message);
+        }
+      );
 
-  $scope.selectAll = function() {
-    var db = $cordovaSQLite.openDB({name:"populated.db", location:'default'});
-    $scope.results=[];
-    var query="SELECT * FROM people" ;
+  };
+  $scope.viewDB = function() {
+    var db = $cordovaSQLite.openDB({
+      name: "populated.db",
+      location: 'default'
+    });
+    $scope.results = [];
+    var query = "SELECT * FROM people";
 
     // Execute SELECT statement to load message from database.
-        $cordovaSQLite.execute(db, query,[])
-            .then(
-                function(result) {
-
-                    if (result.rows.length > 0) {
-
-                        console.log(result.rows.item(0).firstname);
-                        console.log(result.rows.item(0).lastname);
-                        console.log("Message loaded successful, cheers!");
-                    }
-                },
-                function(error) {
-                    console.log("Error on loading: " + error.message);
-                }
-            );
+    $cordovaSQLite.execute(db, query, [])
+      .then(
+        function(result) {
+          if (result.rows.length > 0) {
+            console.log("Database loaded successfully, cheers!");
+            console.log(result.rows.item(0).firstname);
+            console.log(result.rows.item(0).lastname);
+          }
+        },
+        function(error) {
+          console.log("Error on loading: " + error.message);
+        }
+      );
   }
 })
 
