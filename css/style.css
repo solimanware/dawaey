@@ -1,1 +1,39 @@
-/* Empty. Add your own CSS if you like */
+.nav-bar-block, .bar {
+  background-color: #c0392b !important;
+}
+.title {
+  text-align: center !important;
+}
+ion-tabs.tabs-color-active-dark .tab-item {
+  color: #c0392b;
+
+}
+ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.active, ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.activated {
+  border-color:#c0392b;
+}
+.shadow {
+  border-top: 1px solid rgba(0,0,0,0.30);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.30), 0 5px 5px rgba(0,0,0,0.22);
+}
+.tradename {
+  color: #b71c1c;
+  font-weight: bold !important;
+  /*text-overflow: initial !important;*/
+}
+.chname {
+  color: #FF6F00 !important;
+}
+.price {
+  color: #6D4C41;
+}
+.tabs {
+  padding-top: 2px !important;
+}
+.details {
+  height: 50px;
+  width: auto;
+  float: right;
+}
+.item-content {
+  width: 110%;
+}

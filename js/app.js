@@ -9,17 +9,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
 .run(function($ionicPlatform, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
-    // Important!!
-    //
-    // Instantiate database file/connection after ionic platform is ready.
-    //
-    var db;
-    window.plugins.sqlDB.copy("populated.db", function() {
-      db = $cordovaSQLite.openDB({name:"populated.db", location:'default'});
-    }, function(error) {
-      console.error("There was an error copying the database: " + error);
-      db = $cordovaSQLite.openDB({name:"populated.db", location:'default'});
-    });
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -51,46 +40,27 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 
   // Each tab has its own nav history stack:
 
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.search', {
+    url: '/search',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-search': {
+        templateUrl: 'templates/tab-search.html',
+        controller: 'SearchCtrl'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.account', {
-    url: '/account',
+  .state('tab.about', {
+    url: '/about',
     views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+      'tab-about': {
+        templateUrl: 'templates/tab-about.html',
+        controller: 'AboutCtrl'
       }
     }
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/search');
 
 });
