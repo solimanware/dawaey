@@ -1,4 +1,4 @@
-# Dawaey - دوائي
+# <img src="https://lh3.googleusercontent.com/61bLWPcU2c2aFIRE_0OVCgpynn2lXnyBFgXRdhSIsVj2IEdd6cDiXGiV6stiEVhqA30=w300-rw" alt="Dawaey logo"> Dawaey - دوائي 
 Do u want to quickly search drugs offline from your smartphone ?
 
 Here's Dawaey an Application for searching Egyptian drugs
