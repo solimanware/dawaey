@@ -49,6 +49,15 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
       }
     }
   })
+  .state('tab.drug', {
+    url: '/drug/:drugId',
+    views: {
+      'tab-drug': {
+        templateUrl: 'templates/tab-drug.html',
+        controller: 'DrugCtrl'
+      }
+    }
+  })
 
   .state('tab.about', {
     url: '/about',

@@ -8,13 +8,13 @@
     </div>
     <ion-list>
       </ion-item>
-      <ion-item class="item-light item-avatar card item-complex" collection-repeat="drug in drugs | filter:searchit | orderBy: 'tradename' | limitTo:numberOfItemsToDisplay" ng-href="https://www.google.com/search?q={{drug.tradename}} drug" >
+      <ion-item class="item-light item-avatar card item-complex" collection-repeat="drug in drugs | filter:searchit | orderBy: 'tradename' | limitTo:numberOfItemsToDisplay" ng-href="#/tab/drug/{{drug.id}}" >
         <img src="img/icon.png " alt=" ">
-        <h2 class="tradename ">{{drug.tradename}}</h2>
-        <p class="chname ">{{drug.chname}}</p>
+        <h2 class="tradename">{{drug.tradename}}</h2>
+        <p class="chname">{{drug.chname}}</p>
         <p>{{drug.howmany}} {{drug.classification}}</p>
-        <p class="price ">Price: {{drug.price}} EGP</p>
-        <p class="company ">Company: {{drug.company}}</p>
+        <p class="price">Price: {{drug.price}} EGP</p>
+        <p class="company">Company: {{drug.company}}</p>
       </ion-item>
     </ion-list>
     <ion-infinite-scroll ng-if="drugs.length > numberOfItemsToDisplay" on-infinite="addMoreItem() " distance="10% "></ion-infinite-scroll>
