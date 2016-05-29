@@ -9,12 +9,15 @@
       </div>
 
       <div class="item item-body">
-        <h2 class="price ">Price: {{drug.price}} EGP</h2>
-        <h2>{{drug.howmany}} {{drug.classification}}</h2>
-        <h2 class="company ">Company: {{drug.company}}</h2>
+        <h2 class="price">Old Price: {{drug.price}} EGP</h2>
+        <h2 class="newprice">New Price: {{drug.newprice}} EGP</h2>
+        <h2>{{drug.type}} of {{drug.howmany}} {{drug.classification}}</h2>
+        <h2 class="company">Company: {{drug.company}}</h2>
       </div>
-      <!-- <div>
-        <img ng-click="btn()" href="www.google.com" class="details" src="img/button.png" alt="">
-      </div> -->
+      <div>
+        <a ng-href="https://www.google.com/search?q={{drug.tradename}} drug">
+          <img class="details" src="img/button.png" alt="">
+        </a>
+      </div>
   </ion-content>
 </ion-view>

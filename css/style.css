@@ -25,6 +25,10 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
 .price {
   color: #6D4C41;
 }
+.newprice {
+  color: #004D40;
+  font-weight: bolder !important;
+}
 .tabs {
   padding-top: 2px !important;
 }

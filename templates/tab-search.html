@@ -8,12 +8,12 @@
     </div>
     <ion-list>
       </ion-item>
-      <ion-item class="item-light item-avatar card item-complex" collection-repeat="drug in drugs | filter:searchit | orderBy: 'tradename' | limitTo:numberOfItemsToDisplay" ng-href="#/tab/drug/{{drug.id}}" >
+      <ion-item class="item-light item-avatar card item-complex" ng-repeat="drug in drugs | filter:searchit | orderBy: 'tradename' | limitTo:numberOfItemsToDisplay" ng-href="#/tab/drug/{{drug.id}}" >
         <img src="img/icon.png " alt=" ">
         <h2 class="tradename">{{drug.tradename}}</h2>
         <p class="chname">{{drug.chname}}</p>
         <p>{{drug.howmany}} {{drug.classification}}</p>
-        <p class="price">Price: {{drug.price}} EGP</p>
+        <h2 class="newprice">Price: {{drug.newprice}} EGP</h2>
         <p class="company">Company: {{drug.company}}</p>
       </ion-item>
     </ion-list>
