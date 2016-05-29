@@ -39,3 +39,5 @@ angular.module('starter.controllers', [])
       var newurl = 'https://www.google.com/search?q='+url+' drug'
       return $sce.trustAsResourceUrl(newurl);
     };
+  
+});
