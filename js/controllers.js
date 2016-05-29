@@ -34,4 +34,8 @@ angular.module('starter.controllers', [])
 
 .controller('AboutCtrl', function($scope) {
 
-});
+}).filter('trustURL', function ($sce) {
+    return function(url) {
+      var newurl = 'https://www.google.com/search?q='+url+' drug'
+      return $sce.trustAsResourceUrl(newurl);
+    };
