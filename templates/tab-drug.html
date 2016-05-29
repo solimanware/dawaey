@@ -14,11 +14,11 @@
         <h2>{{drug.type}} of {{drug.howmany}} {{drug.classification}}</h2>
         <h2 class="company">Company: {{drug.company}}</h2>
       </div>
-      <!-- <div>
-        <a class="link" ng-href="https://www.google.com/search?q={{drug.tradename}} drug">Click Here</a>
-        <a class="details" ng-href="https://www.google.com/search?q={{drug.tradename}} drug">
+      <div>
+        <a class="link" ng-href="{{drug.tradename | trustURL}}">Click Here</a>
+        <a class="details" ng-href="">
           <img class="details" src="img/button.png" alt="">
         </a>
-      </div> -->
+      </div>
   </ion-content>
 </ion-view>
