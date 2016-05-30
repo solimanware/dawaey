@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angular.filter'])
 
 .run(function($ionicPlatform, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
@@ -56,6 +56,60 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     views: {
       'tab-search': {
         templateUrl: 'templates/tab-search.html',
+        controller: 'SearchCtrl'
+      }
+    }
+  })
+  .state('tab.advsearch', {
+    url: '/advsearch',
+    views: {
+      'tab-advsearch': {
+        templateUrl: 'templates/tab-advsearch.html',
+        controller: 'SearchCtrl'
+      }
+    }
+  })
+  .state('tab.approximate', {
+    url: '/approximate',
+    views: {
+      'tab-approximate': {
+        templateUrl: 'templates/tab-approximate.html',
+        controller: 'SearchCtrl'
+      }
+    }
+  })
+  .state('tab.tradename', {
+    url: '/tradename',
+    views: {
+      'tab-tradename': {
+        templateUrl: 'templates/tab-tradename.html',
+        controller: 'SearchCtrl'
+      }
+    }
+  })
+  .state('tab.chname', {
+    url: '/chname',
+    views: {
+      'tab-chname': {
+        templateUrl: 'templates/tab-chname.html',
+        controller: 'SearchCtrl'
+      }
+    }
+  })
+  .state('tab.price', {
+    url: '/price',
+    views: {
+      'tab-price': {
+        templateUrl: 'templates/tab-price.html',
+        controller: 'SearchCtrl'
+      }
+    }
+  })
+  .state('tab.company', {
+    url: '/company',
+    views: {
+      'tab-company': {
+        templateUrl: 'templates/tab-company.html',
         controller: 'SearchCtrl'
       }
     }

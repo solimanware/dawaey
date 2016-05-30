@@ -42,14 +42,14 @@ angular.module('starter.controllers', [])
       $scope.swipe = true;
     }, 10000);
 
-    // var visited = localStorage.getItem('visited');
-    // if (visited == "Yes you have visited this page before") {
-    //   $state.go('tab.search')
-    // } else {
-    //   console.log("Stay here");
-    // }
-    //
-    // localStorage.setItem('visited', 'Yes you have visited this page before');
+    var visited = localStorage.getItem('visited');
+    if (visited == "You have visited this page before") {
+      $state.go('tab.search')
+    } else {
+      console.log("Stay here");
+    }
+
+    localStorage.setItem('visited', 'You have visited this page before');
 
 
     // Move to the next slide

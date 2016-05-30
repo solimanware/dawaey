@@ -51,6 +51,9 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   margin-right: auto;
   display: block;
 }
+.lol {
+  margin-top: 20px !important;
+}
 
 /*.item-content {
   width: 110%;
