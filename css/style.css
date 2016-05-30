@@ -1,8 +1,20 @@
+@font-face {
+  font-family: 'stc';
+  src: url('../fonts/stc.eot');
+  src: url('../fonts/stc.eot?#iefix') format('embedded-opentype'), url('../fonts/stc.woff') format('woff'), url('../fonts/stc.ttf') format('truetype'), url('../fonts/stc.svg#Sri-TSCRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.stcfont {
+  font-family: "-apple-system", "stc", "Roboto", "Segoe UI", sans-serif;
+}
 .nav-bar-block, .bar {
   background-color: #c0392b !important;
 }
 .title {
   text-align: center !important;
+  color: #fff;
+  font-weight: bolder !important;
 }
 ion-tabs.tabs-color-active-dark .tab-item {
   color: #c0392b;
@@ -39,6 +51,62 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   margin-right: auto;
   display: block;
 }
-.item-content {
+
+/*.item-content {
   width: 110%;
+}*/
+
+
+/*intro styles*/
+
+.introslider1 {
+  background: #ffcdd2 !important;
+}
+.introslider2 {
+  background: #F8BBD0 !important;
+}
+.introslider3 {
+  background: #E1BEE7 !important;
+}
+.slider {
+  height: 100%;
+}
+.slider-slide {
+  padding-top: 80px;
+  color: #000;
+  background-color: #fff;
+  text-align: center;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}
+#logo {
+  margin: 30px 0px;
+}
+.logopic {
+  height: 200px;
+  width: 200px;
+}
+#swipe {
+  height: 80px;
+  width: 80px;
+}
+.demopic {
+  width: 80%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#list {
+  width: 170px;
+  margin: 30px auto;
+  font-size: 20px;
+}
+#list ol {
+  margin-top: 30px;
+}
+#list ol li {
+  text-align: left;
+  list-style: decimal;
+  margin: 10px 0px;
 }

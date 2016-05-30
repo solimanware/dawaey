@@ -31,6 +31,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   // Each state's controller can be found in controllers.js
   $stateProvider
 
+
   // setup an abstract state for the tabs directive
     .state('tab', {
     url: '/tab',
@@ -39,6 +40,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   })
 
   // Each tab has its own nav history stack:
+  //not this one
+  .state('tab.intro', {
+    url: '/intro',
+    views: {
+      'tab-intro': {
+        templateUrl: 'templates/tab-intro.html',
+        controller: 'IntroCtrl'
+      }
+    }
+  })
 
   .state('tab.search', {
     url: '/search',
@@ -70,6 +81,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/search');
+   $urlRouterProvider.otherwise('/tab/intro');
 
 });

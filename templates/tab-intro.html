@@ -1,0 +1,53 @@
+<ion-view cache-view="false" id="store-visit-wrapper" hide-tabs>
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-buttons side="left">
+      <button class="button button-stable" ng-click="skip()">
+        Skip
+      </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+      <button class="button button-stable" ng-click="next()">
+        Next
+      </button>
+    </ion-nav-buttons>
+  </ion-nav-bar>
+  <ion-slide-box>
+    <ion-slide class="introslider1">
+      <div>
+        <h2 class="stcfont"> {{type}}</h2></div>
+
+      <div id="logo">
+        <img class="logopic" src="img/icon.png">
+      </div>
+      <!-- when $scope.myValue is truthy (element is visible) -->
+      <div ng-show="swipe">
+        <h3 class="stcfont">قم بتحريك اصبعك للتنقل</h3>
+        <img id="swipe" src="img/swipe.png" alt="" />
+      </div>
+
+    </ion-slide>
+    <ion-slide class="introslider2">
+      <h3 class="stcfont">لبحث الدواء قم بعمل الآتي</h3>
+
+      <div class="demopic">
+        <img class="demopic" src="img/demopic.gif" alt="" />
+      </div>
+      <div ng-show="swipe">
+        <img id="swipe" src="img/swipe.png" alt="" />
+      </div>
+    </ion-slide>
+    <ion-slide class="introslider3">
+      <h3 class="stcfont">عندك أي أسأله تانيه ؟ </h3>
+      <h4 class="stcfont">لأ ؟؟-</h4>
+      <h3 class="stcfont">اتفضل ادخل على التطبيق من هنا</h3>
+      <button ng-click="skip()" class="button button-assertive">
+        Enter Dawaey
+      </button>
+      <div id="logo">
+        <img class="logopic" src="img/icon.png">
+      </div>
+
+
+    </ion-slide>
+  </ion-slide-box>
+</ion-view>
