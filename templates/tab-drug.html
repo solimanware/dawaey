@@ -1,4 +1,4 @@
-‎<ion-view view-title="Drug info">
+‎<ion-view view-title="معلومات الدواء">
   <ion-content>
     <div class="list card">
 
@@ -9,6 +9,7 @@
       </div>
 
       <div class="item item-body">
+        <img ng-src="{{pic}}" alt="" />
         <h2 class="price">Old Price: {{drug.price}} EGP</h2>
         <h2 class="newprice">New Price: {{drug.newprice}} EGP</h2>
         <h2>{{drug.type}} of {{drug.howmany}} {{drug.classification}}</h2>

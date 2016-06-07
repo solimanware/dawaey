@@ -2,12 +2,12 @@
   <ion-nav-bar class="bar-stable">
     <ion-nav-buttons side="left">
       <button class="button button-stable" ng-click="skip()">
-        Skip
+        تخطي
       </button>
     </ion-nav-buttons>
     <ion-nav-buttons side="right">
       <button class="button button-stable" ng-click="next()">
-        Next
+        {{nextBtn}}
       </button>
     </ion-nav-buttons>
   </ion-nav-bar>
@@ -28,15 +28,23 @@
     </ion-slide>
     <ion-slide class="introslider2">
       <h2 class="stcfont">لبحث الدواء قم بعمل الآتي</h2>
-      <div class="text-right">
-        <h3 class="stcfont">اكتب اسم الدواء او المادة الفعالة في خانة البحث او اسم الشركة</h3>
-        <h3 class="stcfont">إنتظر قليلاً</h3>
-        <h3 class="stcfont">قم باختيار الدواء الذي تبحث عنه للمزيد من المعلومات</h3>
-        <h3 class="stcfont">للكثير من المعلومات حول الدواء اضغط</h3>
+      <div class="text-right introtext">
+        <h3 class="stcfont">أولاً : اذا كنت تريد البحث السريع قم باختيار البحث السريع</h3>
+        <h3 class="stcfont">اكتب اسم الدواء</h3>
+        <h3 class="stcfont">انتظر قليلاً</h3>
+        <h3 class="stcfont">اختر الدواء الذي تريد البحث عنه</h3>
+        <h3 class="stcfont">للبحث في جوجل قم باختيار هذا الزر</h3>
       </div>
       <div>
         <img class="details" src="img/button.png" alt="">
       </div>
+      <div class="text-right introtext">
+        <h3 class="stcfont">ثانياً للبحث المتقدم</h3>
+        <h3 class="stcfont">اكتب اسم الدواء أو المادة الفعالة أو سعر الدواء أو اسم الشركة المصنعة</h3>
+        <h3 class="stcfont">انتظر قليلاً</h3>
+        <h3 class="stcfont">اختر الدواء الذي تريد البحث عنه</h3>
+      </div>
+
 
 
       <div ng-show="swipe">
@@ -44,11 +52,15 @@
       </div>
     </ion-slide>
     <ion-slide class="introslider3">
-      <h3 class="stcfont">عندك أي أسأله تانيه ؟ </h3>
-      <h4 class="stcfont">لأ ؟؟-</h4>
+      <h3 class="stcfont">يا ترى عندك أي أسئله تانية ؟</h3>
+      <h3 class="stcfont">راسلنا على</h3>
+      <p>
+         drusama2@gmail.com
+      </p>
+      <h4 class="stcfont"> لأ معندكش اسئله ؟-</h4>
       <h3 class="stcfont">اتفضل ادخل على التطبيق من هنا</h3>
       <button ng-click="skip()" class="button button-assertive">
-        Enter Dawaey
+        دخول دوائي
       </button>
       <div id="logo">
         <img class="logopic" src="img/icon.png">
