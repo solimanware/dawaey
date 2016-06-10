@@ -8,13 +8,23 @@
 .stcfont {
   font-family: "-apple-system", "stc", "Roboto", "Segoe UI", sans-serif;
 }
+.rtl {
+  direction: rtl;
+}
+.sans {
+  font-family: sans-serif;
+}
+.header-item {
+  font-family: 'stc';
+}
 .nav-bar-block, .bar {
   background-color: #c0392b !important;
 }
 .title {
   text-align: center !important;
-  color: #fff;
+  color: white;
   font-weight: bolder !important;
+  right: 0 !important;
 }
 ion-tabs.tabs-color-active-dark .tab-item {
   color: #c0392b;
@@ -44,23 +54,77 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
 .tabs {
   padding-top: 2px !important;
 }
-.details {
-  height: 50px;
-  width: auto;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
 .lol {
   margin-top: 20px !important;
 }
-
-/*.item-content {
-  width: 110%;
+.wider {
+  width: 80%;
+}
+/*partners*/
+.partner-image {
+  width: 30%;
+  border-radius: 10px;
+  display: inline;
+}
+.fb-follow {
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+.followimg {
+  width: 68%;
+  margin-top: 0;
+}
+/*sponsor*/
+.sponsorview {
+  background: #FBE9E7;
+}
+.sponsorimg {
+  width: 20%;
+  margin: auto;
+  display: block;
+  margin-top: 20px;
+}
+/*.margin-right {
+  margin-right: 20px;
+}*/
+/*menu*/
+.bar-stable .button  {
+  color: white;
+}
+.bar-stable .button:hover  {
+  color: white;
+}
+.bar.bar-stable .title {
+    color: white;
+}
+.menulist {
+  direction: rtl;
+}
+.menuicon {
+  width: 40px;
+}
+.approximate{
+  color: red;
+}
+/*main*/
+.button::before{
+  margin-right: 20px;
+}
+.want {
+  margin-bottom: -10px;
+}
+.mainview {
+  background: #ffebee;
+}
+/*.pane {
+    background-color: #FFF9C4;
 }*/
 
-
 /*intro styles*/
+.introtext {
+  margin-right: 20px;
+}
 
 .introslider1 {
   background: #ffcdd2 !important;
@@ -112,4 +176,11 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   text-align: left;
   list-style: decimal;
   margin: 10px 0px;
+}
+.details {
+  height: 50px;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }

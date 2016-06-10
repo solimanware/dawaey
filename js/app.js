@@ -3,15 +3,14 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angular.filter'])
+angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','starter.services'])
 
-.run(function($ionicPlatform, $cordovaSQLite) {
+.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+    if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
 
@@ -24,117 +23,123 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
   $stateProvider
 
-
-  // setup an abstract state for the tabs directive
-    .state('tab', {
-    url: '/tab',
+    .state('app', {
+    url: '/app',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/menu.html',
+    controller: 'AppCtrl'
   })
 
-  // Each tab has its own nav history stack:
-  //not this one
-  .state('tab.intro', {
+  .state('app.intro', {
     url: '/intro',
     views: {
-      'tab-intro': {
-        templateUrl: 'templates/tab-intro.html',
+      'menuContent': {
+        templateUrl: 'templates/intro.html',
         controller: 'IntroCtrl'
       }
     }
   })
-
-  .state('tab.search', {
-    url: '/search',
-    views: {
-      'tab-search': {
-        templateUrl: 'templates/tab-search.html',
-        controller: 'SearchCtrl'
+    .state('app.main', {
+      url: '/main',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/main.html',
+          controller: 'MainCtrl'
+        }
       }
-    }
-  })
-  .state('tab.advsearch', {
-    url: '/advsearch',
-    views: {
-      'tab-advsearch': {
-        templateUrl: 'templates/tab-advsearch.html',
-        controller: 'SearchCtrl'
+    })
+    .state('app.quick', {
+      url: '/quick',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/quick.html',
+          controller: 'QuickCtrl'
+        }
       }
-    }
-  })
-  .state('tab.approximate', {
-    url: '/approximate',
-    views: {
-      'tab-approximate': {
-        templateUrl: 'templates/tab-approximate.html',
-        controller: 'SearchCtrl'
+    })
+    .state('app.drug', {
+      url: '/drug/:drugId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/drug.html',
+          controller: 'DrugCtrl'
+        }
       }
-    }
-  })
-  .state('tab.tradename', {
-    url: '/tradename',
-    views: {
-      'tab-tradename': {
-        templateUrl: 'templates/tab-tradename.html',
-        controller: 'SearchCtrl'
+    })
+    .state('app.trade', {
+      url: '/trade',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/trade.html',
+          controller: 'QuickCtrl'
+        }
       }
-    }
-  })
-  .state('tab.chname', {
-    url: '/chname',
-    views: {
-      'tab-chname': {
-        templateUrl: 'templates/tab-chname.html',
-        controller: 'SearchCtrl'
+    })
+    .state('app.chname', {
+      url: '/chname',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/chname.html',
+          controller: 'QuickCtrl'
+        }
       }
-    }
-  })
-  .state('tab.price', {
-    url: '/price',
-    views: {
-      'tab-price': {
-        templateUrl: 'templates/tab-price.html',
-        controller: 'SearchCtrl'
+    })
+    .state('app.price', {
+      url: '/price',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/price.html',
+          controller: 'QuickCtrl'
+        }
       }
-    }
-  })
-  .state('tab.company', {
-    url: '/company',
-    views: {
-      'tab-company': {
-        templateUrl: 'templates/tab-company.html',
-        controller: 'SearchCtrl'
+    })
+    .state('app.company', {
+      url: '/company',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/company.html',
+          controller: 'QuickCtrl'
+        }
       }
-    }
-  })
-  .state('tab.drug', {
-    url: '/drug/:drugId',
-    views: {
-      'tab-drug': {
-        templateUrl: 'templates/tab-drug.html',
-        controller: 'DrugCtrl'
+    })
+    .state('app.approximate', {
+      url: '/approximate',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/approximate.html',
+          controller: 'QuickCtrl'
+        }
       }
-    }
-  })
-
-  .state('tab.about', {
-    url: '/about',
-    views: {
-      'tab-about': {
-        templateUrl: 'templates/tab-about.html',
-        controller: 'AboutCtrl'
+    })
+    .state('app.partners', {
+      url: '/partners',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/partners.html',
+          controller: 'PartenersCtrl'
+        }
       }
-    }
-  });
-
+    })
+    .state('app.sponsors', {
+      url: '/sponsors',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/sponsors.html',
+          controller: 'SponsorsCtrl'
+        }
+      }
+    })
+    .state('app.developer', {
+      url: '/developer',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/developer.html',
+          controller: 'DeveloperCtrl'
+        }
+      }
+    });
   // if none of the above states are matched, use this as the fallback
-   $urlRouterProvider.otherwise('/tab/intro');
-
+  $urlRouterProvider.otherwise('/app/intro');
 });

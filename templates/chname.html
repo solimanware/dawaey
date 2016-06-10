@@ -1,0 +1,22 @@
+<ion-view view-title="البحث باسم الدواء العلمي">
+  <ion-content>
+    <div class="shadow">
+      <label class="item item-input">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="search" ng-model="searchit" ng-model-options="{debounce: 500}" placeholder="Search here" ng-focus="searchFocused = true" ng-blur="searchFocused = false">
+      </label>
+    </div>
+    <ion-list>
+      </ion-item>
+      <ion-item class="item-light item-avatar card item-complex" ng-repeat="drug in drugs | filter:{chname:searchit} | orderBy: 'tradename' | limitTo:numberOfItemsToDisplay" ng-href="#/app/drug/{{drug.id}}" >
+        <img src="img/icon.png " alt=" ">
+        <h2 class="tradename">{{drug.tradename}}</h2>
+        <p class="chname">{{drug.chname}}</p>
+        <p>{{drug.howmany}} {{drug.classification}}</p>
+        <h2 class="newprice">Price: {{drug.newprice}} EGP</h2>
+        <p class="company">Company: {{drug.company}}</p>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll ng-if="drugs.length > numberOfItemsToDisplay" on-infinite="addMoreItem() " distance="10% "></ion-infinite-scroll>
+  </ion-content>
+</ion-view>

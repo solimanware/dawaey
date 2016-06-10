@@ -1,0 +1,51 @@
+<ion-side-menus enable-menu-with-back-views="true">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button  class="button-light">
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="right">
+        <button class="button button-icon ion-navicon menuicon" menu-toggle="right">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="right">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">القائمة</h1>
+    </ion-header-bar>
+    <ion-content>
+      <ion-list class="menulist">
+        <ion-item menu-close href="#/app/main">
+          الرئيسية
+        </ion-item>
+        <ion-item menu-close href="#/app/trade">
+          البحث بالاسم التجاري
+        </ion-item>
+        <ion-item menu-close href="#/app/chname">
+          البحث بالاسم العلمي
+        </ion-item>
+        <ion-item menu-close href="#/app/price">
+          البحث بالسعر
+        </ion-item>
+        <ion-item menu-close href="#/app/company">
+          البحث بالشركة
+        </ion-item>
+        <ion-item menu-close href="#/app/approximate">
+          <span class="approximate">البحث التقريبي</span>
+        </ion-item>
+        <ion-item menu-close href="#/app/partners">
+          شركاؤنا
+        </ion-item>
+        <ion-item menu-close href="#/app/sponsors">
+          الممولين
+        </ion-item>
+        <ion-item menu-close href="#/app/developer">
+          عن المطور
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
