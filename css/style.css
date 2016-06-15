@@ -36,10 +36,15 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   border-top: 1px solid rgba(0, 0, 0, 0.30);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.30), 0 5px 5px rgba(0, 0, 0, 0.22);
 }
+/*drug*/
+
 .tradename {
   color: #b71c1c;
   font-weight: bold !important;
   /*text-overflow: initial !important;*/
+}
+.fulltext {
+  white-space: normal !important;
 }
 .chname {
   color: #FF6F00 !important;
@@ -116,6 +121,18 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
 }
 .mainview {
   background: #ffebee;
+}
+footer {
+  width: 100%;
+  background: black;
+  height: 70px;
+  margin: 0;
+  padding: 0;
+}
+footer h1 {
+  color: #fff;
+  line-height: 70px;
+  margin: 0;‎
 }
 /*.pane {
     background-color: #FFF9C4;
