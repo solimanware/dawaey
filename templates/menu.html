@@ -16,25 +16,10 @@
     <ion-header-bar class="bar-stable">
       <h1 class="title">القائمة</h1>
     </ion-header-bar>
-    <ion-content>
+    <ion-content ng-controller="MenuCtrl">
       <ion-list class="menulist">
         <ion-item menu-close href="#/app/main">
           الرئيسية
-        </ion-item>
-        <ion-item menu-close href="#/app/trade">
-          البحث بالاسم التجاري
-        </ion-item>
-        <ion-item menu-close href="#/app/chname">
-          البحث بالاسم العلمي
-        </ion-item>
-        <ion-item menu-close href="#/app/price">
-          البحث بالسعر
-        </ion-item>
-        <ion-item menu-close href="#/app/company">
-          البحث بالشركة
-        </ion-item>
-        <ion-item menu-close href="#/app/approximate">
-          <span class="approximate">البحث التقريبي</span>
         </ion-item>
         <ion-item menu-close href="#/app/partners">
           شركاؤنا
@@ -44,6 +29,9 @@
         </ion-item>
         <ion-item menu-close href="#/app/developer">
           عن المطور
+        </ion-item>
+        <ion-item menu-close ng-click="logOut()">
+        <span class="red">تسجيل الخروج</span>
         </ion-item>
       </ion-list>
     </ion-content>

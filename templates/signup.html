@@ -1,0 +1,36 @@
+<ion-view class="view-bg-blue" hide-nav-bar="true">
+  <ion-content class="signupview">
+    <h1 class="stcfont text-center create">انشاء حساب</h1>
+    <form ng-submit="doSignup()">
+      <div class="list signupform">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">First Name</span>
+          <input ng-model="user.first_name" required type="text" placeholder="John">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Last Name</span>
+          <input ng-model="user.last_name" required type="text" placeholder="Suhr">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Email <a href="#/app/privacypolicy">(Privacy Policy)</a></span>
+          <input ng-model="user.email" required type="email" name="input" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="john@suhr.com">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Password</span>
+          <input ng-model="user.password" required type="password" placeholder="password">
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Date</span>
+          <input ng-model="user.birth_date" type="date" data-date="" data-date-format="DD MMMM YYYY" value="2015-08-09" required >
+        </label>
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">Mobile Number</span>
+          <input ng-model="user.mobile_number" required type="number" placeholder="01012345678">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Sign up</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

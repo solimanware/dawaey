@@ -1,4 +1,4 @@
-<ion-view view-title="البحث بالسعر">
+<ion-view view-title="البحث بالمادة الفعالة">
   <ion-content>
     <div class="shadow">
       <label class="item item-input lablestyle">
@@ -6,7 +6,7 @@
         <option value="">اختر نوع البحث</option> <!-- not selected / blank option -->
         <option value="quick">البحث السريع</option>
         <option value="trade">البحث بالاسم التجاري</option>
-        <option value="activeingredient">البحث بالمادة الفعالة</option>
+        <option value="activeingerdient">البحث بالمادة الفعالة</option>
         <option value="price">البحث بالسعر</option>
         <option value="company">البحث بالشركة</option>
         <option value="approximate">البحث التقريبي</option>
@@ -20,12 +20,12 @@
     </div>
     <ion-list>
       </ion-item>
-      <ion-item class="item-light item-avatar card item-complex" ng-repeat="drug in drugs | filter:{price:searchit} | orderBy: 'price' | limitTo:numberOfItemsToDisplay" ng-href="#/app/drug/{{drug.id}}">
+      <ion-item class="item-light item-avatar card item-complex" ng-repeat="drug in drugs | filter:{activeingerdient:searchit} | orderBy: 'activeingredient' | limitTo:numberOfItemsToDisplay" ng-href="#/app/drug/{{drug.id}}">
         <img ng-src="{{drug.pic}}" alt=" ">
         <h2 class="tradename">{{drug.tradename}}</h2>
         <p class="chname">{{drug.activeingredient}}</p>
         <p>{{drug.form}}</p>
-        <h2 class="newprice">Price: {{drug.price | number}} EGP</h2>
+        <h2 class="newprice">Price: {{drug.price}} EGP</h2>
         <p class="company">Company: {{drug.company}}</p>
       </ion-item>
     </ion-list>

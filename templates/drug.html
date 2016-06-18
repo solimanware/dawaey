@@ -1,23 +1,21 @@
 ‎<ion-view view-title="معلومات الدواء">
   <ion-content>
     <div class="list card">
+      <img class="drug-image" ng-src="{{drug.pic}}">
+        <div class="item item-body nomargin">
+          <h1 class="tradename fulltext text-center nomargin">Tradename: {{drug.tradename}}</h1>
+          <h2 class="chname fulltext text-center"> {{drug.activeingredient}}</h2>
+          <h2>Form: {{drug.form}}</h2>
 
-      <div class="item item-avatar">
-        <img src="img/icon.png">
-        <h2 class="tradename fulltext">{{drug.tradename}}</h2>
-        <p class="chname">{{drug.chname}}</p>
-      </div>
-
-      <div class="item item-body">
-        <img ng-src="{{pic}}" alt="" />
-        <h2 class="price">Old Price: {{drug.price}} EGP</h2>
-        <h2 class="newprice">New Price: {{drug.newprice}} EGP</h2>
-        <h2>{{drug.type}} of {{drug.howmany}} {{drug.classification}}</h2>
+        <h2 class="price">Old Price: {{drug.price}} EGP    && New Price: {{drug.newprice}} EGP</h2>
+        <h2>Dose: {{drug.dose}}</h2>
+        <h2>Main group {{drug.maingp}}</h2>
+        <h2>Sub group {{drug.subgp}}</h2>
         <h2 class="company">Company: {{drug.company}}</h2>
       </div>
       <div>
-        <a class="details" ng-href="{{drug.tradename | trustURL}}">
-          <img class="details" src="img/button.png" alt="">
+        <a class="details button morebutton stcfont" ng-href="{{drug.tradename | trustURL}}">
+          مزيد من المعلومات
         </a>
       </div>
   </ion-content>

@@ -6,7 +6,28 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','starter.services'])
 
-.run(function($ionicPlatform) {
+.run(function($rootScope, $ionicPlatform, $ionicHistory) {
+  $ionicPlatform.registerBackButtonAction(function(e){
+    if ($rootScope.backButtonPressedOnceToExit) {
+      ionic.Platform.exitApp();
+    }
+
+    else if ($ionicHistory.backView()) {
+      $ionicHistory.goBack();
+    }
+    else {
+      $rootScope.backButtonPressedOnceToExit = true;
+      window.plugins.toast.showShortCenter(
+        "Press back button again to exit",function(a){},function(b){}
+      );
+      setTimeout(function(){
+        $rootScope.backButtonPressedOnceToExit = false;
+      },2000);
+    }
+    e.preventDefault();
+    return false;
+  },101);
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -41,6 +62,33 @@ angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','sta
       }
     }
   })
+  .state('app.login', {
+    url: '/login',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+      }
+    }
+  })
+  .state('app.signup', {
+    url: '/signup',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/signup.html',
+        controller: 'SignupCtrl'
+      }
+    }
+  })
+  .state('app.privacypolicy', {
+    url: '/privacypolicy',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/privacypolicy.html',
+        controller: 'PrivacyCtrl'
+      }
+    }
+  })
     .state('app.main', {
       url: '/main',
       views: {
@@ -55,7 +103,7 @@ angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','sta
       views: {
         'menuContent': {
           templateUrl: 'templates/quick.html',
-          controller: 'QuickCtrl'
+          controller: 'MainCtrl'
         }
       }
     })
@@ -73,16 +121,16 @@ angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','sta
       views: {
         'menuContent': {
           templateUrl: 'templates/trade.html',
-          controller: 'QuickCtrl'
+          controller: 'MainCtrl'
         }
       }
     })
-    .state('app.chname', {
-      url: '/chname',
+    .state('app.activeingredient', {
+      url: '/activeingredient',
       views: {
         'menuContent': {
-          templateUrl: 'templates/chname.html',
-          controller: 'QuickCtrl'
+          templateUrl: 'templates/activeingredient.html',
+          controller: 'MainCtrl'
         }
       }
     })
@@ -91,7 +139,7 @@ angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','sta
       views: {
         'menuContent': {
           templateUrl: 'templates/price.html',
-          controller: 'QuickCtrl'
+          controller: 'MainCtrl'
         }
       }
     })
@@ -100,7 +148,7 @@ angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','sta
       views: {
         'menuContent': {
           templateUrl: 'templates/company.html',
-          controller: 'QuickCtrl'
+          controller: 'MainCtrl'
         }
       }
     })
@@ -109,7 +157,7 @@ angular.module('starter', ['ionic', 'angular.filter', 'starter.controllers','sta
       views: {
         'menuContent': {
           templateUrl: 'templates/approximate.html',
-          controller: 'QuickCtrl'
+          controller: 'MainCtrl'
         }
       }
     })
