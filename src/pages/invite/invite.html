@@ -1,0 +1,20 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Invite Your Frirends ❤</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <button ion-button icon-start block (click)="shareViaFacebook()" color="facebook">
+    <ion-icon name="logo-facebook"></ion-icon> Facebook Share</button>
+  <button ion-button icon-start block (click)="shareViaWhatsApp()" color="whatsapp" margin-top>
+    <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp Share</button>
+  <p text-center style="margin-top: 200px;">Sharing is caring ❤</p>
+
+</ion-content>

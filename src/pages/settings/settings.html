@@ -1,0 +1,49 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Your Settings ❤</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Language</ion-label>
+      <ion-select [(ngModel)]="defaultLanguage" (ngModelChange)="waitNextVersion($event)">
+        <ion-option *ngFor="let choice of languageChoices" [value]="choice.value">
+          {{choice.name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Customized Country Data</ion-label>
+      <ion-select [(ngModel)]="defaultCountry" (ngModelChange)="waitNextVersion($event)">
+        <ion-option *ngFor="let choice of countryChoices" [value]="choice.value">
+          {{choice.name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  
+  <div text-center padding-bottom>
+    <button ion-button large (click)="updateDatabase()">Update Application Data</button>
+    
+    
+  </div>
+  <div text-center>
+      <button ion-button color="twitter" (click)="showTutorial()">Show tutorial again</button>
+    </div>
+  
+    <div text-center padding-top>
+        <button ion-button color="danger" small (click)="resetData()">Reset Application</button>
+
+    </div>
+
+
+</ion-content>

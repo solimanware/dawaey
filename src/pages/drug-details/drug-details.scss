@@ -1,0 +1,38 @@
+page-drug-details {
+    .drug-screen{
+        .lowercase{
+            text-transform: lowercase;
+        }
+        .justify{
+            text-align: justify;
+            text-justify: inter-word;
+        }
+        .ai-item{
+            font-size: 2rem;
+        }
+        .clickable{
+            color: color($colors,primary);
+            border-bottom: 2px solid tomato;
+            display: inline-block;
+            line-height: 0.85;
+        }
+        .drug-img{
+            width: 300px;
+            height: 300px;
+            display: block;
+            margin: 0 auto;
+            background-image: url('../../assets/img/placeholder.jpg');
+            border: 1px solid black;
+        }
+        .title{
+            color: color($colors,darker);
+            font-size: 2.5rem;
+            
+        }  
+              
+    }
+    .price{
+            color: color($colors,secondary)
+        }
+    
+}

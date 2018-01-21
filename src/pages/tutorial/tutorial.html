@@ -1,0 +1,66 @@
+<ion-header no-border class="transparent-bg">
+  <ion-navbar>
+    <ion-buttons end *ngIf="showSkip">
+      <button ion-button (click)="startApp()" color="darker">Skip</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager>
+    <ion-slide>
+      <img src="assets/img/ica-slidebox-img-1.png" class="slide-image"/>
+      <h2 class="slide-title" ion-text color="primary">
+        {{ 'Welcome to Dawaey 🎉' | translate }}
+      </h2>
+      <p text-left>
+        <b ion-text color="primary">Dawaey</b> is a smart medical refrence for healthcare providers that working out of the box 🏄‍♂️.
+      </p>
+      <p text-left>
+          It uses new technologies to assist you and make your life easier 😉
+      </p>
+      <p text-left>
+          It's <span ion-text color="danger">free</span>  and will remain free with your help and <a href="mailto:sponsor@dawaey.com">support</a> 😇
+      </p>
+    </ion-slide>
+    <ion-slide>
+        <ion-content>
+
+      <img src="assets/img/ica-slidebox-img-2.png" class="slide-image"/>
+      <h2 padding-left text-left ion-text color="success">Explore new features:</h2>        
+      <ol text-left padding-bottom>
+            <li>🤖 <span ion-text color="danger">AI</span> (Artificial Intelligence) Assistance</li>
+            <li>🔍 Ability to search medications by</li>
+            <ul>
+              <li>Tradenames</li>
+              <li>Active ingredients</li>
+              <li>Medication <span ion-text color="warning">updated</span> local price </li>
+              <li>Medication company</li>
+              <li>Medication group</li>
+              <li>Verbose pharmacology information</li>
+            </ul>
+            <li>💊 Drug-Drug Interactions</li>
+            <li>📷 View for medication pictures</li>
+            <li>📚 Search linked application information</li>
+            <li>ℹ️ Ablibity to ask Google for more medication information</li>
+            <li>➕ Add <a href="mailto:osama@dawaey.com?subject=Adding new drug information (drug name)">new</a> market medications</li>
+            <li>♻️ Update app data via internet</li>
+            <li>🗣 Multi language support</li>
+            <li>🌏 Multiple countries support</li>
+            <li>✔️ Ability to save search histories</li>
+            
+          </ol>
+    </ion-content>
+  </ion-slide>
+
+    <ion-slide>
+      <img src="assets/img/ica-slidebox-img-4.png" class="slide-image"/>
+      <h2 class="slide-title">Ready to Try?</h2>
+      <button ion-button icon-end large clear (click)="startApp()">
+        Continue
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>

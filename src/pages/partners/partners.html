@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Our Parteners ❤</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-card *ngFor="let person of partners">
+    <ion-item>
+      <ion-avatar item-start>
+        <img [src]="person.img" />
+      </ion-avatar>
+      <h2> {{person.name}}</h2>
+      <p> He's Our Partener Since {{person.since}} </p>
+      <a href="https://www.facebook.com/{{person.fb}}">Follow him on facebook</a>
+    </ion-item>
+  </ion-card>
+  <ion-card>
+    <ion-item>
+      <ion-avatar item-start>
+        <img src="assets/img/icon.png" />
+      </ion-avatar>
+      <h2> You! Your Name </h2>
+      <p> Become our partner now! </p>
+      <a href="https://www.facebook.com/dawaey">Follow us on facebook</a>
+    </ion-item>
+  </ion-card>
+  <!-- todo: add contributor hall of fame -->
+
+</ion-content>

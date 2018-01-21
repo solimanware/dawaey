@@ -1,0 +1,10 @@
+<ion-tabs>
+  <!-- Indicates with tabsPage should handle each tab here -->
+  <ion-tab 
+  *ngFor="let tab of tabs"
+  [root]="tab.component" 
+  [tabTitle]="tab.title" 
+  [tabIcon]="tab.icon"
+  [tabUrlPath]="tab.url">
+  </ion-tab>
+</ion-tabs>
