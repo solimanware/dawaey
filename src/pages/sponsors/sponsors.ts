@@ -25,7 +25,7 @@ export class SponsorsPage {
       },
       {
         img:"assets/img/ionic.png",
-        name:"IONIC",
+        name:"Ionic Team",
         since:"9 Dec 2017",
         link:"https://ionicframework.com"
       }

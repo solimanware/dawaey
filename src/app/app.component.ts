@@ -135,15 +135,20 @@ export class MyApp {
 }
 
 //todo:make app color changeable and localizable
-// todo:add user rating intellegience and feedback
-// todo: better market MEO
+//todo:add user rating intellegience and feedback
+//todo: better market MEO
 //todo: change app licence for open source
 //todo: reduce app size by optimizing resources folder ionic cordova resources not very optimized
 //todo: app upload autimation
 //todo: cross-walk support for lower api than 19 > second apk than normal one
-//todo:push updates to appstore
+//todo: push updates to appstore
 //todo: handle user segments
 //todo: fix history bugs and rename it and add more functionality
 //tood: add the ability to write prescription and scan drugs
 //todo: add the ability to enter drug by camera or voice
 //todo: fix undefined when click seachbar clear button
+//todo: optimize resources generation > 
+//todo: active-user counting implementation
+//todo: fix undefined when after firing cancel event
+//todo: edit report templates
+//todo: be more ready for pwa

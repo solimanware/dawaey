@@ -9,19 +9,24 @@
 <ion-content no-bounce>
   <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager>
     <ion-slide>
-      <img src="assets/img/ica-slidebox-img-1.png" class="slide-image"/>
-      <h2 class="slide-title" ion-text color="primary">
-        {{ 'Welcome to Dawaey 🎉' | translate }}
-      </h2>
-      <p text-left>
-        <b ion-text color="primary">Dawaey</b> is a smart medical refrence for healthcare providers that working out of the box 🏄‍♂️.
-      </p>
-      <p text-left>
-          It uses new technologies to assist you and make your life easier 😉
-      </p>
-      <p text-left>
-          It's <span ion-text color="danger">free</span>  and will remain free with your help and <a href="mailto:sponsor@dawaey.com">support</a> 😇
-      </p>
+      <ion-content>
+          <img src="assets/img/ica-slidebox-img-1.png" class="slide-image"/>
+          <h2 class="slide-title" ion-text color="primary">
+            {{ 'Welcome to Dawaey 🎉' | translate }}
+          </h2>
+          <div>
+              <p text-left>
+                  <b ion-text color="primary">Dawaey</b> is a smart medical refrence for healthcare providers that working out of the box 🏄‍♂️.
+                </p>
+                <p text-left>
+                    It uses new technologies to assist you and make your life easier 😉
+                </p>
+                <p text-left>
+                    It's <span ion-text color="danger">free</span>  and will remain free with your help and <a href="mailto:sponsor@dawaey.com">support</a> 😇
+                </p>
+          </div> 
+      </ion-content>
+      
     </ion-slide>
     <ion-slide>
         <ion-content>

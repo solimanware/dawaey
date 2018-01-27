@@ -32,7 +32,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms))
 @Component({selector: 'page-drugs', templateUrl: 'drugs.html'})
 
 export class DrugsPage {
-  noResults: boolean = false;
+  noResults : boolean = false;
   shouldShowSpinner : boolean;
   searchResult : Drug[] = [];
   remmemberedState : Drug[];
@@ -141,272 +141,281 @@ export class DrugsPage {
 
   doMagic() : void {
     //todo: move to search provider
-    this.searchTerm$.do 
-      (() => {
-        //set flag
-        this.loading = true;
-      }).map(String)
-      //avrage user righting speed better ux for high mid or low end devices
-        .debounceTime(1000)
-        .distinctUntilChanged()
-        .filter(str => {
-          if(str.length >= 3){
-            //okay pass this from stream
+    this.searchTerm$
+        .do((term) => this.loading = true)
+        .filter(x => {
+          if(x !== undefined){
+            //okay pass it
             return true
           }else{
-            this.loading = false;
-            //reset to empty array
-            this.searchResult = [];
+            //undefined? any action may happened but not term
+            this.handleBadSearchTerm();
+            return false
           }
         })
-        .do 
-          ((term) => {
-            this.searchTerm = term
-          }).switchMap((searchTerm : string) => this.doSearch(searchTerm)).subscribe((res : Drug[]) => {
+        //adjust writing speed >todo:make it dynamic according to user writing speed
+        .debounceTime(1000)
+        .distinctUntilChanged()
+        //term 3 letters or more?
+        .filter(str => {
+          if(str.length > 2){
+            return true
+          }else{
+            this.handleBadSearchTerm();
+            return false
+          }
+        })
+        //set term string to that term
+        .do((term) =>this.searchTerm = term)
+        //do the search > todo: move to search provider
+        .switchMap((searchTerm : string) => this.doSearch(searchTerm))
+        //get results
+        .subscribe((res : Drug[]) => {
             //found in our data
             if (res.length >= 1) {
               this.searchResult = res;
               this.smoothHideLoading();
             } else {
-              //not found
-              //reset
+              //not found reset
               this.searchResult = [];
               //set flag
               this.noResults = true;
               this
                 .doApproximate()
                 .then((res : Drug[]) => {
-                  console.log(this.drugs.length);
                   this.doYouMean = res[0].tradename;
-                  console.log(res[0]);
                   this.smoothHideLoading();
                 })
             }
           })
+      }
+
+    handleBadSearchTerm(): void{
+      this.searchResult = [];
+      this.smoothHideLoading();
     }
 
-  async smoothHideLoading() {
-    await wait(500)
-    this.loading = false;
-    console.log('hide loading spinner');
-  }
+    async smoothHideLoading() {
+      await wait(500)
+      this.loading = false;
+      console.log('hide loading spinner');
+    }
 
-  showApproximate() : Promise < string > {
-    this.loading = true;
-    return new Promise((res, rej) => {
-      this
-        .doApproximate()
-        .then(async(drugs : Drug[]) => {
-          this.searchResult = drugs;
-          this.smoothHideLoading();
-          res('done')
-        })
-    })
-
-  }
-
-  handleComingFromOtherPage() : Promise < string > {
-    let foundParams = this
-      .navParams
-      .get("searchBy") && this
-      .navParams
-      .get("inputToSearch");
-
-    console.log(this.navParams);
-    return new Promise((resolve, rej) => {
-      if (foundParams) {
-        this.searchBy = this
-          .navParams
-          .get("searchBy");
+    showApproximate(): Promise < string > {
+      this.loading = true;
+      return new Promise((res, rej) => {
         this
-          .searchTerm$
-          .next(this.navParams.data.inputToSearch)
-        console.log('inside handling function');
-        this
-          .doSearch(this.navParams.get("inputToSearch"))
-          .then((res : Drug[]) => {
-            this.searchResult = res;
+          .doApproximate()
+          .then(async(drugs : Drug[]) => {
+            this.searchResult = drugs;
             this.smoothHideLoading();
-            resolve('handled')
-          });
-      }
-    })
-  }
-  //todo: report this bug to ionic
-  reLoadVirtualList() : Promise < any > {
-    return Promise.resolve(() => {
-      setTimeout(() => {
-        this
-          .virtualScroll
-          .renderVirtual(false)
-      }, 500)
-    })
-  }
-
-  openDrug(drug) : void {
-    this
-      .navCtrl
-      .push(DrugDetails, {
-        id: drug.id,
-        drug: drug
-      });
-    this.addToHistory(drug);
-  }
-
-  addToHistory(drug) : void {
-    //todo: needs refactoring
-    console.log('adding to history');
-    this
-      .storage
-      .get('history')
-      .then((history) => {
-        console.log(history);
-        const arr = history || [];
-        arr.push(drug)
-        this
-          .storage
-          .set('history', arr)
+            res('done')
+          })
       })
-      .catch(err => console.log(err))
-  }
 
-  toggleSegments() : void {
-    if(this.segment == 'all') {
-      this.drugs = this.remmemberedState;
-    } else if (this.segment == 'history') {
-      this.remmemberedState = this.drugs;
+    }
+
+    handleComingFromOtherPage(): Promise < string > {
+      let foundParams = this
+        .navParams
+        .get("searchBy") && this
+        .navParams
+        .get("inputToSearch");
+
+      console.log(this.navParams);
+      return new Promise((resolve, rej) => {
+        if (foundParams) {
+          this.searchBy = this
+            .navParams
+            .get("searchBy");
+          this
+            .searchTerm$
+            .next(this.navParams.data.inputToSearch)
+          console.log('inside handling function');
+          this
+            .doSearch(this.navParams.get("inputToSearch"))
+            .then((res : Drug[]) => {
+              this.searchResult = res;
+              this.smoothHideLoading();
+              resolve('handled')
+            });
+        }
+      })
+    }
+    //todo: report this bug to ionic
+    reLoadVirtualList(): Promise < any > {
+      return Promise.resolve(() => {
+        setTimeout(() => {
+          this
+            .virtualScroll
+            .renderVirtual(false)
+        }, 500)
+      })
+    }
+
+    openDrug(drug): void {
+      this
+        .navCtrl
+        .push(DrugDetails, {
+          id: drug.id,
+          drug: drug
+        });
+      this.addToHistory(drug);
+    }
+
+    addToHistory(drug:Drug): void {
+      //todo: needs refactoring
+      console.log('adding to history');
       this
         .storage
         .get('history')
         .then((history) => {
-          this.drugs = history || [];
+          const arr = history || [];
+          arr.push(drug)
+          this
+            .storage
+            .set('history', arr)
         })
         .catch(err => console.log(err))
     }
-  }
 
-  doApproximate() : Promise < Drug[] > {
-    var options = {
-      shouldSort: true,
-      threshold: 0.6,
-      location: 0,
-      distance: 100,
-      maxPatternLength: 32,
-      minMatchCharLength: 1,
-      keys: [this.searchBy]
-    };
-    var fuse = new Fuse(this.drugsInitial, options);
-    return Promise.resolve(fuse.search(this.searchTerm))
-  }
+    toggleSegments(): void {
+    if (this.segment === 'history') {
+        this.remmemberedState = this.searchResult;
+        this
+          .storage
+          .get('history')
+          .then((history) => {
+            this.searchResult = history || [];
+          })
+          .catch(err => console.log(err))
+      }else if(this.segment === 'all'){
+        this.searchResult = this.remmemberedState;
+      }
+    }
 
-  doSearch(searchTerm) : Promise < Drug[] > {
-    //todo: optimization should happen here
-    this.drugs = this.drugsInitial;
+    doApproximate(): Promise < Drug[] > {
+      var options = {
+        shouldSort: true,
+        threshold: 0.6,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [this.searchBy]
+      };
+      var fuse = new Fuse(this.drugsInitial, options);
+      return Promise.resolve(fuse.search(this.searchTerm))
+    }
 
-    // value is an empty string don't filter the drugs
-    //todo: only accept 3 letters as minimum else reset drugs count to 0
-    if (searchTerm && searchTerm.trim() != '' && searchTerm.length > 2) {
-      return Promise.resolve(this.drugs.filter((drug) => {
-        switch (this.searchBy) {
-          case "tradename":
-            return (drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
-          case "activeingredient":
-            return (drug.activeingredient.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
-          case "group":
-            return (drug.group.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
-          case "company":
-            return (drug.company.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
-          case "price":
-            return Number(drug.price) === Number(searchTerm);
-          case "pamphlet":
-            return (drug.pamphlet.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
-          default:
-            return (drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+    doSearch(searchTerm): Promise < Drug[] > {
+      //todo: optimization should happen here
+      this.drugs = this.drugsInitial;
+
+      // value is an empty string don't filter the drugs
+      //todo: only accept 3 letters as minimum else reset drugs count to 0
+      if (searchTerm && searchTerm.trim() != '' && searchTerm.length > 2) {
+        return Promise.resolve(this.drugs.filter((drug) => {
+          switch (this.searchBy) {
+            case "tradename":
+              return (drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+            case "activeingredient":
+              return (drug.activeingredient.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+            case "group":
+              return (drug.group.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+            case "company":
+              return (drug.company.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+            case "price":
+              return Number(drug.price) === Number(searchTerm);
+            case "pamphlet":
+              return (drug.pamphlet.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+            default:
+              return (drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1);
+          }
+        }))
+      }
+    }
+
+    //helper ranking function
+    //todo:need to implement our ranking
+    sortInputFirst(input, data, key) {
+      var first = [];
+      var others = [];
+      for (var i = 0; i < data.length; i++) {
+        if (data[i][key].toLowerCase().startsWith(input.toLowerCase())) {
+          first.push(data[i]);
+        } else {
+          others.push(data[i]);
         }
-      }))
+      }
+      first.sort();
+      others.sort();
+      return Promise.resolve(first.concat(others))
     }
-  }
 
-  //helper ranking function
-  //todo:need to implement our ranking
-  sortInputFirst(input, data, key) {
-    var first = [];
-    var others = [];
-    for (var i = 0; i < data.length; i++) {
-      if (data[i][key].toLowerCase().startsWith(input.toLowerCase())) {
-        first.push(data[i]);
+    showRadio() {
+      let alert = this
+        .alertCtrl
+        .create();
+      alert.setTitle('Choose to search by ...');
+
+      let choices = this.chooseToSearchBy;
+
+      for (let i = 0; i < choices.length; i++) {
+        console.log(choices[i].value);
+        if (choices[i].value === this.searchBy) {
+          choices[i].checked = true;
+          console.log(choices[i].value, choices[i].checked);
+          alert.addInput(choices[i]);
+        } else {
+          console.log(choices[i].value, choices[i].checked);
+          choices[i].checked = false;
+          alert.addInput(choices[i]);
+          console.log(choices[i]);
+        }
+
+      }
+
+      alert.addButton('Cancel');
+      alert.addButton({
+        text: 'OK',
+        handler: value => {
+          this.searchBy = value;
+          console.log(value);
+
+        }
+      });
+      alert.present();
+    }
+
+    onEnterKey() {
+      //handle UX
+      if (this.drugs.length == 0) {
+        this
+          .showApproximate()
+          .then(() => {
+            this.closeKeyboard();
+          })
       } else {
-        others.push(data[i]);
-      }
-    }
-    first.sort();
-    others.sort();
-    return Promise.resolve(first.concat(others))
-  }
-
-  showRadio() {
-    let alert = this
-      .alertCtrl
-      .create();
-    alert.setTitle('Choose to search by ...');
-
-    let choices = this.chooseToSearchBy;
-
-    for (let i = 0; i < choices.length; i++) {
-      console.log(choices[i].value);
-      if (choices[i].value === this.searchBy) {
-        choices[i].checked = true;
-        console.log(choices[i].value, choices[i].checked);
-        alert.addInput(choices[i]);
-      } else {
-        console.log(choices[i].value, choices[i].checked);
-        choices[i].checked = false;
-        alert.addInput(choices[i]);
-        console.log(choices[i]);
+        this.closeKeyboard();
       }
 
     }
 
-    alert.addButton('Cancel');
-    alert.addButton({
-      text: 'OK',
-      handler: value => {
-        this.searchBy = value;
-        console.log(value);
-
-      }
-    });
-    alert.present();
-  }
-
-  onEnterKey() {
-    //handle UX
-    if (this.drugs.length == 0) {
+    closeKeyboard() {
       this
-        .showApproximate()
-        .then(() => {
-          this.closeKeyboard();
-        })
-    } else {
-      this.closeKeyboard();
+        .keyboard
+        .close();
+    }
+    shouldHideSpinner() {
+      return this.loading
     }
 
-  }
+    readyToSearch() {
+      return (this.searchResult.length === 0 && !this.loading) || this.searchResult.length === 0;
+    }
 
-  closeKeyboard() {
-    this
-      .keyboard
-      .close();
+    isEmptyHistory() {
+      return this.drugs.length < 1 && this.loading !== true && this.segment == 'history'
+    }
   }
-  shouldHideSpinner() {
-    return this.loading
-  }
-
-  readyToSearch() {
-    return (this.searchResult.length === 0 && !this.loading) || this.searchResult.length === 0;
-  }
-
-  isEmptyHistory() {
-    return this.drugs.length < 1 && this.loading !== true && this.segment == 'history'
-  }
-}
