@@ -1,5 +1,9 @@
 # Dawaey - دوائي
-The Drug Search Engine Drug Index created in ionic
+Dawaey is a smart medical refrence for healthcare providers that working out of the box
+
+
+It uses [Angular](https://angular.io/) latest version and [IONIC](https://ionicframework.com/) latest version and some other cool and bleeding edge technologies to achieve its smartness
+
 
 ## Install dependencies
 ```sh
