@@ -34,9 +34,11 @@ ionic cordova build ios
 ionic cordova build android --prod --release
 ionic cordova build ios --prod
 ```
+### Demo:
 
+<img src="https://j.gifs.com/VPn0AX.gif" width="250px">
 
-### FAQ:
+### Development FAQ:
 
 Q: Decryption password is missing?
 
@@ -49,11 +51,6 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
 
 ## App Screenshots
 
-<img src="https://j.gifs.com/VPn0AX.gif" width="250px">
-
-
-
-
 <table>
   <tr>
     <th>
@@ -65,26 +62,19 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
     <th>Web</th>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/r9BXATa.png" width="28%"></td>
-    <td><img src="https://i.imgur.com/88UrRYf.png" width="28%"></td>
-    <td><img src="https://i.imgur.com/MMu92rr.png" width="28%"></td> 
+    <td><img src="https://i.imgur.com/r9BXATa.png" ></td>
+    <td><img src="https://i.imgur.com/88UrRYf.png" ></td>
+    <td><img src="https://i.imgur.com/MMu92rr.png" ></td> 
 </td>
   </tr>
 </table>
 
 
-
-
-
-
-
-Web
-
 Statistics for the past few days:
 [![Statistics](https://i.imgur.com/LcyEatT.png)](https://www.f6s.com/dawaey)
 
 
-# Links
+# Download Links
 [App Store](https://itunes.apple.com/us/app/dawaey-pro-%D8%AF%D9%88%D8%A7%D8%A6%D9%8A-%D8%A8%D8%B1%D9%88/id1251431168?ls=1&mt=8)
 
 
@@ -94,6 +84,10 @@ Statistics for the past few days:
 ## Contributions and forks are most welcome
 
 Jump in now 
+
+```sh
+git clone https://github.com/microsmsm/dawaey
+```
 
 
 
