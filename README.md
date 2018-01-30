@@ -17,26 +17,36 @@ npm i -g ionic cordova
 
 
 ## Browser serve
-```
+```sh
 ionic serve
 ```
 
 ## Build debug
-```
+```sh
 ionic build
 ionic cordova build android
 ionic cordova build ios
 ```
 
 ## Build prod release
-```
+```sh
 ionic cordova build android --prod --release
 ionic cordova build ios --prod
 ```
 
 
+### FAQ:
 
-## Screenshots
+Q: Decryption password is missing?
+
+A: Run this command in the root folder
+```sh
+echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
+```
+
+
+
+## App Screenshots
 [iOS](https://itunes.apple.com/us/app/dawaey-pro-%D8%AF%D9%88%D8%A7%D8%A6%D9%8A-%D8%A8%D8%B1%D9%88/id1251431168?ls=1&mt=8)
 
 
