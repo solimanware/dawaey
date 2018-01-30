@@ -79,7 +79,9 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
   </tr>
 </table>
 
-And PWA!
+And Progressive Web App!
+
+
 <img src="https://i.imgur.com/MMu92rr.png" width="50%">
 
 
