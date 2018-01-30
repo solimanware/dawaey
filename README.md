@@ -2,7 +2,7 @@
 Dawaey is a smart medical refrence for healthcare providers that working out of the box
 
 
-It uses [Angular](https://angular.io/) latest version and [IONIC](https://ionicframework.com/) latest version and some other [cool and bleeding edge technologies](https://github.com/Microsmsm/Dawaey/network/dependencies) to achieve its [smartness](https://github.com/Microsmsm/Dawaey#screenshots)
+It uses [Angular](https://angular.io/) latest version and [IONIC](https://ionicframework.com/) latest version and some other [cool and bleeding edge technologies](https://github.com/Microsmsm/Dawaey/network/dependencies) to achieve its [smartness](https://github.com/Microsmsm/Dawaey#app-screenshots)
 
 
 ## Install dependencies
@@ -72,6 +72,10 @@ Statistics for the past few days:
 [Google Play](https://play.google.com/store/apps/details?id=com.brilliantapp.dawaey)
 
 
-## Contributions are most welcome
+## Contributions and forks are most welcome
+
+Jump in now 
+
+
 
 
