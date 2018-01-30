@@ -51,8 +51,14 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
 
 ## App Screenshots
 
-<img src="https://i.imgur.com/GwfGoPN.png" >
-<img src="https://i.imgur.com/tj014Dj.png" >
+<table>
+  <tr>
+    <th><img src="https://i.imgur.com/GwfGoPN.png" ></th>
+    <th><img src="https://i.imgur.com/tj014Dj.png" ></th>
+  </tr>
+</table>
+
+
 
 
 <table>
@@ -68,7 +74,7 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
   <tr>
     <td><img src="https://i.imgur.com/muBKYmo.png" ></td>
     <td><img src="https://i.imgur.com/IvStxqs.png" ></td>
-    <td>><img src="https://i.imgur.com/weON3AH.png"></td> 
+    <td><img src="https://i.imgur.com/weON3AH.png"></td> 
 </td>
   </tr>
 </table>
