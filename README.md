@@ -12,3 +12,9 @@ The Drug Search Engine Drug Index created in ionic
 [![AI search example](https://i.imgur.com/88UrRYf.png)](https://www.facebook.com/DawaeyApp/videos/536932926690983/)
 
 
+Web
+[![AI search example](https://i.imgur.com/MMu92rr.png)](https://www.facebook.com/DawaeyApp/videos/536932926690983/)
+
+
+
+
