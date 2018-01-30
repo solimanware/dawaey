@@ -5,3 +5,7 @@ The Drug Search Engine Drug Index created in ionic
 
 
 [Android](https://play.google.com/store/apps/details?id=com.brilliantapp.dawaey)
+
+[![AI search example](https://i.imgur.com/88UrRYf.png)](https://www.facebook.com/DawaeyApp/videos/536932926690983/)
+
+
