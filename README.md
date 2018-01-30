@@ -39,7 +39,7 @@ ionic cordova build ios --prod
 
 Q: Decryption password is missing?
 
-A: Run this command in the root folder
+A: Run this command in the root folder and reload the browser
 ```sh
 echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
 ```
@@ -70,5 +70,8 @@ Statistics for the past few days:
 
 
 [Google Play](https://play.google.com/store/apps/details?id=com.brilliantapp.dawaey)
+
+
+## Contributions are most welcome
 
 
