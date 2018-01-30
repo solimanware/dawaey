@@ -1,30 +1,30 @@
 # Dawaey - دوائي
 The Drug Search Engine Drug Index created in ionic
 
-install dependencies
+## Install dependencies
 ```sh
 npm i
 ```
 
-install global dependencies
+## Install global dependencies
 ```sh
 npm i -g ionic cordova
 ```
 
 
-browser serve
+## Browser serve
 ```
 ionic serve
 ```
 
-build debug
+## Build debug
 ```
 ionic build
 ionic cordova build android
 ionic cordova build ios
 ```
 
-build prod release
+## Build prod release
 ```
 ionic cordova build android --prod --release
 ionic cordova build ios --prod
