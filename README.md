@@ -51,6 +51,10 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
 
 ## App Screenshots
 
+<img src="https://i.imgur.com/GwfGoPN.png" >
+<img src="https://i.imgur.com/tj014Dj.png" >
+
+
 <table>
   <tr>
     <th>
@@ -59,15 +63,18 @@ echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
 <th>
 <a href="https://play.google.com/store/apps/details?id=com.brilliantapp.dawaey">Android</a>
 </th>
-    <th>Web</th>
+    <th>Windows Phone!</th>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/r9BXATa.png" ></td>
-    <td><img src="https://i.imgur.com/88UrRYf.png" ></td>
-    <td><img src="https://i.imgur.com/MMu92rr.png" ></td> 
+    <td><img src="https://i.imgur.com/muBKYmo.png" ></td>
+    <td><img src="https://i.imgur.com/IvStxqs.png" ></td>
+    <td>><img src="https://i.imgur.com/weON3AH.png"></td> 
 </td>
   </tr>
 </table>
+
+And PWA!
+<img src="https://i.imgur.com/MMu92rr.png width="50%">
 
 
 Statistics for the past few days:
