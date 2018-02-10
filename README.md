@@ -4,7 +4,7 @@ Dawaey is a smart medical refrence for healthcare providers that working out of 
 
 It uses Google's [Angular](https://angular.io/)@latest and [IONIC](https://ionicframework.com/)@latest plus some other [cool and bleeding edge technologies](https://github.com/Microsmsm/Dawaey/network/dependencies) to achieve its [smartness](https://github.com/Microsmsm/Dawaey#demo)
 
-
+## <a href="https://microsmsm.com/dawaey">Try online -> PWA</a>
 
 ## Install dependencies
 ```sh
