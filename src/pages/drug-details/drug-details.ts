@@ -1,11 +1,10 @@
-import { Storage } from '@ionic/storage';
+import { Storage } from "@ionic/storage";
 import { DrugsPage } from "./../drugs/drugs";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { Component } from "@angular/core";
 import { NavController, NavParams, AlertController } from "ionic-angular";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
-import { Drug } from '../../interfaces'
-
+import { Drug } from "../../interfaces";
 
 @Component({
   selector: "page-drug-details",
@@ -96,7 +95,7 @@ export class DrugDetails {
       inputToSearch: item
     });
   }
-  viewDrugGroup(){
+  viewDrugGroup() {
     let group = this.drug.group;
     this.navCtrl.push(DrugsPage, {
       searchBy: "group",
@@ -110,7 +109,7 @@ export class DrugDetails {
       drug: drug
     });
   }
-  handleViewingPamphlet(){
+  handleViewingPamphlet() {
     this.showPamphlet = true;
     // let confirm = this.alertCtrl.create({
     //   title: 'This is a paid feature',
@@ -139,13 +138,23 @@ export class DrugDetails {
     passedNumber = encodeURIComponent(passedNumber);
     (<any>window).location = "tel:" + passedNumber;
   }
-  viewPicture(){
-    this.openLinkSystemBrowser(`https://www.google.com/search?tbm=isch&q=${this.drug.tradename.split(' ').slice(0,2).join(' ')} drug`)
+  viewPicture() {
+    this.openLinkSystemBrowser(
+      `https://www.google.com/search?tbm=isch&q=${this.drug.tradename
+        .split(" ")
+        .slice(0, 2)
+        .join(" ")} drug`
+    );
   }
-  googleMore(){
-    this.openLinkSystemBrowser(`https://www.google.com/search?&q=${this.drug.tradename.split(' ').slice(0,2).join(' ')} drug`)
+  googleMore() {
+    this.openLinkSystemBrowser(
+      `https://www.google.com/search?&q=${this.drug.tradename
+        .split(" ")
+        .slice(0, 2)
+        .join(" ")} drug`
+    );
   }
-  openLinkSystemBrowser(link){
+  openLinkSystemBrowser(link) {
     window.open(link, "_system");
   }
   ionViewDidLoad() {
