@@ -10,6 +10,7 @@
   <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager>
     <ion-slide>
       <ion-content>
+        <img src="assets/img/stars.gif" id="stars" alt="">
           <img src="assets/img/ica-slidebox-img-1.png" class="slide-image"/>
           <h2 class="slide-title" ion-text color="primary">
             {{ 'Welcome to Dawaey 🎉' | translate }}
@@ -21,18 +22,18 @@
                 <p text-left>
                     It uses new technologies to assist you and make your life easier 😉
                 </p>
-                <p text-left>
+                <!-- <p text-left>
                     It's <span ion-text color="danger">free</span>  and will remain free with your help and <a href="mailto:sponsor@dawaey.com">support</a> 😇
-                </p>
-          </div> 
+                </p> -->
+          </div>
       </ion-content>
-      
+
     </ion-slide>
     <ion-slide>
         <ion-content>
 
       <img src="assets/img/ica-slidebox-img-2.png" class="slide-image"/>
-      <h2 padding-left text-left ion-text color="success">Explore new features:</h2>        
+      <h2 padding-left text-left ion-text color="success">Explore new features:</h2>
       <ol text-left padding-bottom>
             <li>🤖 <span ion-text color="danger">AI</span> (Artificial Intelligence) Assistance</li>
             <li>🔍 Ability to search medications by</li>
@@ -53,7 +54,7 @@
             <li>🗣 Multi language support</li>
             <li>🌏 Multiple countries support</li>
             <li>✔️ Ability to save search histories</li>
-            
+
           </ol>
     </ion-content>
   </ion-slide>
