@@ -1,5 +1,5 @@
 import { Storage } from "@ionic/storage";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { KEYS } from "./../../app/keys";
 import { Injectable } from "@angular/core";
 import "rxjs/add/operator/map";
@@ -79,4 +79,12 @@ export class DrugProvider {
   updateDrugs() {
     return this.getAndStoreDrugsByDefaultCountry();
   }
+
+  doSearch(term): Observable<any> {
+    console.log(term);
+    let params = new HttpParams().set('q', term);
+    console.log(params);
+    return this.http.get("http://localhost:3000/search", { params: params,responseType: 'text' });
+  }
+
 }

@@ -1,3 +1,4 @@
+import { OnlinePage } from './../pages/online/online';
 import { TutorialPage } from './../pages/tutorial/tutorial';
 import { InvitePage } from './../pages/invite/invite';
 import { SettingsPage } from './../pages/settings/settings';
@@ -25,7 +26,6 @@ import { OneSignal } from '@ionic-native/onesignal';
 
 import { SettingsProvider } from '../providers/settings/settings';
 
-import { SocialSharing } from '@ionic-native/social-sharing';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { DrugProvider } from '../providers/drug/drug';
@@ -34,24 +34,17 @@ import { IonicStorageModule } from '@ionic/storage';
 
 
 import { HttpClientModule,HttpClient } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { InAppPurchase } from '@ionic-native/in-app-purchase';
+
 
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
-
-
-
-
-
-
-
-
 
 @NgModule({
   declarations: [
@@ -65,7 +58,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AboutPage,
     SettingsPage,
     InvitePage,
-    TutorialPage
+    TutorialPage,
+    OnlinePage
   ],
   imports: [
     BrowserModule,
@@ -90,7 +84,8 @@ export function HttpLoaderFactory(http: HttpClient) {
           { component: SettingsPage, name: 'SettingsPage', segment: 'settings' },
           { component: AboutPage, name: 'AboutPage', segment: 'about' },
           { component: InvitePage, name: 'InvitePage', segment: 'invite' },
-          { component: TutorialPage, name: 'TutorialPage', segment:'tutorial'}
+          { component: TutorialPage, name: 'TutorialPage', segment: 'tutorial' },
+          { component: OnlinePage, name: 'OnlinePage', segment:'online'}
         ]
       }),
       IonicStorageModule.forRoot({
@@ -110,7 +105,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AboutPage,
     SettingsPage,
     InvitePage,
-    TutorialPage
+    TutorialPage,
+    OnlinePage
   ],
   providers: [
     StatusBar,
@@ -120,10 +116,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     OneSignal,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     SettingsProvider,
-    SocialSharing,
     InAppBrowser,
     DrugProvider,
-    PartnerProvider
+    PartnerProvider,
+    InAppPurchase
   ]
 })
 export class AppModule { }

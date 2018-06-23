@@ -16,7 +16,7 @@
 
 
 <ion-content class="drug-screen">
-    
+
 
   <ion-card>
 
@@ -36,12 +36,12 @@
           <p class="clickable">
               {{drug.group}}
           </p>
-        </div> 
+        </div>
       <h3 class="title" *ngIf="drug.company">Company :</h3>
       <div text-center (click)="viewCompanyProducts()">
         <p class="clickable">{{drug.company}}</p>
       </div>
-      
+
     </ion-card-content>
     <div padding *ngIf="showPamphlet && drug.pamphlet">
       <h2 *ngFor="let s of drug.pamphlet.split('$')">
@@ -60,12 +60,12 @@
   <ion-item-group *ngIf="drug">
     <ion-item-divider color="light">More Information :</ion-item-divider>
     <ion-card-content text-center>
-      <a ion-button color="whatsapp" (click)="handleViewingPamphlet()">View Pamphlet</a>                
+      <a ion-button color="whatsapp" (click)="handleViewingPamphlet()">View Pamphlet</a>
       <br>
-      <a ion-button color="google" (click)="viewPicture()">View Picture</a>        
-      
-      <a ion-button color="google" (click)="googleMore()">Google More</a>        
-      
+      <a ion-button color="google" (click)="viewPicture()">View Picture</a>
+
+      <a ion-button color="google" (click)="googleMore()">Google More</a>
+
     </ion-card-content>
   </ion-item-group>
 

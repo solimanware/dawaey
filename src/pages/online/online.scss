@@ -1,0 +1,85 @@
+page-online {
+    .drugs-screen {
+        .full-width-text{
+          font-size: 4vw;
+        }
+        .text-center{
+          text-align: center;
+        }
+        .animate {
+          animation-name: bounce;
+          animation-duration: 1.2s;
+          animation-direction: alternate;
+          animation-timing-function: linear;
+          animation-iteration-count: 2;
+          animation-fill-mode: forwards;
+          animation-timing-function: ease;
+        }
+        @keyframes bounce {
+          from {
+            transform: translateY(0px);
+          }
+          to {
+            transform: translateY(50px);
+          }
+        }
+        .lowercase {
+          text-transform: lowercase;
+        }
+        .hidden {
+          visibility: hidden;
+        }
+        .none {
+          display: none;
+        }
+        $spinnerSize: 100px;
+        .spinner-container {
+          text-align: center;
+          margin-right: $spinnerSize/2;
+        }
+        ion-spinner * {
+          width: $spinnerSize;
+          height: $spinnerSize;
+          stroke: color($colors, primary);
+        }
+        background-color: color($colors, light);
+        .drug {
+          background: transparent;
+        }
+        .filters {
+          ion-slide {
+            width: unset !important;
+          }
+          padding-top: 10px;
+          padding-bottom: 10px;
+          ion-col {
+            text-align: center;
+            font-size: 1.6rem;
+            line-height: 1.6rem;
+            ion-icon {
+              color: color($colors, primary);
+            }
+            &.col-with-arrow {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+          .option {
+            border: 1px solid black;
+            border-radius: 8px;
+            margin-right: 10px;
+            padding: 5px; //background: color($colors, secondary);
+          }
+          p {
+            color: color($colors, primary);
+            margin: 0;
+            font-size: 1.6rem;
+            line-height: 1.6rem;
+          }
+          .selected {
+            font-weight: bolder;
+          }
+        }
+      }
+}

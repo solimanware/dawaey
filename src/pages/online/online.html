@@ -1,0 +1,31 @@
+<ion-header >
+  <ion-navbar no-bounce no-border-bottom>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <!-- <ion-title>Search Drugs</ion-title> -->
+
+    <ion-title>Search Drugs</ion-title>
+
+  </ion-navbar>
+  <ion-toolbar no-border-top>
+    <!-- todo: ux better showing user what search category he's searching in -->
+    <ion-searchbar placeholder="Type drug name here" (ionInput)="searchTerm$.next($event.target.value)"
+      (keyup.enter)="onEnterKey()">
+    </ion-searchbar>
+
+  </ion-toolbar>
+</ion-header>
+<!-- todo: better ux teaching users how to use basic app features -->
+<ion-content class="drugs-screen">
+  <ion-list [class.hidden]="loading" #virtualScroll [virtualScroll]="drugs" approxItemHeight="64px" approxItemWidth="360px" bufferRatio="20">
+    <ion-item *virtualItem="let drug" class="drug" (click)="openDrug(drug)">
+      <ion-avatar item-start>
+        <img src="assets/img/icon.png">
+      </ion-avatar>
+      <h2 class="lowercase">{{ drug.tradename }}</h2>
+      <p class="lowercase">{{ drug.activeingredient }}</p>
+      <ion-icon name="log-in" color="primary" item-end></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>
