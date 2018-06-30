@@ -70,6 +70,7 @@ export class SettingsPage {
   updateDatabase() {
     this.presentToast('Updating ...')
     this.drugProvider.updateDrugs().subscribe(data => {
+      console.log(data.length);
       this.presentToast('You have successfully updated the application data')
     });
   }

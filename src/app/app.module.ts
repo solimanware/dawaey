@@ -12,7 +12,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { BrowserModule } from '@angular/platform-browser';
 
 
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
@@ -34,10 +34,11 @@ import { IonicStorageModule } from '@ionic/storage';
 
 
 import { HttpClientModule,HttpClient } from '@angular/common/http';
-import { HttpModule } from '@angular/http';
 
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {VirtualScrollModule} from 'od-virtualscroll';
+
 
 
 // AoT requires an exported function for factories
@@ -123,7 +124,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     SocialSharing,
     InAppBrowser,
     DrugProvider,
-    PartnerProvider
+    PartnerProvider,
+    VirtualScrollModule
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA,
+    NO_ERRORS_SCHEMA
   ]
 })
 export class AppModule { }

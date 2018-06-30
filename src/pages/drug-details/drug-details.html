@@ -16,7 +16,7 @@
 
 
 <ion-content class="drug-screen">
-    
+
 
   <ion-card>
 
@@ -29,19 +29,19 @@
             <span>{{ activeingredients?.length > 1 ? i+1+'-' :'*'}}</span> <span class="clickable"> {{item}}</span>
           </h2>
       </h2>
-      <h3 class="title">Price : <span ion-text color="danger"><strong *ngIf="displayOptions.currency">{{drug.price | currency:displayOptions.currency.currencyCode:true:displayOptions.currency.digitInfo}}</strong></span></h3>
+      <h3 class="title">Price : <span ion-text color="danger"><strong>{{drug.price}} EGP</strong></span></h3>
       <!-- <h2>Old Price: <span ion-text color="primary">{{drug.oldprice}}</span></h2> -->
       <h3 class="title" *ngIf="drug.group" class="title">Drug group: </h3>
       <div text-center (click)="viewDrugGroup()">
           <p class="clickable">
               {{drug.group}}
           </p>
-        </div> 
+        </div>
       <h3 class="title" *ngIf="drug.company">Company :</h3>
       <div text-center (click)="viewCompanyProducts()">
         <p class="clickable">{{drug.company}}</p>
       </div>
-      
+
     </ion-card-content>
     <div padding *ngIf="showPamphlet && drug.pamphlet">
       <h2 *ngFor="let s of drug.pamphlet.split('$')">
@@ -60,19 +60,19 @@
   <ion-item-group *ngIf="drug">
     <ion-item-divider color="light">More Information :</ion-item-divider>
     <ion-card-content text-center>
-      <a ion-button color="whatsapp" (click)="handleViewingPamphlet()">View Pamphlet</a>                
+      <a ion-button color="whatsapp" (click)="handleViewingPamphlet()">View Pamphlet</a>
       <br>
-      <a ion-button color="google" (click)="viewPicture()">View Picture</a>        
-      
-      <a ion-button color="google" (click)="googleMore()">Google More</a>        
-      
+      <a ion-button color="google" (click)="viewPicture()">View Picture</a>
+
+      <a ion-button color="google" (click)="googleMore()">Google More</a>
+
     </ion-card-content>
   </ion-item-group>
 
   <ion-item-group *ngIf="similars">
     <ion-item-divider color="light">Similars :</ion-item-divider>
     <ion-item *ngFor="let similar of similars" (click)="openDrug(similar)">
-      {{similar.tradename}} <span class="price" style="float:right;">{{similar.price | currency:displayOptions.currency.currencyCode:true:displayOptions.currency.digitInfo}} EGP</span>
+      {{similar.tradename}} <span class="price" style="float:right;">{{similar.price}} EGP</span>
     </ion-item>
 
   </ion-item-group>

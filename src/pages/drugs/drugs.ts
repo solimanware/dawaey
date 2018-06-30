@@ -154,7 +154,7 @@ export class DrugsPage {
       .distinctUntilChanged()
       //term 3 letters or more?
       .filter(str => {
-        if (str.length > 2) {
+        if (str.length > 2 && this.drugs.length) {
           return true;
         } else {
           this.handleBadSearchTerm();

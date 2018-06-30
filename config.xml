@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="9000011" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="9.0.11" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="9000012" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="9.0.12" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Dawaey - دوائي</name>
     <description>Top Updated Drug Index</description>
-    <author email="m@microsmsm.com" href="https://microsmsm.com/">Osama Soliman</author>
+    <author email="microsmsm@icloud.com" href="https://microsmsm.github.io">Osama Soliman</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
@@ -99,5 +99,7 @@
     </platform>
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <allow-navigation href="http://192.168.1.2:8100" />
+    <allow-navigation href="http://192.168.1.12:8100" />
     <engine name="ios" spec="4.5.4" />
+    <allow-navigation href="http://192.168.1.6:8100" />
 </widget>
