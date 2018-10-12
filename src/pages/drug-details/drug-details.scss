@@ -7,8 +7,16 @@ page-drug-details {
             text-align: justify;
             text-justify: inter-word;
         }
-        .ai-item{
+        .detail-item{
             font-size: 2rem;
+            padding-top: 5px;
+            margin: 0;
+        }
+        .cap:first-letter{
+            text-transform:uppercase
+        }
+        .cap{
+            text-transform:lowercase
         }
         .clickable{
             color: color($colors,primary);

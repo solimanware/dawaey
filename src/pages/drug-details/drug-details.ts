@@ -1,8 +1,13 @@
 import { Storage } from "@ionic/storage";
 import { DrugsPage } from "./../drugs/drugs";
 import { DrugProvider } from "./../../providers/drug/drug";
-import { Component } from "@angular/core";
-import { NavController, NavParams, AlertController } from "ionic-angular";
+import { ViewChild, Component } from "@angular/core";
+import {
+  Content,
+  NavController,
+  NavParams,
+  AlertController
+} from "ionic-angular";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { Drug } from "../../interfaces";
 
@@ -11,12 +16,15 @@ import { Drug } from "../../interfaces";
   templateUrl: "drug-details.html"
 })
 export class DrugDetails {
-  showPamphlet: boolean = false;
+  showPharma: boolean = false;
   activeingredients: string[] = [];
   id;
   drug: Drug;
   similars = [];
   displayOptions: any = {};
+  @ViewChild(Content)
+  content: Content;
+  pharmaPosition: any;
 
   constructor(
     public navCtrl: NavController,
@@ -67,8 +75,6 @@ export class DrugDetails {
       }
       for (let i = 0; i < drugs.length; i++) {
         if (drugs[i].activeingredient === currentDrugAI) {
-          console.log(drugs[i]);
-
           let obj = drugs[i];
           this.similars.push(obj);
         }
@@ -109,8 +115,16 @@ export class DrugDetails {
       drug: drug
     });
   }
-  handleViewingPamphlet() {
-    this.showPamphlet = true;
+
+  togglePharma() {
+    this.showPharma = !this.showPharma;
+
+    if (this.showPharma === true) {
+        this.content.scrollTo(0, document.getElementById('start-pharma').offsetTop,500);
+    } else {
+      this.content.scrollToTop(500);
+    }
+
     // let confirm = this.alertCtrl.create({
     //   title: 'This is a paid feature',
     //   message: 'Viewing Pamphlet will cost you EGP1... Do you want to proceed?',
@@ -157,7 +171,5 @@ export class DrugDetails {
   openLinkSystemBrowser(link) {
     window.open(link, "_system");
   }
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad DrugDetails");
-  }
+  ionViewDidLoad() {  }
 }

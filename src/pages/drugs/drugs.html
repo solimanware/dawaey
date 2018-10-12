@@ -26,7 +26,8 @@
   <ion-toolbar no-border-top>
     <!-- todo: ux better showing user what search category he's searching in -->
     <ion-searchbar placeholder="Search by {{schema[searchBy]}}" (ionInput)="searchTerm$.next($event.target.value)"
-      (keyup.enter)="onEnterKey()">
+      (keyup.enter)="onEnterKey()"
+      (ionClear)="searchResult = [];noResults=false;">
     </ion-searchbar>
 
   </ion-toolbar>
@@ -37,7 +38,7 @@
   <h1 *ngIf="this.searchResult.length === 0 && !loading && !noResults" class="animate text-center">You can search now <span >↑↑↑</span></h1>
  <!--todo: report bug when using *ngIf with spinner-->
   <div [class.none]="!loading" class="spinner-container">
-      <ion-spinner duration="500"></ion-spinner>
+      <ion-spinner duration="250"></ion-spinner>
   </div>
   <!--todo: report bug when using *ngIf with virtualScroll-->
   <ion-list [class.hidden]="loading" #virtualScroll [virtualScroll]="searchResult" approxItemHeight="64px" approxItemWidth="360px" bufferRatio="20">
@@ -48,7 +49,7 @@
       <h2 class="lowercase">{{ drug.tradename }}</h2>
       <p class="lowercase">{{ drug.activeingredient }}</p>
 
-      <p *ngIf="searchBy === 'price'" ion-text color="danger">{{drug.price | currency:displayOptions.currency.currencyCode:true:displayOptions.currency.digitInfo}}</p>
+      <p *ngIf="searchBy === 'price'" ion-text color="danger">{{drug.price}} EGP</p>
       <p *ngIf="searchBy === 'group'">{{ drug.group }}</p>
       <p *ngIf="searchBy === 'company'">{{ drug.company }}</p>
 
