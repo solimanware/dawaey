@@ -1,63 +1,32 @@
-import {
-  Storage
-} from '@ionic/storage';
-import {
-  TutorialPage
-} from './../pages/tutorial/tutorial';
-import {
-  DrugProvider
-} from './../providers/drug/drug';
-import {
-  InvitePage
-} from './../pages/invite/invite';
-import {
-  SettingsPage
-} from './../pages/settings/settings';
+import { Storage } from "@ionic/storage";
+import { TutorialPage } from "./../pages/tutorial/tutorial";
+import { DrugProvider } from "./../providers/drug/drug";
+import { InvitePage } from "./../pages/invite/invite";
+import { SettingsPage } from "./../pages/settings/settings";
 
-import {
-  AboutPage
-} from './../pages/about/about';
-import {
-  PartnersPage
-} from './../pages/partners/partners';
-import {
-  TabsPage
-} from './../pages/tabs/tabs';
-import {
-  Component,
-  ViewChild
-} from '@angular/core';
-import {
-  Nav,
-  Platform,
-  Events
-} from 'ionic-angular';
-import {
-  StatusBar
-} from '@ionic-native/status-bar';
-import {
-  SplashScreen
-} from '@ionic-native/splash-screen';
+import { AboutPage } from "./../pages/about/about";
+import { PartnersPage } from "./../pages/partners/partners";
+import { TabsPage } from "./../pages/tabs/tabs";
+import { Component, ViewChild } from "@angular/core";
+import { Nav, Platform, Events } from "ionic-angular";
+import { StatusBar } from "@ionic-native/status-bar";
+import { SplashScreen } from "@ionic-native/splash-screen";
 
-import {
-  GoogleAnalytics
-} from '@ionic-native/google-analytics';
-import {
-  OneSignal
-} from '@ionic-native/onesignal';
+import { GoogleAnalytics } from "@ionic-native/google-analytics";
+import { OneSignal } from "@ionic-native/onesignal";
 
-const wait = (ms) => new Promise(r => setTimeout(r, ms))
-
+const wait = ms => new Promise(r => setTimeout(r, ms));
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: "app.html"
 })
 export class MyApp {
-  @ViewChild(Nav) nav: Nav;
-
+  @ViewChild(Nav)
+  nav: Nav;
 
   rootPage: any;
-  menuPages = [{
+  menuPages = [
+    {
       title: "Home",
       component: TabsPage,
       icon: "home"
@@ -82,7 +51,7 @@ export class MyApp {
       component: AboutPage,
       icon: "bug"
     }
-  ]
+  ];
   firstTime: boolean;
 
   constructor(
@@ -95,70 +64,71 @@ export class MyApp {
     private events: Events,
     public storage: Storage
   ) {
-      //not firing at first until flag is set
-      //ignored at first app run
-      if (localStorage.hasSeenTutorial === 'true') {
-        this.rootPage = TabsPage;
-      } else {
-        //first app run go to tutorial page and set flag to true
-        this.rootPage = TutorialPage;
-        localStorage.hasSeenTutorial = 'true';
-      }
-     this.platformReady()
+    //not firing at first until flag is set
+    //ignored at first app run
+    if (localStorage.hasSeenTutorial === "true") {
+      this.rootPage = TabsPage;
+    } else {
+      //first app run go to tutorial page and set flag to true
+      this.rootPage = TutorialPage;
+      localStorage.hasSeenTutorial = "true";
+    }
+    this.platformReady();
   }
 
   platformReady() {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
-      if (this.platform.is('cordova')) {
+      if (this.platform.is("cordova")) {
         //hide splash
         setTimeout(() => {
           this.splashScreen.hide();
-        }, 3000)
+        }, 3000);
         //change status bar color
-        if (this.platform.is('android')) {
+        if (this.platform.is("android")) {
           this.statusBar.backgroundColorByHexString("#7b1fa2");
         }
         //google analytics
         this.startAnalytics();
         //oneSignal
         this.startPushService();
-
       }
       this.listenToEvents();
       this.startBackgroundJobs();
-
-    })
+    });
   }
 
   startBackgroundJobs() {
     //for better UX
     //load data at first time app launch
     //not has seen tutorial === first time
-    if (localStorage.hasSeenTutorial !== 'true') {
+    if (localStorage.hasSeenTutorial !== "true") {
       //load default data //TODO:get user country and langauge
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
     }
   }
 
-
   startAnalytics() {
     //start getting analytics
-    this.ga.startTrackerWithId('UA-88642709-1')
+    this.ga
+      .startTrackerWithId("UA-88642709-1")
       .then(() => {
-        console.log('Google analytics is ready now');
+        console.log("Google analytics is ready now");
       })
-      .catch(e => console.log('Error starting GoogleAnalytics', e));
+      .catch(e => console.log("Error starting GoogleAnalytics", e));
   }
 
   startPushService() {
     //start registring and getting pushs
-    this.oneSignal.startInit("daaa8674-68e2-49a3-aa58-3844d767a9aa", "1061030166084");
-    this.oneSignal.handleNotificationReceived().subscribe((jsonData) => {
+    this.oneSignal.startInit(
+      "daaa8674-68e2-49a3-aa58-3844d767a9aa",
+      "1061030166084"
+    );
+    this.oneSignal.handleNotificationReceived().subscribe(jsonData => {
       console.log(JSON.stringify(jsonData));
     });
 
-    this.oneSignal.handleNotificationOpened().subscribe((jsonData) => {
+    this.oneSignal.handleNotificationOpened().subscribe(jsonData => {
       // do something when a notification is opened
       console.log(JSON.stringify(jsonData));
     });
@@ -167,12 +137,11 @@ export class MyApp {
   }
 
   listenToEvents() {
-    this.events.subscribe('country:changed', (c) => {
-      console.log('country:changed getAndStoreDrugs for ' + c);
+    this.events.subscribe("country:changed", c => {
+      console.log("country:changed getAndStoreDrugs for " + c);
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
-    })
+    });
   }
-
 
   //menu view method
   openPage(page) {

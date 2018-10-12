@@ -10,21 +10,17 @@ import { Drug } from "../../interfaces";
 
 @Injectable()
 export class DrugProvider {
-  key = KEYS.password;
-
   constructor(public http: HttpClient, public storage: Storage) {}
-  getDrugs(country): Observable<any> {
-    return this.http.get(API.drugs(country)).map((drugs: Drug[]) => {
-      for (let i = 0; i < drugs.length; i++) {
-        drugs[i].price = this.parsePrice(drugs[i].price);
-      }
-      return drugs;
+  getDrugs(country): Observable<Drug[]> {
+    return this.http.get(API.drugs(country)).map((json: any) => {
+      return <Drug[]>json["drugs"];
     });
   }
-  parsePrice(price: number): number {
-    const d = (c, k) => (c ^ k) - k;
-    return Math.abs(d(price, this.key) / 100);
-  }
+
+  // parsePrice(price: number): number {
+  //   const d = (c, k) => (c ^ k) - k;
+  //   return Math.abs(d(price, this.key) / 100);
+  // }
 
   getDrugsByDefaultCountry(): Observable<any> {
     const drugs = new Observable(observer => {

@@ -17,7 +17,6 @@ import { Keyboard } from "@ionic-native/keyboard";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 
 import * as Fuse from "fuse.js";
-import { Drug } from "../../interfaces";
 import { Storage } from "@ionic/storage";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/operator/map";
@@ -33,20 +32,21 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 export class DrugsPage {
   noResults: boolean = false;
   shouldShowSpinner: boolean;
-  searchResult: Drug[] = [];
-  remmemberedState: Drug[];
+  searchResult: any[] = [];
+  remmemberedState: any[];
   doYouMean: String;
   displayOptions: any = {};
   schema: {};
-  history: Drug[] = [];
+  history: any[] = [];
   searchTerm: string = "";
   searchTerm$ = new Subject<string>();
-  drugsInitial: Drug[] = []; //initialize your drugsInitial array empty
-  drugs: Drug[] = []; //initialize your drugs array empty
+  drugsInitial: any[] = []; //initialize your drugsInitial array empty
+  drugs: any[] = []; //initialize your drugs array empty
   chooseToSearchBy = [];
   searchBy = "tradename";
   segment = "all";
-  @ViewChild(Content) content: Content;
+  @ViewChild(Content)
+  content: Content;
   loading: boolean = true;
   @ViewChild("virtualScroll", { read: VirtualScroll })
   virtualScroll: VirtualScroll;
@@ -61,51 +61,35 @@ export class DrugsPage {
     private loadingCtrl: LoadingController,
     private storage: Storage
   ) {
-    this.chooseToSearchBy = [];
     this.schema = {
       id: "Code",
       tradename: "Trade Name",
       activeingredient: "Active Ingredients",
       price: "Price",
       company: "Company",
-      group: "Group",
-      pamphlet: "Pamphlet",
-      priceHistory: ""
+      group: "Drug Group",
+      pamphlet: "Drug Pamphlet",
+      dosage: "Drug Dose",
+      composition: "Drug Composition"
     };
-    this.storage.get("country").then(country => {
-      if (country == "kw") {
-        this.displayOptions.currency = {
-          currencyCode: "KWD",
-          digitInfo: "1.3-3"
-        };
-      } else {
-        this.displayOptions.currency = {
-          currencyCode: "EGP",
-          digitInfo: "1.2-2"
-        };
-      }
-    });
-    this.doMagic();
   }
 
-  // ngOnChanges(changes) {   console.log(changes);   this.readyToSearch();
-  // this.shouldShowDrugList();   this.isEmptyHistory() }
   ionViewDidEnter() {
     this.loading = true;
     this.reLoadVirtualList().then(async () => {
       this.smoothHideLoading();
     });
+    this.initSearch();
   }
   ionViewDidLoad() {
     this.loading = true;
-    console.log("didLoad");
     this.drugs = this.drugsInitial;
     //report analytics
     this.ga.trackView("Main Screen");
 
     //+ no need to load every didEnter
     this.drugProvider.displayDrugs().subscribe(data => {
-      //todo: optimization should happen here
+      //TODO: optimization should happen here
       this.drugsInitial = data;
       this.drugs = data;
       this.loading = false;
@@ -135,29 +119,37 @@ export class DrugsPage {
     //careful doing something outside this observation
   }
 
-  doMagic(): void {
-    //todo: move to search provider
+  initSearch() {
     this.searchTerm$
       .do(term => (this.loading = true))
-      .filter(x => {
-        if (x !== undefined) {
-          //okay pass it
-          return true;
-        } else {
-          //undefined? any action may happened but not term
+      //adjust writing speed >TODO:make it dynamic according to user writing speed
+      .debounceTime(200)
+      .distinctUntilChanged()
+      .filter(event => {
+        if (typeof event === "undefined") {
           this.handleBadSearchTerm();
+          //false means filter it out and stop here
           return false;
+        } else {
+          //true mean pass it to next operator
+          return true;
         }
       })
-      //adjust writing speed >todo:make it dynamic according to user writing speed
-      .debounceTime(1000)
-      .distinctUntilChanged()
+      //trimming white spaces of string prefrals
+      .map(term => term.trim())
       //term 3 letters or more?
       .filter(str => {
-        if (str.length > 2 && this.drugs.length) {
+        if (
+          //search by any price length
+          (this.searchBy === "price" && str.length > 0 && this.drugs.length) ||
+          //make sure there is drugs and at least term is 2 chars
+          (str.length > 2 && this.drugs.length)
+        ) {
+          //true mean pass it to next operator
           return true;
         } else {
           this.handleBadSearchTerm();
+          //false means filter it out and stop here
           return false;
         }
       })
@@ -166,22 +158,27 @@ export class DrugsPage {
       //do the search > todo: move to search provider
       .switchMap((searchTerm: string) => this.doSearch(searchTerm))
       //get results
-      .subscribe((res: Drug[]) => {
-        //found in our data
-        if (res.length >= 1) {
-          this.searchResult = res;
-          this.smoothHideLoading();
-        } else {
-          //not found reset
-          this.searchResult = [];
-          //set flag
-          this.noResults = true;
-          this.doApproximate().then((res: Drug[]) => {
-            this.doYouMean = res[0].tradename;
+      .subscribe(
+        (res: any[]) => {
+          //found in our data
+          if (res.length >= 1) {
+            this.searchResult = res;
             this.smoothHideLoading();
-          });
+          } else {
+            //not found reset
+            this.searchResult = [];
+            //set flag
+            this.noResults = true;
+            this.doApproximate().then((res: any[]) => {
+              this.doYouMean = res[0].tradename;
+              this.smoothHideLoading();
+            });
+          }
+        },
+        err => {
+          console.log(err);
         }
-      });
+      );
   }
 
   handleBadSearchTerm(): void {
@@ -190,15 +187,14 @@ export class DrugsPage {
   }
 
   async smoothHideLoading() {
-    await wait(500);
+    await wait(10);
     this.loading = false;
-    console.log("hide loading spinner");
   }
 
   showApproximate(): Promise<string> {
     this.loading = true;
     return new Promise((res, rej) => {
-      this.doApproximate().then(async (drugs: Drug[]) => {
+      this.doApproximate().then(async (drugs: any[]) => {
         this.searchResult = drugs;
         this.smoothHideLoading();
         res("done");
@@ -207,26 +203,25 @@ export class DrugsPage {
   }
 
   handleComingFromOtherPage(): Promise<string> {
+    //did you find parameters coming from other page?
     let foundParams =
       this.navParams.get("searchBy") && this.navParams.get("inputToSearch");
-
-    console.log(this.navParams);
     return new Promise((resolve, rej) => {
       if (foundParams) {
         this.searchBy = this.navParams.get("searchBy");
         this.searchTerm$.next(this.navParams.data.inputToSearch);
-        console.log("inside handling function");
-        this.doSearch(this.navParams.get("inputToSearch")).then(
-          (res: Drug[]) => {
+        this.doSearch(this.navParams.get("inputToSearch"))
+          .then((res: any[]) => {
             this.searchResult = res;
             this.smoothHideLoading();
             resolve("handled");
-          }
-        );
+          })
+          .catch(err => console.log(err));
       }
     });
   }
-  //todo: report this bug to ionic
+
+  //TODO: report this bug to ionic
   reLoadVirtualList(): Promise<any> {
     return Promise.resolve(() => {
       setTimeout(() => {
@@ -235,6 +230,8 @@ export class DrugsPage {
     });
   }
 
+  //opens drug page with specific drug
+  //TODO: needs optimization
   openDrug(drug): void {
     this.navCtrl.push(DrugDetails, {
       id: drug.id,
@@ -243,7 +240,7 @@ export class DrugsPage {
     this.addToHistory(drug);
   }
 
-  addToHistory(drug: Drug): void {
+  addToHistory(drug: any): void {
     //todo: needs refactoring
     console.log("adding to history");
     this.storage
@@ -270,7 +267,7 @@ export class DrugsPage {
     }
   }
 
-  doApproximate(): Promise<Drug[]> {
+  doApproximate(): Promise<any[]> {
     var options = {
       shouldSort: true,
       threshold: 0.6,
@@ -284,52 +281,29 @@ export class DrugsPage {
     return Promise.resolve(fuse.search(this.searchTerm));
   }
 
-  doSearch(searchTerm): Promise<Drug[]> {
+  doSearch(searchTerm): Promise<any[]> {
     //todo: optimization should happen here
     this.drugs = this.drugsInitial;
-
-    // value is an empty string don't filter the drugs
-    //todo: only accept 3 letters as minimum else reset drugs count to 0
-    if (searchTerm && searchTerm.trim() != "" && searchTerm.length > 2) {
-      return Promise.resolve(
-        this.drugs.filter(drug => {
-          switch (this.searchBy) {
-            case "tradename":
-              return (
-                drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) >
-                -1
-              );
-            case "activeingredient":
-              return (
-                drug.activeingredient
-                  .toLowerCase()
-                  .indexOf(searchTerm.toLowerCase()) > -1
-              );
-            case "group":
-              return (
-                drug.group.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1
-              );
-            case "company":
-              return (
-                drug.company.toLowerCase().indexOf(searchTerm.toLowerCase()) >
-                -1
-              );
-            case "price":
-              return Number(drug.price) === Number(searchTerm);
-            case "pamphlet":
-              return (
-                drug.pamphlet.toLowerCase().indexOf(searchTerm.toLowerCase()) >
-                -1
-              );
-            default:
-              return (
-                drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) >
-                -1
-              );
-          }
-        })
-      );
-    }
+    return Promise.resolve(
+      this.drugs.filter(drug => {
+        switch (this.searchBy) {
+          //this case search with price exactly like input
+          case "price":
+            return Number(drug.price) === Number(searchTerm);
+          case this.searchBy:
+            return (
+              drug[this.searchBy]
+                .toLowerCase()
+                .indexOf(searchTerm.toLowerCase()) > -1
+            );
+          default:
+            return (
+              drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) >
+              -1
+            );
+        }
+      })
+    );
   }
 
   //helper ranking function
@@ -356,16 +330,12 @@ export class DrugsPage {
     let choices = this.chooseToSearchBy;
 
     for (let i = 0; i < choices.length; i++) {
-      console.log(choices[i].value);
       if (choices[i].value === this.searchBy) {
         choices[i].checked = true;
-        console.log(choices[i].value, choices[i].checked);
         alert.addInput(choices[i]);
       } else {
-        console.log(choices[i].value, choices[i].checked);
         choices[i].checked = false;
         alert.addInput(choices[i]);
-        console.log(choices[i]);
       }
     }
 
@@ -374,7 +344,6 @@ export class DrugsPage {
       text: "OK",
       handler: value => {
         this.searchBy = value;
-        console.log(value);
       }
     });
     alert.present();
