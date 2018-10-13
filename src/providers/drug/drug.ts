@@ -54,8 +54,8 @@ export class DrugProvider {
     return drugs;
   }
 
-  displayDrugs(): Observable<any> {
-    let data = new Observable(observer => {
+  displayDrugs(): Observable<Drug[]> {
+    let data: Observable<Drug[]> = new Observable(observer => {
       this.storage.get("drugs").then(d => {
         //is there data in the storage?
         if (d) {

@@ -1,3 +1,4 @@
+import { Drug } from "./../../interfaces";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { DrugDetails } from "./../drug-details/drug-details";
 import { Component, ViewChild, OnChanges } from "@angular/core";
@@ -31,20 +32,18 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 @Component({ selector: "page-drugs", templateUrl: "drugs.html" })
 export class DrugsPage {
   noResults: boolean = false;
-  shouldShowSpinner: boolean;
-  searchResult: any[] = [];
-  remmemberedState: any[];
+  searchResult: Drug[] = [];
+  remmemberedState: Drug[];
   doYouMean: String;
-  displayOptions: any = {};
-  schema: {};
-  history: any[] = [];
+  schema: any = {};
+  history: Drug[] = [];
   searchTerm: string = "";
   searchTerm$ = new Subject<string>();
-  drugsInitial: any[] = []; //initialize your drugsInitial array empty
-  drugs: any[] = []; //initialize your drugs array empty
+  drugsInitial: Drug[] = []; //initialize your drugsInitial array empty
+  drugs: Drug[] = []; //initialize your drugs array empty
   chooseToSearchBy = [];
-  searchBy = "tradename";
-  segment = "all";
+  searchBy: string = "tradename";
+  segment: string = "all";
   @ViewChild(Content)
   content: Content;
   loading: boolean = true;
@@ -77,8 +76,10 @@ export class DrugsPage {
   ionViewDidEnter() {
     this.loading = true;
     this.reLoadVirtualList().then(async () => {
-      this.smoothHideLoading();
+      this.loading = false;
     });
+
+    //Initialize Search term observing
     this.initSearch();
   }
   ionViewDidLoad() {
@@ -87,36 +88,41 @@ export class DrugsPage {
     //report analytics
     this.ga.trackView("Main Screen");
 
-    //+ no need to load every didEnter
     this.drugProvider.displayDrugs().subscribe(data => {
       //TODO: optimization should happen here
       this.drugsInitial = data;
       this.drugs = data;
+      console.log("data loaded");
+
+      this.initSearchByOptions();
       this.loading = false;
 
       this.handleComingFromOtherPage()
         .then(() => {
-          this.smoothHideLoading();
+          this.loading = false;
         })
         .catch(err => {
           console.log(err);
-          this.smoothHideLoading();
+          this.loading = false;
         });
-      const optionArr = [];
-      for (let prop in this.drugs[0]) {
-        if (prop && this.schema[prop]) {
-          const myObj = {
-            type: "radio",
-            label: this.schema[prop],
-            value: prop,
-            checked: false
-          };
-          optionArr.push(myObj);
-        }
-      }
-      this.chooseToSearchBy = optionArr;
     });
     //careful doing something outside this observation
+  }
+
+  initSearchByOptions() {
+    const optionArr = [];
+    for (let prop in this.drugs[0]) {
+      if (prop && this.schema[prop]) {
+        const myObj = {
+          type: "radio",
+          label: this.schema[prop],
+          value: prop,
+          checked: false
+        };
+        optionArr.push(myObj);
+      }
+    }
+    this.chooseToSearchBy = optionArr;
   }
 
   initSearch() {
@@ -194,7 +200,7 @@ export class DrugsPage {
   showApproximate(): Promise<string> {
     this.loading = true;
     return new Promise((res, rej) => {
-      this.doApproximate().then(async (drugs: any[]) => {
+      this.doApproximate().then(async (drugs: Drug[]) => {
         this.searchResult = drugs;
         this.smoothHideLoading();
         res("done");
@@ -211,7 +217,7 @@ export class DrugsPage {
         this.searchBy = this.navParams.get("searchBy");
         this.searchTerm$.next(this.navParams.data.inputToSearch);
         this.doSearch(this.navParams.get("inputToSearch"))
-          .then((res: any[]) => {
+          .then((res: Drug[]) => {
             this.searchResult = res;
             this.smoothHideLoading();
             resolve("handled");
@@ -240,8 +246,8 @@ export class DrugsPage {
     this.addToHistory(drug);
   }
 
-  addToHistory(drug: any): void {
-    //todo: needs refactoring
+  addToHistory(drug: Drug): void {
+    //TODO: needs refactoring
     console.log("adding to history");
     this.storage
       .get("history")
@@ -267,7 +273,7 @@ export class DrugsPage {
     }
   }
 
-  doApproximate(): Promise<any[]> {
+  doApproximate(): Promise<Drug[]> {
     var options = {
       shouldSort: true,
       threshold: 0.6,
@@ -281,7 +287,7 @@ export class DrugsPage {
     return Promise.resolve(fuse.search(this.searchTerm));
   }
 
-  doSearch(searchTerm): Promise<any[]> {
+  doSearch(searchTerm): Promise<Drug[]> {
     //todo: optimization should happen here
     this.drugs = this.drugsInitial;
     return Promise.resolve(
@@ -307,7 +313,7 @@ export class DrugsPage {
   }
 
   //helper ranking function
-  //todo:need to implement our ranking
+  //TODO: need to implement our ranking algorithm
   sortInputFirst(input, data, key) {
     var first = [];
     var others = [];
