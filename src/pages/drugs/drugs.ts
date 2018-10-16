@@ -31,15 +31,14 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 
 @Component({ selector: "page-drugs", templateUrl: "drugs.html" })
 export class DrugsPage {
-  noResults: boolean = false;
+  shouldShowDidYouMean: boolean = false;
   searchResult: Drug[] = [];
   remmemberedState: Drug[];
-  doYouMean: String;
+  doYouMean: string;
   schema: any = {};
   history: Drug[] = [];
   searchTerm: string = "";
   searchTerm$ = new Subject<string>();
-  drugsInitial: Drug[] = []; //initialize your drugsInitial array empty
   drugs: Drug[] = []; //initialize your drugs array empty
   chooseToSearchBy = [];
   searchBy: string = "tradename";
@@ -82,15 +81,14 @@ export class DrugsPage {
     //Initialize Search term observing
     this.initSearch();
   }
+
   ionViewDidLoad() {
     this.loading = true;
-    this.drugs = this.drugsInitial;
+
     //report analytics
     this.ga.trackView("Main Screen");
 
     this.drugProvider.displayDrugs().subscribe(data => {
-      //TODO: optimization should happen here
-      this.drugsInitial = data;
       this.drugs = data;
       console.log("data loaded");
 
@@ -165,7 +163,7 @@ export class DrugsPage {
       .switchMap((searchTerm: string) => this.doSearch(searchTerm))
       //get results
       .subscribe(
-        (res: any[]) => {
+        (res: Drug[]) => {
           //found in our data
           if (res.length >= 1) {
             this.searchResult = res;
@@ -173,11 +171,12 @@ export class DrugsPage {
           } else {
             //not found reset
             this.searchResult = [];
-            //set flag
-            this.noResults = true;
-            this.doApproximate().then((res: any[]) => {
+            this.loading = true;
+            this.doApproximate().then((res: Drug[]) => {
+              this.shouldShowDidYouMean = true;
+              console.log(res);
               this.doYouMean = res[0].tradename;
-              this.smoothHideLoading();
+              this.loading = false;
             });
           }
         },
@@ -189,6 +188,7 @@ export class DrugsPage {
 
   handleBadSearchTerm(): void {
     this.searchResult = [];
+    this.shouldShowDidYouMean = false;
     this.smoothHideLoading();
   }
 
@@ -204,7 +204,8 @@ export class DrugsPage {
         this.searchResult = drugs;
         this.smoothHideLoading();
         res("done");
-      });
+      })
+      .catch((err)=>console.log(err));
     });
   }
 
@@ -274,22 +275,21 @@ export class DrugsPage {
   }
 
   doApproximate(): Promise<Drug[]> {
-    var options = {
-      shouldSort: true,
-      threshold: 0.6,
-      location: 0,
-      distance: 100,
-      maxPatternLength: 32,
-      minMatchCharLength: 1,
-      keys: [this.searchBy]
-    };
-    var fuse = new Fuse(this.drugsInitial, options);
-    return Promise.resolve(fuse.search(this.searchTerm));
+      var options = {
+        shouldSort: true,
+        threshold: 0.6,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [this.searchBy]
+      };
+      var fuse = new Fuse(this.drugs, options);
+      return Promise.resolve(fuse.search(this.searchTerm));
+    
   }
 
   doSearch(searchTerm): Promise<Drug[]> {
-    //todo: optimization should happen here
-    this.drugs = this.drugsInitial;
     return Promise.resolve(
       this.drugs.filter(drug => {
         switch (this.searchBy) {
@@ -336,13 +336,8 @@ export class DrugsPage {
     let choices = this.chooseToSearchBy;
 
     for (let i = 0; i < choices.length; i++) {
-      if (choices[i].value === this.searchBy) {
-        choices[i].checked = true;
+        choices[i].checked = choices[i].value === this.searchBy ? true : false;
         alert.addInput(choices[i]);
-      } else {
-        choices[i].checked = false;
-        alert.addInput(choices[i]);
-      }
     }
 
     alert.addButton("Cancel");
@@ -369,16 +364,7 @@ export class DrugsPage {
   closeKeyboard() {
     this.keyboard.close();
   }
-  shouldHideSpinner() {
-    return this.loading;
-  }
 
-  readyToSearch() {
-    return (
-      (this.searchResult.length === 0 && !this.loading) ||
-      this.searchResult.length === 0
-    );
-  }
 
   isEmptyHistory() {
     return (

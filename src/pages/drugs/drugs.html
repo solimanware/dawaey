@@ -26,8 +26,7 @@
   <ion-toolbar no-border-top>
     <!-- todo: ux better showing user what search category he's searching in -->
     <ion-searchbar placeholder="Search by {{schema[searchBy]}}" (ionInput)="searchTerm$.next($event.target.value)"
-      (keyup.enter)="onEnterKey()"
-      (ionClear)="searchResult = [];noResults=false;">
+      (keyup.enter)="onEnterKey()" (ionClear)="searchResult = [];noResults=false;">
     </ion-searchbar>
 
   </ion-toolbar>
@@ -36,13 +35,15 @@
 <ion-content class="drugs-screen">
   <p *ngIf="drugs.length === 0">fetching drugs, please wait...</p>
   <!--todo: report bug when using text-center with animation-->
-  <h1 *ngIf="this.searchResult.length === 0 && !loading && !noResults" class="animate text-center">You can search now <span >↑↑↑</span></h1>
- <!--todo: report bug when using *ngIf with spinner-->
+  <h1 *ngIf="this.searchResult.length === 0 && !loading && !shouldShowDidYouMean" class="animate text-center">You can
+    search now <span>↑↑↑</span></h1>
+  <!--todo: report bug when using *ngIf with spinner-->
   <div [class.none]="!loading" class="spinner-container">
-      <ion-spinner duration="250"></ion-spinner>
+    <ion-spinner duration="250"></ion-spinner>
   </div>
   <!--todo: report bug when using *ngIf with virtualScroll-->
-  <ion-list [class.hidden]="loading" #virtualScroll [virtualScroll]="searchResult" approxItemHeight="64px" approxItemWidth="360px" bufferRatio="20">
+  <ion-list [class.hidden]="loading" #virtualScroll [virtualScroll]="searchResult" approxItemHeight="64px"
+    approxItemWidth="360px" bufferRatio="20">
     <ion-item *virtualItem="let drug" class="drug" (click)="openDrug(drug)">
       <ion-avatar item-start>
         <img src="assets/img/icon.png">
@@ -57,11 +58,13 @@
       <ion-icon name="log-in" color="primary" item-end></ion-icon>
     </ion-item>
   </ion-list>
-  <div *ngIf="noResults&&!loading&&this.searchResult.length === 0" text-center>
+  <div *ngIf="!loading&&this.searchResult.length === 0&&shouldShowDidYouMean" text-center>
     <p>Oops Sorry, We Didn't find
-      <strong>{{searchTerm}}</strong> you can recheck spelling it... <br> or try our <span ion-text color="danger">🤖 AI</span> Search</p>
-      <h3 class="full-width-text" ion-color color="danger">Did You Mean <span ion-text color="danger">{{doYouMean}}</span> ?</h3>
-      <p text-center no-margin ion-text color="danger">↓↓↓</p>
+      <strong>{{searchTerm}}</strong> you can recheck spelling it... <br> or try our <span ion-text color="danger">🤖
+        AI</span> Search</p>
+    <h3 class="full-width-text" ion-color color="danger">Did You Mean <span ion-text color="danger">{{doYouMean}}</span>
+      ?</h3>
+    <p text-center no-margin ion-text color="danger">↓↓↓</p>
     <button ion-button color="primary" round (click)="showApproximate()">Artificial Intelligence search</button>
     <p>Or Report it to be added</p>
     <a href="mailto:osama@dawaey.com?subject=Report Missing {{searchTerm}}" ion-button color="dark">
