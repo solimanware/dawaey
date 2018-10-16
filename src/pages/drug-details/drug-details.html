@@ -23,7 +23,7 @@
     <ion-card-content *ngIf="drug">
       <h2 class="title">Tradename :</h2>
       <h1 class="cap" *ngIf="drug.tradename" text-center ion-text color="favorite">{{drug.tradename}}</h1>
-      <h2 class="title">{{activeingredients.length>1? "Active Ingredient(s) :":"Active Ingredient :"}}</h2>
+      <h2 no-margin class="title">{{activeingredients.length>1? "Active Ingredient(s) :":"Active Ingredient :"}}</h2>
       <h2  class="detail-item lowercase" *ngFor="let item of activeingredients; let i= index" (click)="searchActiveIngredient(item)">
 
         <span margin-left>{{ activeingredients?.length > 1 ? i+1+'-' :''}}</span> <span class="clickable cap"> {{item}}</span>

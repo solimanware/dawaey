@@ -7,7 +7,7 @@
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",
         "ionic:build": "ionic-app-scripts build",
-        "build-release:android": "ionic-app-scripts build android --prod --release;",
+        "prod:android": "ionic cordova build android --prod --release",
         "pwa": "cp -R www/ app"
     },
     "dependencies": {

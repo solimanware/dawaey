@@ -17,7 +17,7 @@
       </ion-avatar>
       <h2> {{person.name}}</h2>
       <p> He's Our Partener Since {{person.since}} </p>
-      <a href="https://www.facebook.com/{{person.fb}}">Follow him on facebook</a>
+      <a (click)="openFacebook(person.fb)">Follow him on facebook</a>
     </ion-item>
   </ion-card>
   <ion-card>
@@ -27,7 +27,7 @@
       </ion-avatar>
       <h2> You! Your Name </h2>
       <p> Become our partner now! </p>
-      <a href="https://www.facebook.com/dawaey">Follow us on facebook</a>
+      <a (click)="openFacebook('dawaeyapp')">Contact us on Facebook</a>
     </ion-item>
   </ion-card>
   <!-- TODO: add contributor hall of fame -->

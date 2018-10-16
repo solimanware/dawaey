@@ -34,6 +34,7 @@
 </ion-header>
 <!-- todo: better ux teaching users how to use basic app features -->
 <ion-content class="drugs-screen">
+  <p *ngIf="drugs.length === 0">fetching drugs, please wait...</p>
   <!--todo: report bug when using text-center with animation-->
   <h1 *ngIf="this.searchResult.length === 0 && !loading && !noResults" class="animate text-center">You can search now <span >↑↑↑</span></h1>
  <!--todo: report bug when using *ngIf with spinner-->

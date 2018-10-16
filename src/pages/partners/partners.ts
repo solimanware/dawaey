@@ -24,4 +24,11 @@ export class PartnersPage {
     this.ga.trackView('Parteners Screen')
   }
 
+  openFacebook(username){
+    this.openLinkSystemBrowser(`https://www.facebook.com/${username}`);
+  }
+  openLinkSystemBrowser(link) {
+    window.open(link, "_system");
+  }
+
 }
