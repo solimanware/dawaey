@@ -174,7 +174,6 @@ export class DrugsPage {
             this.loading = true;
             this.doApproximate().then((res: Drug[]) => {
               this.shouldShowDidYouMean = true;
-              console.log(res);
               this.doYouMean = res[0].tradename;
               this.loading = false;
             });
