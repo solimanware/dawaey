@@ -16,15 +16,14 @@ import { Drug } from "../../interfaces";
   templateUrl: "drug-details.html"
 })
 export class DrugDetails {
-  showPharma: boolean = false;
+  loading: boolean;
+  drugs: Drug[] = [];
   activeingredients: string[] = [];
-  id;
   drug: Drug;
-  similars = [];
-  displayOptions: any = {};
+  showPharma: boolean = false;
+  similars: Drug[] = [];
   @ViewChild(Content)
   content: Content;
-  pharmaPosition: any;
 
   constructor(
     public navCtrl: NavController,
@@ -33,61 +32,79 @@ export class DrugDetails {
     private ga: GoogleAnalytics,
     private storage: Storage,
     public alertCtrl: AlertController
-  ) {
-    this.storage.get("country").then(country => {
-      if (country == "kw") {
-        this.displayOptions.showPicture = false;
-        this.displayOptions.currency = {
-          currencyCode: "KWD",
-          digitInfo: "1.3-3"
-        };
+  ) {}
+
+  async ionViewDidEnter() {
+    this.loading = true;
+    //set view
+    this.drug = await this.loadDrugDetails();
+    this.activeingredients = this.drug.activeingredient.split("+");
+    this.loading = false;
+
+    //set analytics
+    this.ga.trackView(this.drug.tradename);
+
+    //load similars
+    this.similars = await this.loadDrugSimilars();
+  }
+
+  loadDrugDetails(): Promise<Drug> {
+    return new Promise((resolve, reject) => {
+      //getting just id from directlink url
+      if (this.navParams.get("drug") == undefined) {
+        this.drugProvider.displayDrugs().subscribe((result: Drug[]) => {
+          //save array to use later
+          this.drugs = result;
+          //**you can linear search if you're not certain about id and data**//
+          let drugId = Number(this.navParams.get("id")) - 1;
+          resolve(this.drugs[drugId]);
+        });
       } else {
-        this.displayOptions.showPicture = true;
-        this.displayOptions.currency = {
-          currencyCode: "EGP",
-          digitInfo: "1.2-2"
-        };
+        //getting details from navigation object
+        resolve(this.navParams.get("drug"));
       }
     });
-    let currentId = navParams.get("id");
+  }
 
-    if (navParams.get("drug") == undefined) {
-      this.drugProvider.displayDrugs().subscribe(drugs => {
-        for (let i = 0; i < drugs.length; i++) {
-          if (drugs[i].id == currentId) {
-            this.drug = drugs[i];
-            this.activeingredients = this.drug.activeingredient.split("+");
+  loadDrugSimilars(): Promise<Drug[]> {
+    return new Promise((resolve, reject) => {
+      //check we have data here
+      if (this.drugs.length) {
+        //loop to find which have the save ingredienets;
+        for (let i = 0; i < this.drugs.length; i++) {
+          if (this.drug.activeingredient === this.drugs[i].activeingredient) {
+            const similar = this.drugs[i];
+            this.similars.push(similar);
           }
         }
-      });
-    } else {
-      this.drug = navParams.get("drug");
-      this.activeingredients = this.drug.activeingredient.split("+");
-    }
+      } else {
+        //load it
+        this.drugProvider.displayDrugs().subscribe((result: Drug[]) => {
+          this.drugs = result;
+          //then loop
+          //loop to find which have the save ingredienets;
+          for (let i = 0; i < this.drugs.length; i++) {
+            if (this.drug.activeingredient === this.drugs[i].activeingredient) {
+              const similar = this.drugs[i];
+              this.similars.push(similar);
+            }
+          }
+        });
+      }
 
-    let currentDrugAI;
-    this.drugProvider.displayDrugs().subscribe(drugs => {
-      for (let i = 0; i < drugs.length; i++) {
-        if (drugs[i].id == currentId) {
-          this.ga.trackView(drugs[i].tradename);
-          currentDrugAI = drugs[i].activeingredient;
-        }
-      }
-      for (let i = 0; i < drugs.length; i++) {
-        if (drugs[i].activeingredient === currentDrugAI) {
-          let obj = drugs[i];
-          this.similars.push(obj);
-        }
-      }
+      //TODO: implement our ranking function
       function compare(a, b) {
         if (Number(a.price) < Number(b.price)) return -1;
         if (Number(a.price) > Number(b.price)) return 1;
         return 0;
       }
 
-      this.similars = this.similars.sort(compare);
+      resolve(this.similars.sort(compare));
     });
   }
+
+  ionViewDidLoad() {}
+
   viewCompanyProducts() {
     let company = this.drug.company;
     this.navCtrl.push(DrugsPage, {
@@ -114,44 +131,34 @@ export class DrugDetails {
       id: drug.id,
       drug: drug
     });
+    this.addToHistory(drug)
   }
 
   togglePharma() {
     this.showPharma = !this.showPharma;
-
     if (this.showPharma === true) {
-        this.content.scrollTo(0, document.getElementById('start-pharma').offsetTop,500);
+      //setting newer id to make new scroll when new view pushes to nav object as id is unique to every element
+      this.content.scrollTo(
+        0,
+        document.getElementById(`pharma${this.drug.id}`).offsetTop,
+        500
+      );
     } else {
       this.content.scrollToTop(500);
     }
+  }
 
-    // let confirm = this.alertCtrl.create({
-    //   title: 'This is a paid feature',
-    //   message: 'Viewing Pamphlet will cost you EGP1... Do you want to proceed?',
-    //   buttons: [
-    //     {
-    //       text: 'Dismiss',
-    //       handler: () => {
-    //         this.showPamphlet = false;
-    //       }
-    //     },
-    //     {
-    //       text: "Proceed",
-    //       handler: () => {
-    //         this.callIt('*868*2*01063116380*1#')
-    //         setTimeout(()=>{
-    //           this.showPamphlet = true;
-    //         },500)
-    //       }
-    //     }
-    //   ]
-    // });
-    // confirm.present();
+  addToHistory(drug: Drug): void {
+    this.storage
+      .get("history")
+      .then(history => {
+        const arr = history || [];
+        arr.push(drug);
+        this.storage.set("history", arr);
+      })
+      .catch(err => console.log(err));
   }
-  callIt(passedNumber) {
-    passedNumber = encodeURIComponent(passedNumber);
-    (<any>window).location = "tel:" + passedNumber;
-  }
+
   viewPicture() {
     this.openLinkSystemBrowser(
       `https://www.google.com/search?tbm=isch&q=${this.drug.tradename
@@ -160,6 +167,7 @@ export class DrugDetails {
         .join(" ")} drug`
     );
   }
+
   googleMore() {
     this.openLinkSystemBrowser(
       `https://www.google.com/search?&q=${this.drug.tradename
@@ -168,8 +176,8 @@ export class DrugDetails {
         .join(" ")} drug`
     );
   }
+
   openLinkSystemBrowser(link) {
     window.open(link, "_system");
   }
-  ionViewDidLoad() {  }
 }

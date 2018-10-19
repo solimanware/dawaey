@@ -7,8 +7,8 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title *ngIf="drug">
-      {{ drug.tradename }}
+    <ion-title>
+      {{ drug?.tradename }}
     </ion-title>
   </ion-navbar>
 
@@ -16,67 +16,66 @@
 
 
 <ion-content class="drug-screen">
+  <div [class.none]="!loading" class="spinner-container">
+    <ion-spinner duration="250"></ion-spinner>
+  </div>
 
+  <ion-card *ngIf="!loading">
 
-  <ion-card>
-
-    <ion-card-content *ngIf="drug">
+    <ion-card-content>
       <h2 class="title">Tradename :</h2>
-      <h1 class="cap" *ngIf="drug.tradename" text-center ion-text color="favorite">{{drug.tradename}}</h1>
-      <h2 no-margin class="title">{{activeingredients.length>1? "Active Ingredient(s) :":"Active Ingredient :"}}</h2>
-      <h2  class="detail-item lowercase" *ngFor="let item of activeingredients; let i= index" (click)="searchActiveIngredient(item)">
+      <h1 class="cap" text-center ion-text color="favorite">{{drug?.tradename}}</h1>
 
+      <h2 no-margin class="title">{{activeingredients?.length>1? "Active Ingredient(s) :":"Active Ingredient :"}}</h2>
+      <h2 class="detail-item lowercase" *ngFor="let item of activeingredients; let i= index" (click)="searchActiveIngredient(item)">
         <span margin-left>{{ activeingredients?.length > 1 ? i+1+'-' :''}}</span> <span class="clickable cap"> {{item}}</span>
-
       </h2>
-      <h3 class="title">Price : <span ion-text color="danger"><strong>{{drug.price}} EGP</strong></span></h3>
-      <!-- <h2>Old Price: <span ion-text color="primary">{{drug.oldprice}}</span></h2> -->
 
-      <h3 class="title" *ngIf="drug.group" class="title">Drug group: </h3>
+      <h3 class="title">Price : <span ion-text color="danger"><strong>{{drug?.price}} EGP</strong></span></h3>
+
+      <h3 class="title" *ngIf="drug?.group" class="title">Drug group: </h3>
       <div margin-left text-left (click)="viewDrugGroup()">
         <p class="detail-item clickable">
-          {{drug.group}}
+          {{drug?.group}}
         </p>
       </div>
 
-      
-
-      <h3 class="title" *ngIf="drug.company">Company :</h3>
+      <h3 class="title" *ngIf="drug?.company">Company :</h3>
       <div id="company" margin-left text-left (click)="viewCompanyProducts()">
-        <p class="detail-item clickable">{{drug.company}}</p>
+        <p class="detail-item clickable">{{drug?.company}}</p>
       </div>
 
-      <span id="start-pharma">
-      <span [hidden]="!showPharma">
-      <h3 class="title" *ngIf="drug.composition">Composition :</h3>
-      <div>
-        <h2 *ngFor="let s of drug?.composition?.split('\n')">
-          <strong padding-left>{{s}}</strong>
-        </h2>
+      <div id="pharma{{drug?.id}}" style="height: 1px"></div>
+
+      <div [hidden]="!showPharma">
+        <h3 class="title" *ngIf="drug?.composition">Composition :</h3>
+        <div>
+          <h2 *ngFor="let s of drug?.composition?.split('\n')">
+            <strong padding-left>{{s}}</strong>
+          </h2>
+        </div>
+
+        <h3 class="title" *ngIf="drug?.pamphlet">Pharmacology :</h3>
+        <div padding>
+          <h2 *ngFor="let s of drug?.pamphlet?.split('\n')">
+            <strong>{{s}}</strong>
+          </h2>
+        </div>
+
+        <h3 class="title" *ngIf="drug?.dosage">Dose :</h3>
+        <div padding>
+          <h2 *ngFor="let s of drug?.dosage?.split('\n')">
+            <strong>{{s}}</strong>
+          </h2>
+        </div>
       </div>
 
-      <h3 class="title" *ngIf="drug.pamphlet">Pharmacology :</h3>
-      <div padding>
-        <h2 *ngFor="let s of drug?.pamphlet?.split('\n')">
-          <strong>{{s}}</strong>
-        </h2>
-      </div>
-
-      <h3 class="title" *ngIf="drug.dosage">Dose :</h3>
-      <div padding>
-        <h2 *ngFor="let s of drug?.dosage?.split('\n')">
-          <strong>{{s}}</strong>
-        </h2>
-      </div>
-    </span>
-  </span>
 
 
-      
-      
+
 
     </ion-card-content>
-    
+
 
 
 
@@ -91,7 +90,8 @@
   <ion-item-group *ngIf="drug">
     <ion-item-divider color="light">More Information :</ion-item-divider>
     <ion-card-content text-center>
-      <a ion-button color="primary" (click)="togglePharma()">{{showPharma===true?'Hide Detailed Pharma':'View Detailed Pharma'}}</a>
+      <a ion-button color="primary" (click)="togglePharma()">{{showPharma===true?'Hide Detailed Pharma':'View Detailed
+        Pharma'}}</a>
       <br>
       <a ion-button color="google" (click)="viewPicture()">View Picture</a>
 
@@ -100,10 +100,10 @@
     </ion-card-content>
   </ion-item-group>
 
-  <ion-item-group *ngIf="similars">
+  <ion-item-group *ngIf="similars.length>0">
     <ion-item-divider color="light">Similars :</ion-item-divider>
     <ion-item *ngFor="let similar of similars" (click)="openDrug(similar)">
-      {{similar.tradename}} <span class="price" style="float:right;">{{similar.price}} EGP</span>
+      {{similar.tradename}} <span class="price" style="float:right;">{{similar?.price}} EGP</span>
     </ion-item>
 
   </ion-item-group>
