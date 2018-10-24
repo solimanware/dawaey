@@ -30,10 +30,10 @@ export class DrugDetails {
     public navParams: NavParams,
     private drugProvider: DrugProvider,
     private ga: GoogleAnalytics,
-    private storage: Storage,
-    public alertCtrl: AlertController
+    private storage: Storage
   ) {}
 
+  //Setting live cycle event of entering this component
   async ionViewDidEnter() {
     this.loading = true;
     //set view
@@ -48,6 +48,7 @@ export class DrugDetails {
     this.similars = await this.loadDrugSimilars();
   }
 
+  //load this drug information
   loadDrugDetails(): Promise<Drug> {
     return new Promise((resolve, reject) => {
       //getting just id from directlink url
@@ -66,45 +67,42 @@ export class DrugDetails {
     });
   }
 
+  //load similar drugs for this current drug in view
   loadDrugSimilars(): Promise<Drug[]> {
-    return new Promise((resolve, reject) => {
-      //check we have data here
-      if (this.drugs.length) {
-        //loop to find which have the save ingredienets;
-        for (let i = 0; i < this.drugs.length; i++) {
-          if (this.drug.activeingredient === this.drugs[i].activeingredient) {
-            const similar = this.drugs[i];
-            this.similars.push(similar);
-          }
+    //function to push similar drugs to class similars array
+    const pushSimilars = () => {
+      //loop to find which have the save ingredienets;
+      for (let i = 0; i < this.drugs.length; i++) {
+        if (this.drug.activeingredient === this.drugs[i].activeingredient) {
+          //push if similar -> similar has the same active ingredient
+          this.similars.push(this.drugs[i]);
         }
+      }
+    };
+
+    //method returns promise of similar drugs...
+    return new Promise((resolve, reject) => {
+      //check we have data here //usually we have it when we use direct link
+      if (this.drugs.length) {
+        pushSimilars();
       } else {
-        //load it
+        //load it //current data is limited to data coming from nav object
         this.drugProvider.displayDrugs().subscribe((result: Drug[]) => {
           this.drugs = result;
-          //then loop
-          //loop to find which have the save ingredienets;
-          for (let i = 0; i < this.drugs.length; i++) {
-            if (this.drug.activeingredient === this.drugs[i].activeingredient) {
-              const similar = this.drugs[i];
-              this.similars.push(similar);
-            }
-          }
+          pushSimilars();
         });
       }
 
       //TODO: implement our ranking function
-      function compare(a, b) {
-        if (Number(a.price) < Number(b.price)) return -1;
-        if (Number(a.price) > Number(b.price)) return 1;
-        return 0;
-      }
+      //function to sort lowest price first
+      const lowestFirst = (a, b) => Number(a.price) - Number(b.price);
 
-      resolve(this.similars.sort(compare));
+      //resolve the promise waiting when done
+      resolve(this.similars.sort(lowestFirst));
     });
   }
 
-  ionViewDidLoad() {}
-
+  //open link with company search parameter in main screen
   viewCompanyProducts() {
     let company = this.drug.company;
     this.navCtrl.push(DrugsPage, {
@@ -112,12 +110,16 @@ export class DrugDetails {
       inputToSearch: company
     });
   }
+
+  //open link with active ingredient search parameter in main screen
   searchActiveIngredient(item) {
     this.navCtrl.push(DrugsPage, {
       searchBy: "activeingredient",
       inputToSearch: item
     });
   }
+
+  //open link with drug group search parameter in main screen
   viewDrugGroup() {
     let group = this.drug.group;
     this.navCtrl.push(DrugsPage, {
@@ -126,14 +128,16 @@ export class DrugDetails {
     });
   }
 
+  //open link with drug details in another screen and add it to screen
   openDrug(drug) {
     this.navCtrl.push(DrugDetails, {
       id: drug.id,
       drug: drug
     });
-    this.addToHistory(drug)
+    this.addToHistory(drug);
   }
 
+  //toggle showing pharma details and scroll to it
   togglePharma() {
     this.showPharma = !this.showPharma;
     if (this.showPharma === true) {
@@ -148,6 +152,7 @@ export class DrugDetails {
     }
   }
 
+  //add to history function
   addToHistory(drug: Drug): void {
     this.storage
       .get("history")
@@ -159,6 +164,7 @@ export class DrugDetails {
       .catch(err => console.log(err));
   }
 
+  //view drug picture externally
   viewPicture() {
     this.openLinkSystemBrowser(
       `https://www.google.com/search?tbm=isch&q=${this.drug.tradename
@@ -168,6 +174,7 @@ export class DrugDetails {
     );
   }
 
+  //google more about drug externally
   googleMore() {
     this.openLinkSystemBrowser(
       `https://www.google.com/search?&q=${this.drug.tradename
@@ -177,6 +184,7 @@ export class DrugDetails {
     );
   }
 
+  //in app browser open link is system browser
   openLinkSystemBrowser(link) {
     window.open(link, "_system");
   }
