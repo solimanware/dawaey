@@ -3,7 +3,7 @@
     <name>Dawaey - دوائي</name>
     <description>Top Updated Drug Index</description>
     <author email="drusama2@gmail.com" href="https://microsmsm.github.io">Osama Soliman</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.7:8100" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
     <allow-navigation href="http://localhost:8080/*" />
@@ -101,4 +101,5 @@
     <allow-navigation href="http://192.168.1.2:8100" />
     <allow-navigation href="http://192.168.1.12:8100" />
     <allow-navigation href="http://192.168.1.6:8100" />
+    <allow-navigation href="http://192.168.1.7:8100" sessionid="56f266ed" />
 </widget>

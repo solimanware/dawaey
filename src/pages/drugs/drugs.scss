@@ -40,12 +40,14 @@ page-drugs {
       margin-right: $spinnerSize/2;
       animation-name: bounceOut;
       animation-duration: 0.1s;
+
       animation-fill-mode: both;
       animation-timing-function: linear;
       animation-iteration-count: 1;
     }
     @keyframes bounceOut {
       50% {
+
         opacity: 1;
       }
       100% {
