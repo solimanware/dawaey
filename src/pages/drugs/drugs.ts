@@ -368,7 +368,7 @@ export class DrugsPage {
 
   isEmptyHistory() {
     return (
-      this.sampleDrug &&
+      this.searchResult.length ===0 &&
       this.loading !== true &&
       this.segment == "history"
     );
