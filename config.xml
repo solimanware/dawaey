@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="9000014" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="9.0.14" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="190100000" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="10.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Dawaey - دوائي</name>
     <description>Top Updated Drug Index</description>
     <author email="drusama2@gmail.com" href="https://microsmsm.github.io">Osama Soliman</author>

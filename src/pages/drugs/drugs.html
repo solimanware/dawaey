@@ -59,15 +59,15 @@
     </ion-item>
   </ion-list>
   <div *ngIf="!loading&&this.searchResult.length === 0&&shouldShowDidYouMean" text-center>
-    <p>Oops Sorry, We Didn't find
-      <strong>{{searchTerm}}</strong> you can recheck spelling it... <br> or try our <span ion-text color="danger">🤖
-        AI</span> Search</p>
+    <p *ngIf="searchTerm.length">Oops Sorry, We Didn't find
+      <strong>{{searchTerm}}</strong> you can recheck spelling it... <br> or try our <span ion-text color="green">🤖
+        AI (Artificial Intelligence)</span> Search</p>
     <h3 class="full-width-text" ion-color color="danger">Did You Mean <span ion-text color="danger">{{doYouMean}}</span>
       ?</h3>
     <p text-center no-margin ion-text color="danger">↓↓↓</p>
     <button ion-button color="primary" round (click)="showApproximate()">Artificial Intelligence search</button>
     <p>Or Report it to be added</p>
-    <a href="mailto:osama@dawaey.com?subject=Report Missing {{searchTerm}}" ion-button color="dark">
+    <a href="mailto:app@dawaey.com?subject=Report Missing {{searchTerm}}" ion-button color="dark">
       Report Missing
     </a>
   </div>
