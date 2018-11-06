@@ -1,15 +1,12 @@
 import { Drug } from "./../../interfaces";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { DrugDetails } from "./../drug-details/drug-details";
-import { Component, ViewChild, OnChanges } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 
 import {
   NavController,
   AlertController,
   Content,
-  LoadingController,
-  Loading,
-  FabContainer,
   NavParams,
   VirtualScroll
 } from "ionic-angular";
@@ -17,7 +14,6 @@ import { Keyboard } from "@ionic-native/keyboard";
 
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 
-import * as Fuse from "fuse.js";
 import { Storage } from "@ionic/storage";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/operator/map";
@@ -39,7 +35,7 @@ export class DrugsPage {
   history: Drug[] = [];
   searchTerm: string = "";
   searchTerm$ = new Subject<string>();
-  drugs: Drug[] = []; //initialize your drugs array empty
+  sampleDrug: Drug;
   chooseToSearchBy = [];
   searchBy: string = "tradename";
   segment: string = "all";
@@ -48,6 +44,7 @@ export class DrugsPage {
   loading: boolean = true;
   @ViewChild("virtualScroll", { read: VirtualScroll })
   virtualScroll: VirtualScroll;
+  searchWorker: any;
 
   constructor(
     public keyboard: Keyboard,
@@ -56,9 +53,9 @@ export class DrugsPage {
     public navParams: NavParams,
     private drugProvider: DrugProvider,
     private ga: GoogleAnalytics,
-    private loadingCtrl: LoadingController,
     private storage: Storage
   ) {
+    //setting up schema for visual searchby options
     this.schema = {
       id: "Code",
       tradename: "Trade Name",
@@ -70,8 +67,12 @@ export class DrugsPage {
       dosage: "Drug Dose",
       composition: "Drug Composition"
     };
+
+    //setting up service worker to be sperate search in new thread
+    this.searchWorker = new Worker('./assets/workers/search.js');
   }
 
+  //is view did enter? just loaded?
   ionViewDidEnter() {
     this.loading = true;
     this.reLoadVirtualList().then(async () => {
@@ -82,6 +83,7 @@ export class DrugsPage {
     this.initSearch();
   }
 
+  //is view all elemnts did loaded?
   ionViewDidLoad() {
     this.loading = true;
 
@@ -89,12 +91,16 @@ export class DrugsPage {
     this.ga.trackView("Main Screen");
 
     this.drugProvider.displayDrugs().subscribe(data => {
-      this.drugs = data;
-      console.log("data loaded");
-
+      //setting up sample drug of dataset
+      this.sampleDrug = data[0]
+      //posting data to worker thread
+      this.searchWorker.postMessage({
+        drugs:data
+      })
+      //initializing search options visuals
       this.initSearchByOptions();
       this.loading = false;
-
+      //are you coming from another page?
       this.handleComingFromOtherPage()
         .then(() => {
           this.loading = false;
@@ -109,7 +115,8 @@ export class DrugsPage {
 
   initSearchByOptions() {
     const optionArr = [];
-    for (let prop in this.drugs[0]) {
+    //generate options dynamically from schema and sample input
+    for (let prop in this.sampleDrug) {
       if (prop && this.schema[prop]) {
         const myObj = {
           type: "radio",
@@ -124,11 +131,14 @@ export class DrugsPage {
   }
 
   initSearch() {
+    //observing search term behaviour subject
     this.searchTerm$
       .do(term => (this.loading = true))
-      //adjust writing speed >TODO:make it dynamic according to user writing speed
-      .debounceTime(200)
+      //deboucing to left load from search thread
+      .debounceTime(50)
+      //wait until user end typing
       .distinctUntilChanged()
+      //filter out non terms
       .filter(event => {
         if (typeof event === "undefined") {
           this.handleBadSearchTerm();
@@ -141,13 +151,15 @@ export class DrugsPage {
       })
       //trimming white spaces of string prefrals
       .map(term => term.trim())
-      //term 3 letters or more?
+      //make sure term 3 letters or more?
       .filter(str => {
-        if (
-          //search by any price length
-          (this.searchBy === "price" && str.length > 0 && this.drugs.length) ||
-          //make sure there is drugs and at least term is 2 chars
-          (str.length > 2 && this.drugs.length)
+        //sample drug means data loaded (safe check)
+        if (this.sampleDrug &&
+          
+          //make sure at least term is 2 chars
+          ((str.length > 2)) ||
+          //or search by any price term length
+          (this.searchBy === "price" && str.length > 0)
         ) {
           //true mean pass it to next operator
           return true;
@@ -174,7 +186,8 @@ export class DrugsPage {
             this.loading = true;
             this.doApproximate().then((res: Drug[]) => {
               this.shouldShowDidYouMean = true;
-              this.doYouMean = res[0].tradename;
+              //or string is a fallback to not found using fuzz search
+              this.doYouMean = res[0].tradename || "";
               this.loading = false;
             });
           }
@@ -204,7 +217,7 @@ export class DrugsPage {
         this.smoothHideLoading();
         res("done");
       })
-      .catch((err)=>console.log(err));
+        .catch((err) => console.log(err));
     });
   }
 
@@ -274,41 +287,29 @@ export class DrugsPage {
   }
 
   doApproximate(): Promise<Drug[]> {
-      var options = {
-        shouldSort: true,
-        threshold: 0.6,
-        location: 0,
-        distance: 100,
-        maxPatternLength: 32,
-        minMatchCharLength: 1,
-        keys: [this.searchBy]
-      };
-      var fuse = new Fuse(this.drugs, options);
-      return Promise.resolve(fuse.search(this.searchTerm));
-    
+    this.searchWorker.postMessage({
+      key: this.searchBy,
+      term: this.searchTerm,
+      type: "approximate"
+    })
+    return new Promise((resolve, reject) => {
+      this.searchWorker.onmessage = function (event) {
+        resolve(event.data)
+      }
+    })
   }
 
-  doSearch(searchTerm): Promise<Drug[]> {
-    return Promise.resolve(
-      this.drugs.filter(drug => {
-        switch (this.searchBy) {
-          //this case search with price exactly like input
-          case "price":
-            return Number(drug.price) === Number(searchTerm);
-          case this.searchBy:
-            return (
-              drug[this.searchBy]
-                .toLowerCase()
-                .indexOf(searchTerm.toLowerCase()) > -1
-            );
-          default:
-            return (
-              drug.tradename.toLowerCase().indexOf(searchTerm.toLowerCase()) >
-              -1
-            );
-        }
-      })
-    );
+  doSearch(searchTerm$): Promise<Drug[]> {
+    this.searchWorker.postMessage({
+      key: this.searchBy,
+      term: searchTerm$,
+      type:"exact"
+    })
+    return new Promise((resolve, reject) => {
+      this.searchWorker.onmessage = function (event) {
+        resolve(event.data)
+      }
+    })
   }
 
   //helper ranking function
@@ -335,8 +336,8 @@ export class DrugsPage {
     let choices = this.chooseToSearchBy;
 
     for (let i = 0; i < choices.length; i++) {
-        choices[i].checked = choices[i].value === this.searchBy ? true : false;
-        alert.addInput(choices[i]);
+      choices[i].checked = choices[i].value === this.searchBy ? true : false;
+      alert.addInput(choices[i]);
     }
 
     alert.addButton("Cancel");
@@ -351,7 +352,7 @@ export class DrugsPage {
 
   onEnterKey() {
     //handle UX
-    if (this.drugs.length == 0) {
+    if (this.searchResult.length == 0) {
       this.showApproximate().then(() => {
         this.closeKeyboard();
       });
@@ -367,7 +368,7 @@ export class DrugsPage {
 
   isEmptyHistory() {
     return (
-      this.drugs.length < 1 &&
+      this.sampleDrug &&
       this.loading !== true &&
       this.segment == "history"
     );

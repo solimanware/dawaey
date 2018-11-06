@@ -32,10 +32,29 @@ page-drugs {
     .none {
       display: none;
     }
+    
+    
     $spinnerSize: 100px;
     .spinner-container {
       text-align: center;
       margin-right: $spinnerSize/2;
+      animation-name: bounceOutToRight;
+      animation-duration: 0.5s;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-iteration-count: 1;
+    }
+    @keyframes bounceOutToRight {
+      50% {
+        opacity: 1;
+      }
+      100% {
+        display: none;
+        overflow: hidden;
+        opacity: 0;
+        transform: translate3d(2000px, 0, 0);
+        
+      }
     }
     ion-spinner * {
       width: $spinnerSize;
