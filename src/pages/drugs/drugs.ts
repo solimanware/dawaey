@@ -135,7 +135,7 @@ export class DrugsPage {
     this.searchTerm$
       .do(term => (this.loading = true))
       //deboucing to left load from search thread
-      .debounceTime(50)
+      //.debounceTime(10)
       //wait until user end typing
       .distinctUntilChanged()
       //filter out non terms

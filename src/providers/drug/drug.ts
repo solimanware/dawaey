@@ -12,15 +12,10 @@ import { Drug } from "../../interfaces";
 export class DrugProvider {
   constructor(public http: HttpClient, public storage: Storage) {}
   getDrugs(country): Observable<Drug[]> {
-    return this.http.get(API.drugs(country)).map((json: any) => {
-      return <Drug[]>json["drugs"];
+    return this.http.get(API.drugs(country)).map((json: Drug[]) => {
+      return json["drugs"];
     });
   }
-
-  // parsePrice(price: number): number {
-  //   const d = (c, k) => (c ^ k) - k;
-  //   return Math.abs(d(price, this.key) / 100);
-  // }
 
   getDrugsByDefaultCountry(): Observable<any> {
     const drugs = new Observable(observer => {

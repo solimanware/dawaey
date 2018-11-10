@@ -169,3 +169,4 @@ export class MyApp {
 //TODO: fix undefined when after firing cancel event
 //TODO: edit report templates
 //TODO: be more ready for pwa
+//TODO: Charge ppl outside egypt
