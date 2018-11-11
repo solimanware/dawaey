@@ -26,8 +26,6 @@ onmessage = function (e) {
         console.log("received search term... doing approximate search now");
         let workerResult = doApproximate(drugs, e.data.key, e.data.term)
         console.log('Posting workerResult back to main script');
-        console.log(workerResult);
-
         postMessage(workerResult);
     }
 }

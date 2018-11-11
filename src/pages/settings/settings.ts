@@ -72,10 +72,9 @@ export class SettingsPage {
       })
     this.storage.get('color')
       .then(c => {
-        this.defaultLanguage = c || 'Pruple';
+        this.defaultLanguage = c || 'pruple';
       })
 
-      console.log(this.colorChoices);
       
 
   }

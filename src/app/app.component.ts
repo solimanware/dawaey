@@ -8,7 +8,7 @@ import { AboutPage } from "./../pages/about/about";
 import { PartnersPage } from "./../pages/partners/partners";
 import { TabsPage } from "./../pages/tabs/tabs";
 import { Component, ViewChild } from "@angular/core";
-import { Nav, Platform, Events, ModalController } from "ionic-angular";
+import { Nav, Platform, Events, ModalController, AlertController } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 
@@ -75,7 +75,8 @@ export class MyApp {
     private drugProvider: DrugProvider,
     private events: Events,
     public storage: Storage,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public alertCtrl: AlertController
   ) {
     this.matColors = {
       red: {
@@ -168,9 +169,11 @@ export class MyApp {
       this.rootPage = TutorialPage;
       localStorage.hasSeenTutorial = "true";
     }
-    this.storage.get("color").then(color => {
-      root.style.setProperty(`--color-primary`, this.matColors[color].primary);
-      root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
+    this.storage.get("color").then((color:string) => {
+      if (color && color.length) {
+        root.style.setProperty(`--color-primary`, this.matColors[color].primary);
+        root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
+      }
     })
   }
 
@@ -181,14 +184,20 @@ export class MyApp {
       if (this.platform.is("cordova")) {
         //change status bar color
         if (this.platform.is("android")) {
+          //set statusbar color
           this.statusBar.backgroundColorByHexString("#7b1fa2");
+          this.storage.get("color").then(color => {
+            if (color) {
+              this.statusBar.backgroundColorByHexString(this.matColors[color].primary);
+            }
+          })
         }
         //google analytics
         this.startAnalytics();
         //oneSignal
         this.startPushService();
       }
-      let splash = this.modalCtrl.create(SplashPage, undefined,{ cssClass: "modal-fullscreen" });
+      let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
       splash.present();
       this.listenToEvents();
       this.startBackgroundJobs();
@@ -202,6 +211,8 @@ export class MyApp {
     if (localStorage.hasSeenTutorial !== "true") {
       //load default data //TODO:get user country and langauge
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
+    } else {
+      this.startCheckingForUpdates();
     }
   }
 
@@ -233,6 +244,10 @@ export class MyApp {
     this.oneSignal.endInit();
   }
 
+  startCheckingForUpdates() {
+    this.drugProvider.checkForUpdates().subscribe();
+  }
+
   listenToEvents() {
     this.events.subscribe("country:changed", c => {
       console.log("country:changed getAndStoreDrugs for " + c);
@@ -241,6 +256,7 @@ export class MyApp {
     this.events.subscribe("color:changed", (color) => {
       root.style.setProperty(`--color-primary`, this.matColors[color].primary);
       root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
+      this.statusBar.backgroundColorByHexString(this.matColors[color].primary);
     });
   }
 

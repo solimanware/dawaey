@@ -10,9 +10,9 @@ import { Drug } from "../../interfaces";
 
 @Injectable()
 export class DrugProvider {
-  constructor(public http: HttpClient, public storage: Storage) {}
+  constructor(public http: HttpClient, public storage: Storage) { }
   getDrugs(country): Observable<Drug[]> {
-    return this.http.get(API.drugs(country)).map((json: Drug[]) => {
+    return this.http.get(API.drugs(country)).map((json) => {
       return json["drugs"];
     });
   }
@@ -29,6 +29,33 @@ export class DrugProvider {
       });
     });
     return drugs;
+  }
+
+
+
+  checkForUpdates(): Observable<string> {
+    return new Observable(observer=>{
+      //check if there's update
+      this.http.get(API.updates).subscribe(res=>{
+        //found update as version is newer
+        if(res["data"]["version"] !== API.current){
+          //installing update
+          this.installNewUpdate().subscribe(()=>{
+            console.log('installing new update');
+            observer.next('installing new update');
+            localStorage.dataVersion = res["data"]["version"];
+          }) 
+        }else{
+          console.log('you are up to date');
+          observer.next('data is up to date');
+        }
+      })
+    })
+    
+  }
+
+  installNewUpdate() {
+    return this.updateDrugs();
   }
 
   // getAndStoreDrugsByCountry(country): Observable<any> {   const drugs = new

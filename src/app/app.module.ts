@@ -37,9 +37,7 @@ import { HttpClientModule,HttpClient } from '@angular/common/http';
 
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ColorDirective } from '../directives/color/color';
 import { DirectivesModule } from '../directives/directives.module';
-import { BackgroundColorDirective } from '../directives/background-color/background-color';
 import { SplashPage } from '../pages/splash/splash';
 
 
@@ -70,8 +68,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsPage,
     InvitePage,
     TutorialPage,
-    ColorDirective,
-    BackgroundColorDirective,
     SplashPage
   ],
   imports: [
@@ -104,6 +100,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         name: '__dawaeyapp',
         driverOrder: ['indexeddb', 'sqlite', 'websql']
       }), //<-add this
+      DirectivesModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

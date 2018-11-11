@@ -3,6 +3,14 @@ page-drug-details {
         .lowercase{
             text-transform: lowercase;
         }
+        #company p {
+            font-size: 4vw;
+          }
+          @media screen and (min-width: 700px) {
+            #company p {
+               font-size: 2rem;
+            }
+          }  
         .justify{
             text-align: justify;
             text-justify: inter-word;
