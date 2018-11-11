@@ -8,12 +8,13 @@ import { AboutPage } from "./../pages/about/about";
 import { PartnersPage } from "./../pages/partners/partners";
 import { TabsPage } from "./../pages/tabs/tabs";
 import { Component, ViewChild } from "@angular/core";
-import { Nav, Platform, Events } from "ionic-angular";
+import { Nav, Platform, Events, ModalController } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { OneSignal } from "@ionic-native/onesignal";
+import { SplashPage } from "../pages/splash/splash";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const root = document.documentElement;
@@ -73,7 +74,8 @@ export class MyApp {
     private oneSignal: OneSignal,
     private drugProvider: DrugProvider,
     private events: Events,
-    public storage: Storage
+    public storage: Storage,
+    public modalCtrl: ModalController
   ) {
     this.matColors = {
       red: {
@@ -177,10 +179,6 @@ export class MyApp {
     this.platform.ready().then(() => {
       this.recoverRememberedState()
       if (this.platform.is("cordova")) {
-        //hide splash
-        setTimeout(() => {
-          this.splashScreen.hide();
-        }, 3000);
         //change status bar color
         if (this.platform.is("android")) {
           this.statusBar.backgroundColorByHexString("#7b1fa2");
@@ -190,6 +188,8 @@ export class MyApp {
         //oneSignal
         this.startPushService();
       }
+      let splash = this.modalCtrl.create(SplashPage, undefined,{ cssClass: "modal-fullscreen" });
+      splash.present();
       this.listenToEvents();
       this.startBackgroundJobs();
     });

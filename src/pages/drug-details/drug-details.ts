@@ -98,7 +98,8 @@ export class DrugDetails {
       const lowestFirst = (a, b) => Number(a.price) - Number(b.price);
 
       //resolve the promise waiting when done
-      resolve(this.similars.sort(lowestFirst));
+      let result = this.similars.sort(lowestFirst)
+      resolve(result);
     });
   }
 

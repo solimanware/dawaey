@@ -30,6 +30,7 @@ $colors: (
   warning:     #b7621c,
   success: #227916,
   transparent : transparent,
+  snow:      #fffafa,
   light:      #ffffff,
   dark:       #424242,
   darker:     #000,
@@ -95,6 +96,7 @@ $tabs-ios-tab-font-weight: bolder;
 
 $tabs-background : linear-gradient(to right, variablecolor(primary) 0%, variablecolor(secondary) 50%, variablecolor(primary) 100%);
 $tabs-tab-color-active : variablecolor(light);
+$tabs-tab-color-inactive: variablecolor(secondary);
 
 
 

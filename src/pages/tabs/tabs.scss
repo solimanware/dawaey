@@ -2,5 +2,8 @@ page-tabs {
     // #tab-t0-0{
     //     color: color($colors,darker)
     // }
+    .tab-button-text,.tab-button-icon{
+        color: var(--color-snow) !important;
+    }
 
 }

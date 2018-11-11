@@ -40,6 +40,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ColorDirective } from '../directives/color/color';
 import { DirectivesModule } from '../directives/directives.module';
 import { BackgroundColorDirective } from '../directives/background-color/background-color';
+import { SplashPage } from '../pages/splash/splash';
 
 
 
@@ -70,7 +71,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     InvitePage,
     TutorialPage,
     ColorDirective,
-    BackgroundColorDirective
+    BackgroundColorDirective,
+    SplashPage
   ],
   imports: [
     BrowserModule,
@@ -115,7 +117,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AboutPage,
     SettingsPage,
     InvitePage,
-    TutorialPage
+    TutorialPage,
+    SplashPage
   ],
   providers: [
     StatusBar,

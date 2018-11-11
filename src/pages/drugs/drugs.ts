@@ -74,11 +74,6 @@ export class DrugsPage {
 
   //is view did enter? just loaded?
   ionViewDidEnter() {
-    this.loading = true;
-    this.reLoadVirtualList().then(async () => {
-      this.loading = false;
-    });
-
     //Initialize Search term observing
     this.initSearch();
   }
@@ -135,7 +130,7 @@ export class DrugsPage {
     this.searchTerm$
       .do(term => (this.loading = true))
       //deboucing to left load from search thread
-      //.debounceTime(10)
+      .debounceTime(100)
       //wait until user end typing
       .distinctUntilChanged()
       //filter out non terms
@@ -237,15 +232,6 @@ export class DrugsPage {
           })
           .catch(err => console.log(err));
       }
-    });
-  }
-
-  //TODO: report this bug to ionic
-  reLoadVirtualList(): Promise<any> {
-    return Promise.resolve(() => {
-      setTimeout(() => {
-        this.virtualScroll.renderVirtual(false);
-      }, 500);
     });
   }
 

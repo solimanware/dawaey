@@ -1,0 +1,41 @@
+.ios, .md {
+ 
+    page-splash {
+        .scroll-content {
+            height: 100vh !important;
+            width: 100vw !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+        }
+        div{
+            height: 100vh !important;
+            width: 100vw !important;
+            background-color: #7b1fa2;
+            background-image: url(../../assets/img/splash.png);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+        }
+ 
+    }
+ 
+}
+ 
+@keyframes fadeInAndSpin {
+ 
+    100% {
+        opacity: 1;
+        transform: rotate3d(1, 1, 0, 0deg);
+    }
+ 
+}
+ 
+@keyframes fadeIn {
+ 
+    100% {
+        opacity: 1;
+    }
+ 
+}

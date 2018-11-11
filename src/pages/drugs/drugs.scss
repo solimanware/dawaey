@@ -6,10 +6,6 @@ page-drugs {
     .text-center{
       text-align: center;
     }
-    .svg-logo{
-      border-radius: 100%;
-      fill: var(--color-primary)
-    }
     .animate {
       animation-name: bounce;
       animation-duration: 1.2s;
@@ -63,7 +59,7 @@ page-drugs {
     ion-spinner * {
       width: $spinnerSize;
       height: $spinnerSize;
-      stroke: color($colors, primary);
+      stroke: var(--color-primary);
     }
     background-color: color($colors, light);
     .drug {

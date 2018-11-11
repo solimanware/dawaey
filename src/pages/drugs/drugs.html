@@ -34,10 +34,8 @@
 <!-- todo: better ux teaching users how to use basic app features -->
 <ion-content class="drugs-screen">
   <p *ngIf="!sampleDrug">fetching drugs, please wait...</p>
-  <!--todo: report bug when using text-center with animation-->
   <h1 *ngIf="this.searchResult.length === 0 && !loading && !shouldShowDidYouMean" class="animate text-center">You can
     search now <span>↑↑↑</span></h1>
-  <!--todo: report bug when using *ngIf with spinner-->
   <div *ngIf="loading" class="spinner-container">
     <ion-spinner duration="250"></ion-spinner>
   </div>
@@ -46,11 +44,10 @@
     approxItemWidth="360px" bufferRatio="20">
     <ion-item *virtualItem="let drug" class="drug" (click)="openDrug(drug)">
       <ion-avatar item-start>
-          <svg class="svg-logo" version="1.0" xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 1024.000000 1024.000000"
+        <svg class="svg-logo" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024.000000 1024.000000"
           preserveAspectRatio="xMidYMid meet">
-         <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)">
-         <path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0
+          <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)">
+            <path d="M0 5120 l0 -5120 5120 0 5120 0 0 5120 0 5120 -5120 0 -5120 0 0
          -5120z m5876 3671 c7 -9 18 -12 30 -7 10 4 15 4 11 0 -4 -4 7 -16 25 -27 42
          -25 81 -40 73 -27 -3 6 1 7 9 4 9 -3 16 -10 16 -16 0 -5 5 -6 10 -3 6 3 10 2
          10 -3 0 -13 50 -33 62 -26 7 5 8 2 3 -6 -6 -10 -4 -12 8 -7 12 4 14 2 10 -11
@@ -163,41 +160,41 @@
          -176 27 -56 26 -94 65 -94 96 0 15 37 51 53 51 7 0 23 -7 35 -16z m7920 0 c32
          -22 28 -60 -9 -95 -63 -59 -235 -87 -351 -56 -46 12 -44 12 65 12 103 0 117 2
          170 29 40 19 57 33 53 42 -3 8 -9 20 -12 28 -6 16 29 56 49 56 7 0 23 -7 35
-         -16z"/>
-         <path d="M5385 7760 c-384 -45 -726 -262 -922 -586 -20 -33 -183 -371 -363
+         -16z" />
+            <path d="M5385 7760 c-384 -45 -726 -262 -922 -586 -20 -33 -183 -371 -363
          -752 l-328 -693 25 -10 c13 -5 30 -9 38 -9 7 0 67 -18 132 -40 256 -84 345
          -89 518 -28 55 20 153 55 217 77 143 51 225 61 318 37 81 -21 149 -59 321
          -178 168 -116 221 -141 316 -146 85 -5 122 7 224 73 154 100 223 119 474 136
          82 5 153 13 157 17 15 15 201 420 223 487 43 128 58 221 58 375 1 326 -110
-         602 -341 852 -153 165 -442 319 -698 372 -89 19 -278 27 -369 16z"/>
-         <path d="M5230 2330 l0 -310 35 0 35 0 0 310 0 310 -35 0 -35 0 0 -310z"/>
-         <path d="M4550 2432 c-22 -12 -44 -35 -57 -62 -21 -41 -23 -57 -23 -218 l0
+         602 -341 852 -153 165 -442 319 -698 372 -89 19 -278 27 -369 16z" />
+            <path d="M5230 2330 l0 -310 35 0 35 0 0 310 0 310 -35 0 -35 0 0 -310z" />
+            <path d="M4550 2432 c-22 -12 -44 -35 -57 -62 -21 -41 -23 -57 -23 -218 l0
          -173 -159 3 -160 3 -30 29 c-58 55 -53 128 11 189 37 35 39 41 29 63 l-11 25
          -38 -21 c-125 -70 -130 -245 -9 -323 41 -27 42 -27 233 -27 166 0 193 2 198
          16 3 9 6 102 6 208 0 188 1 193 23 214 31 29 87 29 113 1 16 -18 20 -42 24
          -178 l5 -156 158 -3 158 -3 30 30 29 29 0 176 0 176 -30 0 -30 0 0 -159 c0
          -132 -3 -162 -16 -175 -12 -13 -39 -16 -130 -16 l-114 0 0 134 c0 122 -2 136
-         -23 167 -43 64 -121 85 -187 51z"/>
-         <path d="M5515 2431 c-81 -37 -105 -84 -105 -202 0 -87 11 -117 57 -161 40
+         -23 167 -43 64 -121 85 -187 51z" />
+            <path d="M5515 2431 c-81 -37 -105 -84 -105 -202 0 -87 11 -117 57 -161 40
          -38 74 -48 164 -48 87 0 92 -5 64 -60 -21 -41 -63 -60 -135 -60 l-60 0 0 -30
          0 -30 79 0 c88 0 127 18 168 79 22 32 23 43 23 212 0 102 -5 190 -11 206 -23
          61 -100 113 -169 113 -19 0 -53 -9 -75 -19z m143 -67 c41 -29 52 -66 52 -179
          l0 -105 -70 0 c-120 0 -170 45 -170 153 0 98 40 147 120 147 25 0 56 -7 68
-         -16z"/>
-         <path d="M6000 2441 c-37 -12 -70 -34 -70 -47 0 -6 8 -18 18 -27 15 -13 20
+         -16z" />
+            <path d="M6000 2441 c-37 -12 -70 -34 -70 -47 0 -6 8 -18 18 -27 15 -13 20
          -14 42 -2 14 8 47 14 73 15 38 0 53 -5 72 -25 24 -23 25 -31 25 -133 0 -90 -3
          -112 -17 -123 -11 -10 -54 -15 -140 -17 l-123 -4 0 -30 0 -30 140 4 140 3 32
-         33 33 32 0 129 c0 141 -6 158 -68 205 -29 21 -115 31 -157 17z"/>
-         </g>
-         </svg>
-         
-      </ion-avatar>
-      <h2 class="lowercase">{{ drug.tradename }}</h2>
-      <p class="lowercase">{{ drug.activeingredient }}</p>
+         33 33 32 0 129 c0 141 -6 158 -68 205 -29 21 -115 31 -157 17z" />
+          </g>
+        </svg>
 
-      <p *ngIf="searchBy === 'price'" ion-text color="danger">{{drug.price}} EGP</p>
-      <p *ngIf="searchBy === 'group'">{{ drug.group }}</p>
-      <p *ngIf="searchBy === 'company'">{{ drug.company }}</p>
+      </ion-avatar>
+      <h2 class="lowercase">{{ drug?.tradename }}</h2>
+      <p class="lowercase">{{ drug?.activeingredient }}</p>
+
+      <p *ngIf="searchBy === 'price'" ion-text color="danger">{{drug?.price}} EGP</p>
+      <p *ngIf="searchBy === 'group'">{{ drug?.group }}</p>
+      <p *ngIf="searchBy === 'company'">{{ drug?.company }}</p>
 
       <ion-icon name="log-in" color="primary" item-end></ion-icon>
     </ion-item>
@@ -206,7 +203,7 @@
     <p *ngIf="searchTerm.length">Oops Sorry, We Didn't find
       <strong>{{searchTerm}}</strong> you can recheck spelling it... <br> or try our <span ion-text color="green">🤖
         AI (Artificial Intelligence)</span> Search</p>
-    <h3 class="full-width-text" ion-color color="danger">Did You Mean <span ion-text color="danger">{{doYouMean}}</span>
+    <h3 class="full-width-text" ion-color color="danger">Did You Mean <span ion-text color="success">{{doYouMean}}</span>
       ?</h3>
     <p text-center no-margin ion-text color="danger">↓↓↓</p>
     <button ion-button backgroundColor="primary" round (click)="showApproximate()">Artificial Intelligence search</button>
