@@ -2,4 +2,18 @@ page-about {
     .text-center{
         text-align: center;
     }
+    .img-avatar img{
+        height: 160px !important;
+        width: auto !important;
+        border-radius: 100%;
+        border: 4px solid gold;
+        margin: auto;
+    }
+    .developer-title{
+        font-size: 3.6rem;
+        font-weight: lighter;
+    }
+    .developer-links span a{
+        text-decoration: underline;
+    }
 }

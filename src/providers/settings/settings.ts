@@ -25,6 +25,13 @@ export class SettingsProvider {
         this.events.publish('country:changed', country)
       })
   }
+  setColor(color) {
+    this.storage.set('color', color)
+      .then((color) => {
+        console.log('set storage Color ' + color);
+        this.events.publish('color:changed', color)
+      })
+  }
 
   getCountry() {
 

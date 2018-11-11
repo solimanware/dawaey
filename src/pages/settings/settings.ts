@@ -12,8 +12,10 @@ import { NavController, NavParams, ToastController } from 'ionic-angular';
 export class SettingsPage {
   defaultCountry: string;
   defaultLanguage: string;
+  defaultColor: string;
   countryChoices: { value: string; name: string; }[];
   languageChoices: { value: string; name: string; }[];
+  colorChoices: { value: string; name: string; }[];
 
   constructor(
     public navCtrl: NavController,
@@ -41,6 +43,25 @@ export class SettingsPage {
       { value: "eg", name: 'Egypt' },
       { value: "kw", name: 'Kuwait' }
     ]
+    this.colorChoices = [
+      { value: "red", name: 'Red' },
+      { value: "pink", name: 'Pink' },
+      { value: "deepPurple", name: 'Deep Purple' },
+      { value: "indigo", name: 'Indigo' },
+      { value: "blue", name: 'Blue' },
+      { value: "lightBlue", name: 'Light Blue' },
+      { value: "cyan", name: 'Cyan' },
+      { value: "teal", name: 'Teal' },
+      { value: "green", name: 'Green' },
+      { value: "lightGreen", name: 'Light Green' },
+      { value: "yello", name: 'Yello' },
+      { value: "amber", name: 'Amber' },
+      { value: "orange", name: 'Orange' },
+      { value: "deepOrange", name: 'Deep Orange' },
+      { value: "brown", name: 'Brown' },
+      { value: "gray", name: 'Gray' },
+      { value: "blueGray", name: 'blueGray' },
+    ]
     this.storage.get('country')
       .then(c => {
         this.defaultCountry = c || 'eg';
@@ -49,6 +70,13 @@ export class SettingsPage {
       .then(l => {
         this.defaultLanguage = l || 'en';
       })
+    this.storage.get('color')
+      .then(c => {
+        this.defaultLanguage = c || 'Pruple';
+      })
+
+      console.log(this.colorChoices);
+      
 
   }
 
@@ -66,6 +94,12 @@ export class SettingsPage {
   }
   waitNextVersion(ev){
     this.presentToast('Wait this feature in the next version')
+  }
+  changeColor(color){
+    console.log('change color');
+    console.log(color);
+    
+    this.settingsProvider.setColor(color)
   }
   updateDatabase() {
     this.presentToast('Updating ...')

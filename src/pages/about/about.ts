@@ -19,4 +19,8 @@ export class AboutPage {
     this.ga.trackView('Developer Screen')
   }
 
+  openLink(url){
+    window.open(url,"_system")
+  }
+
 }

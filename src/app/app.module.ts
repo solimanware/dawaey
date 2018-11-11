@@ -37,6 +37,9 @@ import { HttpClientModule,HttpClient } from '@angular/common/http';
 
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ColorDirective } from '../directives/color/color';
+import { DirectivesModule } from '../directives/directives.module';
+import { BackgroundColorDirective } from '../directives/background-color/background-color';
 
 
 
@@ -65,7 +68,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     AboutPage,
     SettingsPage,
     InvitePage,
-    TutorialPage
+    TutorialPage,
+    ColorDirective,
+    BackgroundColorDirective
   ],
   imports: [
     BrowserModule,

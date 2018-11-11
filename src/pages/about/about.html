@@ -7,24 +7,45 @@
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
+      <ion-icon color="light" name="menu"></ion-icon>
     </button>
-    <ion-title>About us ❤</ion-title>
+    <ion-title ion-text color="light">About us ❤</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content>
   <ion-card>
-    <ion-item-divider color="light">Made with ❤ By:</ion-item-divider>
-    <ion-item class="text-center">
-      <a href="https://microsmsm.github.io">Dr. Osama Soliman</a>
+    <ion-item-divider><span color="primary">Made with ❤ By:</span> </ion-item-divider>
+    <ion-item>
+      <div class="img-avatar">
+        <img src="assets/img/osama.jpg" />
+      </div>
+      <h2 text-center class="developer-title">Osama Soliman</h2>
+      <h2 text-center >(Microsmsm)</h2>
+      <p text-center > Software Development Expert With Medical Background</p>
+      <div text-center>
+        <h2 class="developer-links"> 
+          <span>
+            <a (click)="openLink('https://github.com/microsmsm')" color="primary">GitHub</a>
+          </span> 
+          <span>
+            <a (click)="openLink('https://facebook.com/DrOs96')" color="primary">Facebook</a>
+          </span> 
+          <span>
+            <a (click)="openLink('https://linkedin.com/in/osamasoliman')" color="primary">Linked In</a>
+          </span> 
+          <span>
+            <a (click)="openLink('https://twitter.com/microsmsm')" color="primary">Twitter</a>
+          </span> 
+        </h2>
+      </div>
     </ion-item>
   </ion-card>
   <ion-card>
-    <ion-item-divider color="light">For Support 🛠:</ion-item-divider>
-    <ion-item class="text-center">
-        <a href="mailto:support@dawaey.com">Support@Dawaey.com</a>
+    <ion-item-divider><span color="primary">Contact For</span> 🛠:</ion-item-divider>
+    <ion-item class="text-center" >
+        <a href="mailto:support@dawaey.com" color="primary">Support@Dawaey.com</a>
     </ion-item>
   </ion-card>
 
