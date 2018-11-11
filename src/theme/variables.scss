@@ -41,29 +41,41 @@ $colors: (
   facebook:   #3b5998
 );
 
+// ripped CSS4 vars out of color map
+:root {
+  // each item in color map
+  @each $key, $value in $colors {
+    --color-#{$key}: #{$value};
+  }
+  --color-background: red;
+}
+
+@function variablecolor($color-name) {
+  @return var(--color-#{$color-name});
+}
+
+
 
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
 
 
-
-
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
-$toolbar-md-background:                   color($colors, primary);
+$toolbar-md-background:   variablecolor(primary)    ;
 
 // Change the color of the segment button text
-$toolbar-md-active-color:                 #fff;
+$toolbar-md-active-color:                 variablecolor(light);
 
 
-$tabs-ios-tab-icon-color: color($colors, light);
+$tabs-ios-tab-icon-color: variablecolor(light);
 
-$tabs-ios-tab-icon-color-active: color($colors, google);
+$tabs-ios-tab-icon-color-active: variablecolor(google);
 
-$tabs-ios-tab-text-color-active:   color($colors, light);
-$tabs-ios-tab-color-inactive: color($colors, dark);
+$tabs-ios-tab-text-color-active:   variablecolor(light);
+$tabs-ios-tab-color-inactive: variablecolor(dark);
 $tabs-ios-tab-font-weight: bolder;
 
 
@@ -81,8 +93,8 @@ $tabs-ios-tab-font-weight: bolder;
 // so that the above variables are used and Ionic's
 // default are overridden.
 
-$tabs-background : -webkit-linear-gradient(left, map-get($colors, primary) 0%, map-get($colors, secondary) 50%, map-get($colors, primary) 100%);
-$tabs-tab-color-active : white;
+$tabs-background : linear-gradient(to right, variablecolor(primary) 0%, variablecolor(secondary) 50%, variablecolor(primary) 100%);
+$tabs-tab-color-active : variablecolor(light);
 
 
 

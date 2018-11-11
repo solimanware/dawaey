@@ -2,18 +2,18 @@
 
   <ion-navbar>
     <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
+      <ion-icon color="light" name="menu"></ion-icon>
     </button>
-    <ion-title>Invite Your Frirends ❤</ion-title>
+    <ion-title ion-text color="light">Invite Your Frirends ❤</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <button ion-button icon-start block (click)="shareViaFacebook()" color="facebook">
+  <button ion-button icon-start block (click)="shareViaFacebook()" backgroundColor="facebook">
     <ion-icon name="logo-facebook"></ion-icon> Facebook</button>
-  <button ion-button icon-start block (click)="shareViaWhatsApp()" color="whatsapp" margin-top>
+  <button ion-button icon-start block (click)="shareViaWhatsApp()" backgroundColor="whatsapp" margin-top>
     <ion-icon name="logo-whatsapp"></ion-icon> WhatsApp</button>
 
 </ion-content>

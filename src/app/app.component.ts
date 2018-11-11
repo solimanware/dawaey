@@ -16,6 +16,14 @@ import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { OneSignal } from "@ionic-native/onesignal";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
+const root = document.documentElement;
+export interface MaterialColors {
+  [key: string]: MaterialColor
+}
+export interface MaterialColor {
+  primary: string;
+  secondary: string;
+}
 
 @Component({
   templateUrl: "app.html"
@@ -54,6 +62,9 @@ export class MyApp {
   ];
   firstTime: boolean;
 
+  matColors: MaterialColors;
+
+
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
@@ -64,6 +75,88 @@ export class MyApp {
     private events: Events,
     public storage: Storage
   ) {
+    this.matColors = {
+      red: {
+        "primary": "#B71C1C",
+        "secondary": "#E53935",
+      },
+      pink: {
+        "primary": "#880E4F",
+        "secondary": "#D81B60",
+      },
+      purple: {
+        "primary": "#4A148C",
+        "secondary": "#8E24AA",
+      },
+      deepPurple: {
+        "primary": "#311B92",
+        "secondary": "#5E35B1",
+      },
+      indigo: {
+        "primary": "#1A237E",
+        "secondary": "#3949AB",
+      },
+      blue: {
+        "primary": "#0D47A1",
+        "secondary": "#1E88E5",
+      },
+      lightBlue: {
+        "primary": "#01579B",
+        "secondary": "#039BE5",
+      },
+      cyan: {
+        "primary": "#006064",
+        "secondary": "#00ACC1",
+      },
+      teal: {
+        "primary": "#004D40",
+        "secondary": "#00897B",
+      },
+      green: {
+        "primary": "#1B5E20",
+        "secondary": "#43A047",
+      },
+      lightGreen: {
+        "primary": "#33691E",
+        "secondary": "#7CB342",
+      },
+      lime: {
+        "primary": "#827717",
+        "secondary": "#C0CA33",
+      },
+      yello: {
+        "primary": "#F57F17",
+        "secondary": "#FDD835",
+      },
+      amber: {
+        "primary": "#FF6F00",
+        "secondary": "#FFB300",
+      },
+      orange: {
+        "primary": "#E65100",
+        "secondary": "#FB8C00",
+      },
+      deepOrange: {
+        "primary": "#BF360C",
+        "secondary": "#F4511E",
+      },
+      brown: {
+        "primary": "#3E2723",
+        "secondary": "#6D4C41",
+      },
+      gray: {
+        "primary": "#212121",
+        "secondary": "#757575",
+      },
+      blueGray: {
+        "primary": "#263238",
+        "secondary": "#546E7A",
+      }
+    };
+    this.platformReady();
+  }
+
+  recoverRememberedState() {
     //not firing at first until flag is set
     //ignored at first app run
     if (localStorage.hasSeenTutorial === "true") {
@@ -73,12 +166,16 @@ export class MyApp {
       this.rootPage = TutorialPage;
       localStorage.hasSeenTutorial = "true";
     }
-    this.platformReady();
+    this.storage.get("color").then(color => {
+      root.style.setProperty(`--color-primary`, this.matColors[color].primary);
+      root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
+    })
   }
 
   platformReady() {
     // Call any initial plugins when ready
     this.platform.ready().then(() => {
+      this.recoverRememberedState()
       if (this.platform.is("cordova")) {
         //hide splash
         setTimeout(() => {
@@ -141,6 +238,10 @@ export class MyApp {
       console.log("country:changed getAndStoreDrugs for " + c);
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
     });
+    this.events.subscribe("color:changed", (color) => {
+      root.style.setProperty(`--color-primary`, this.matColors[color].primary);
+      root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
+    });
   }
 
   //menu view method
@@ -169,3 +270,4 @@ export class MyApp {
 //TODO: fix undefined when after firing cancel event
 //TODO: edit report templates
 //TODO: be more ready for pwa
+//TODO: Charge ppl outside egypt

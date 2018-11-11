@@ -1,14 +1,15 @@
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
+      <ion-icon color="light" name="menu"></ion-icon>
     </button>
-    <ion-title>Our Sponsors 👍</ion-title>
+    <ion-title ion-text color="light">Our Sponsors 👍</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding text-center>
+  <h2 padding-left text-left>Gold Sponsors: </h2>
   <ion-card *ngFor="let company of sponsors" class="gold-frame">
     <ion-item>
       <ion-avatar item-start>
@@ -19,7 +20,7 @@
     </ion-item>
   </ion-card>
   <div text-right padding-right>
-      <a  href="mailto:sponsor@dawaey.com">Become sponsor</a>
+    <a href="mailto:sponsor@dawaey.com" color="primary">Become sponsor</a>
   </div>
-  
+
 </ion-content>

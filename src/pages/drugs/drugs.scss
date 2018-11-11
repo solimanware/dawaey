@@ -6,6 +6,10 @@ page-drugs {
     .text-center{
       text-align: center;
     }
+    .svg-logo{
+      border-radius: 100%;
+      fill: var(--color-primary)
+    }
     .animate {
       animation-name: bounce;
       animation-duration: 1.2s;
