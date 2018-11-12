@@ -286,6 +286,7 @@ export class DrugsPage {
   }
 
   doSearch(searchTerm$): Promise<Drug[]> {
+    console.time('doing search')
     this.searchWorker.postMessage({
       key: this.searchBy,
       term: searchTerm$,
@@ -294,6 +295,7 @@ export class DrugsPage {
     return new Promise((resolve, reject) => {
       this.searchWorker.onmessage = function (event) {
         resolve(event.data)
+        console.timeEnd('doing search')
       }
     })
   }

@@ -3,6 +3,11 @@ page-drugs {
     .full-width-text{
       font-size: 4vw;
     }
+    @media screen and (min-width: 700px) {
+      .full-width-text {
+         font-size: 2rem;
+      }
+    } 
     .text-center{
       text-align: center;
     }
@@ -61,7 +66,8 @@ page-drugs {
       height: $spinnerSize;
       stroke: var(--color-primary);
     }
-    background-color: color($colors, light);
+
+   // background-color: var(--color-primary);
     .drug {
       background: transparent;
     }
@@ -76,7 +82,7 @@ page-drugs {
         font-size: 1.6rem;
         line-height: 1.6rem;
         ion-icon {
-          color: color($colors, primary);
+          color: var(--color-primary);
         }
         &.col-with-arrow {
           display: flex;
@@ -91,7 +97,7 @@ page-drugs {
         padding: 5px; //background: color($colors, secondary);
       }
       p {
-        color: color($colors, primary);
+        color: var(--color-primary);
         margin: 0;
         font-size: 1.6rem;
         line-height: 1.6rem;

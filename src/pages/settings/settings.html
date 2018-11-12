@@ -31,7 +31,7 @@
     </ion-item>
     <ion-item>
       <ion-label>Choose App Color</ion-label>
-      <ion-select [(ngModel)]="appColor" (ngModelChange)="changeColor($event)">
+      <ion-select [(ngModel)]="defaultColor" (ngModelChange)="changeColor($event)">
         <ion-option *ngFor="let choice of colorChoices" [value]="choice.value">
           {{choice.name}}
         </ion-option>

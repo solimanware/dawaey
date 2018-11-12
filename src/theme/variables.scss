@@ -60,24 +60,23 @@ $colors: (
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
+$tabs-ios-tab-icon-color: variablecolor(light);
+$tabs-ios-tab-icon-color-active: variablecolor(google);
+$tabs-ios-tab-text-color-active:   variablecolor(light);
+$tabs-ios-tab-color-inactive: variablecolor(dark);
+$tabs-ios-tab-font-weight: bolder;
+
+$segment-button-ios-background-color-activated: variablecolor(primary)    ;
+$segment-button-ios-text-color:variablecolor(light);
 
 
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
-$toolbar-md-background:   variablecolor(primary)    ;
-
+$toolbar-md-background: variablecolor(primary)    ;
 // Change the color of the segment button text
-$toolbar-md-active-color:                 variablecolor(light);
+$toolbar-md-active-color: variablecolor(light);
 
-
-$tabs-ios-tab-icon-color: variablecolor(light);
-
-$tabs-ios-tab-icon-color-active: variablecolor(google);
-
-$tabs-ios-tab-text-color-active:   variablecolor(light);
-$tabs-ios-tab-color-inactive: variablecolor(dark);
-$tabs-ios-tab-font-weight: bolder;
 
 
 // App Windows Variables

@@ -71,8 +71,8 @@ export class SettingsPage {
         this.defaultLanguage = l || 'en';
       })
     this.storage.get('color')
-      .then(c => {
-        this.defaultLanguage = c || 'pruple';
+      .then(color => {
+        this.defaultColor = color || 'red';
       })
 
       

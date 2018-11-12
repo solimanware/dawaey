@@ -58,7 +58,7 @@ export class MyApp {
     {
       title: "About",
       component: AboutPage,
-      icon: "bug"
+      icon: "information-circle"
     }
   ];
   firstTime: boolean;
