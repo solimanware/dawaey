@@ -4,6 +4,7 @@ import { DrugProvider } from './../../providers/drug/drug';
 import { SettingsProvider } from './../../providers/settings/settings';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'page-settings',
@@ -23,7 +24,8 @@ export class SettingsPage {
     public settingsProvider: SettingsProvider,
     private storage: Storage,
     private drugProvider: DrugProvider,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private translate: TranslateService
   ) {
     this.languageChoices = [
       { value: "ar", name: 'Arabic' },
@@ -81,6 +83,7 @@ export class SettingsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
+   // this.translate.setDefaultLang('en')
   }
   updateDefaultCountry(ev) {
     console.log(ev);
@@ -89,10 +92,12 @@ export class SettingsPage {
   }
   updateDefaultLanguage(ev) {
     console.log(ev);
-    this.presentToast('Wait this feature in the next version')
+    this.translate.setDefaultLang(ev)
+    this.defaultLanguage = 'ar';
+    this.storage.set('language','ar')
   }
   waitNextVersion(ev){
-    this.presentToast('Wait this feature in the next version')
+   // this.presentToast('Wait this feature in the next version')
   }
   changeColor(color){
     console.log('change color');

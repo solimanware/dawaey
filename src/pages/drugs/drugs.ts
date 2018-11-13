@@ -22,6 +22,7 @@ import "rxjs/add/operator/do";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/switchMap";
+import { TranslateService } from "@ngx-translate/core";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
@@ -53,7 +54,8 @@ export class DrugsPage {
     public navParams: NavParams,
     private drugProvider: DrugProvider,
     private ga: GoogleAnalytics,
-    private storage: Storage
+    private storage: Storage,
+    public translate: TranslateService
   ) {
     //setting up schema for visual searchby options
     this.schema = {
@@ -319,12 +321,13 @@ export class DrugsPage {
 
   showRadio() {
     let alert = this.alertCtrl.create();
-    alert.setTitle("Choose to search by ...");
+    alert.setTitle(this.translate.instant('Choose to search by ...'));
 
     let choices = this.chooseToSearchBy;
 
     for (let i = 0; i < choices.length; i++) {
       choices[i].checked = choices[i].value === this.searchBy ? true : false;
+      choices[i].label = this.translate.instant(choices[i].label)
       alert.addInput(choices[i]);
     }
 

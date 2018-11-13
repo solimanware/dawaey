@@ -1,5 +1,8 @@
 page-drugs {
   .drugs-screen {
+    .selectable{
+      user-select: text !important;
+    }
     .full-width-text{
       font-size: 4vw;
     }

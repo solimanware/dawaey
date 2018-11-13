@@ -15,6 +15,7 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { OneSignal } from "@ionic-native/onesignal";
 import { SplashPage } from "../pages/splash/splash";
+import { TranslateService } from "@ngx-translate/core";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const root = document.documentElement;
@@ -76,7 +77,8 @@ export class MyApp {
     private events: Events,
     public storage: Storage,
     public modalCtrl: ModalController,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    private translate: TranslateService
   ) {
     this.matColors = {
       red: {
@@ -169,7 +171,7 @@ export class MyApp {
       this.rootPage = TutorialPage;
       localStorage.hasSeenTutorial = "true";
     }
-    this.storage.get("color").then((color:string) => {
+    this.storage.get("color").then((color: string) => {
       if (color && color.length) {
         root.style.setProperty(`--color-primary`, this.matColors[color].primary);
         root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
@@ -197,6 +199,13 @@ export class MyApp {
         //oneSignal
         this.startPushService();
       }
+      this.storage.get('language').then(l => {
+        if(l){
+          console.log(l);
+          this.translate.use(l)
+        }
+      })
+
       let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
       splash.present();
       this.listenToEvents();
@@ -268,8 +277,7 @@ export class MyApp {
   }
 }
 
-//TODO:make app color changeable and localizable
-//TODO:add user rating intellegience and feedback
+//TODO: add user rating intellegience and feedback
 //TODO: better market MEO
 //TODO: change app licence for open source
 //TODO: reduce app size by optimizing resources folder ionic cordova resources not very optimized
@@ -287,3 +295,4 @@ export class MyApp {
 //TODO: edit report templates
 //TODO: be more ready for pwa
 //TODO: Charge ppl outside egypt
+//TODO: share ability
