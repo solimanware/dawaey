@@ -2,12 +2,11 @@ import { SponsorsPage } from "./../sponsors/sponsors";
 import { InteractionsPage } from "./../interactions/interactions";
 import { DrugsPage } from "./../drugs/drugs";
 import { NavParams, Platform } from "ionic-angular";
-import { Page } from "ionic-angular/umd/navigation/nav-util";
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 export interface ITab {
   title:string;
-  component:Page;
+  component:any;
   icon:string;
   url:string;
   }
