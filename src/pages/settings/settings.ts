@@ -91,10 +91,9 @@ export class SettingsPage {
     this.presentToast('You have successfully updated the default country')
   }
   updateDefaultLanguage(ev) {
-    console.log(ev);
-    this.translate.setDefaultLang(ev)
-    this.defaultLanguage = 'ar';
-    this.storage.set('language','ar')
+    this.translate.use(ev)
+    this.defaultLanguage = ev;
+    this.storage.set('language',ev)
   }
   waitNextVersion(ev){
    // this.presentToast('Wait this feature in the next version')
