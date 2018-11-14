@@ -21,12 +21,15 @@
         .catch(err => console.log('Error', err));
     }
   </script>
-  <link href="build/main.css" rel="stylesheet">
+  <link href="build/main.css" rel="stylesheet" lazyload>
 
 </head>
 <body>
-  
 
+  <noscript>
+      <h1>Your browser does not support JavaScript!</h1>
+  </noscript>
+  
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
 
