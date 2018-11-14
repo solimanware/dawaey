@@ -1,15 +1,22 @@
 import { SponsorsPage } from "./../sponsors/sponsors";
 import { InteractionsPage } from "./../interactions/interactions";
 import { DrugsPage } from "./../drugs/drugs";
-import { Component } from "@angular/core";
 import { NavParams, Platform } from "ionic-angular";
+import { Component, OnInit, AfterViewInit } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
+export interface ITab {
+  title:string;
+  component:any;
+  icon:string;
+  url:string;
+  }
 
 @Component({
   selector: "page-tabs",
   templateUrl: "tabs.html"
 })
 export class TabsPage {
-  tabs = [
+  public tabs:ITab[] = [
     {
       title: "Drug Search",
       component: DrugsPage,
@@ -32,10 +39,12 @@ export class TabsPage {
   mySelectedIndex: number;
   isAndroid: boolean;
 
-  constructor(navParams: NavParams, public plt: Platform) {
+  constructor(
+    navParams: NavParams,
+    public plt: Platform,
+    private translate:TranslateService,
+    public ts: TranslateService) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
     this.isAndroid = this.plt.is("andorid");
   }
-
-  ionViewDidLoad() {}
 }

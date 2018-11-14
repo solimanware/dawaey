@@ -3,14 +3,13 @@
     <button ion-button menuToggle>
       <ion-icon color="light" name="menu"></ion-icon>
     </button>
-    <!-- <ion-title ion-text color="light">Search Drugs</ion-title> -->
 
     <ion-segment [(ngModel)]="segment" (ionChange)="toggleSegments()">
       <ion-segment-button value="all">
-        All
+        {{'all'|translate}}
       </ion-segment-button>
       <ion-segment-button value="history">
-        History
+        {{'history'|translate}}
       </ion-segment-button>
     </ion-segment>
 
@@ -25,7 +24,7 @@
   </ion-navbar>
   <ion-toolbar no-border-top>
     <!-- todo: ux better showing user what search category he's searching in -->
-    <ion-searchbar placeholder="Search by {{schema[searchBy]}}" (ionInput)="searchTerm$.next($event.target.value)"
+    <ion-searchbar placeholder="{{'Search by'|translate}} {{schema[searchBy] | translate}}" (ionInput)="searchTerm$.next($event.target.value)"
       (keyup.enter)="onEnterKey()" (ionClear)="searchResult = [];noResults=false;">
     </ion-searchbar>
 
@@ -33,9 +32,8 @@
 </ion-header>
 <!-- todo: better ux teaching users how to use basic app features -->
 <ion-content class="drugs-screen">
-  <p *ngIf="!sampleDrug">fetching drugs, please wait...</p>
-  <h1 *ngIf="this.searchResult.length === 0 && !loading && !shouldShowDidYouMean" class="animate text-center">You can
-    search now <span>↑↑↑</span></h1>
+  <p *ngIf="!sampleDrug">{{'fetching drugs please wait' | translate}}</p>
+  <h1 *ngIf="this.searchResult.length === 0 && !loading && !shouldShowDidYouMean" class="animate text-center">{{'You can search now'|translate}} <span>↑↑↑</span></h1>
   <div *ngIf="loading" class="spinner-container">
     <ion-spinner duration="250"></ion-spinner>
   </div>
@@ -189,7 +187,7 @@
         </svg>
 
       </ion-avatar>
-      <h2 class="lowercase">{{ drug?.tradename }}</h2>
+      <h2 class="lowercase selectable">{{ drug?.tradename }}</h2>
       <p class="lowercase">{{ drug?.activeingredient }}</p>
 
       <p *ngIf="searchBy === 'price'" ion-text color="danger">{{drug?.price}} EGP</p>

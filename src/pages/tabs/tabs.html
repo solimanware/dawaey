@@ -3,7 +3,7 @@
   <ion-tab 
   *ngFor="let tab of tabs"
   [root]="tab.component" 
-  [tabTitle]="tab.title" 
+  [tabTitle]="ts.instant(tab.title)" 
   [tabIcon]="tab.icon"
   [tabUrlPath]="tab.url">
   </ion-tab>

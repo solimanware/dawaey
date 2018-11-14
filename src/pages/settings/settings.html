@@ -15,7 +15,7 @@
   <ion-list>
     <ion-item>
       <ion-label>Language</ion-label>
-      <ion-select [(ngModel)]="defaultLanguage" (ngModelChange)="waitNextVersion($event)">
+      <ion-select [(ngModel)]="defaultLanguage" (ngModelChange)="updateDefaultLanguage($event)">
         <ion-option *ngFor="let choice of languageChoices" [value]="choice.value">
           {{choice.name}}
         </ion-option>
