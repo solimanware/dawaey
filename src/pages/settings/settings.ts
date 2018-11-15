@@ -29,17 +29,7 @@ export class SettingsPage {
   ) {
     this.languageChoices = [
       { value: "ar", name: 'Arabic' },
-      { value: "da", name: 'Danish' },
-      { value: "nl", name: 'Dutch' },
-      { value: "en", name: 'English' },
-      { value: "fi", name: 'Finnish' },
-      { value: "fr", name: 'French' },
-      { value: "de", name: 'German' },
-      { value: "lt", name: "Lithuanian" },
-      { value: "nb", name: 'Norwegian' },
-      { value: "ru", name: 'Russian' },
-      { value: "es", name: 'Spanish' },
-      { value: "sv", name: 'Swedish' },
+      { value: "en", name: 'English' }
     ]
     this.countryChoices = [
       { value: "eg", name: 'Egypt' },
@@ -96,7 +86,7 @@ export class SettingsPage {
     this.storage.set('language',ev)
   }
   waitNextVersion(ev){
-   // this.presentToast('Wait this feature in the next version')
+    this.presentToast('Wait this feature in the next version')
   }
   changeColor(color){
     console.log('change color');

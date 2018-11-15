@@ -4,7 +4,7 @@
     <button ion-button menuToggle>
       <ion-icon color="light" name="menu"></ion-icon>
     </button>
-    <ion-title ion-text color="light">Your Settings ❤</ion-title>
+    <ion-title ion-text text-start color="light">{{'Your Settings'|translate}} ❤</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -14,24 +14,24 @@
 
   <ion-list>
     <ion-item>
-      <ion-label>Language</ion-label>
-      <ion-select [(ngModel)]="defaultLanguage" (ngModelChange)="updateDefaultLanguage($event)">
+      <ion-label>{{'Language'| translate}}</ion-label>
+      <ion-select [(ngModel)]="defaultLanguage" (ionChange)="updateDefaultLanguage($event)">
         <ion-option *ngFor="let choice of languageChoices" [value]="choice.value">
           {{choice.name}}
         </ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label>Customized Country Data</ion-label>
-      <ion-select [(ngModel)]="defaultCountry" (ngModelChange)="waitNextVersion($event)">
+      <ion-label>{{'Customized Country Data' | translate}}</ion-label>
+      <ion-select [(ngModel)]="defaultCountry" (ionChange)="waitNextVersion($event)">
         <ion-option *ngFor="let choice of countryChoices" [value]="choice.value">
           {{choice.name}}
         </ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label>Choose App Color</ion-label>
-      <ion-select [(ngModel)]="defaultColor" (ngModelChange)="changeColor($event)">
+      <ion-label>{{'Choose App Color'|translate}}</ion-label>
+      <ion-select [(ngModel)]="defaultColor" (ionChange)="changeColor($event)">
         <ion-option *ngFor="let choice of colorChoices" [value]="choice.value">
           {{choice.name}}
         </ion-option>
@@ -40,14 +40,14 @@
   </ion-list>
   
   <div text-center padding-bottom>
-    <button ion-button large backgroundColor="primary" (click)="updateDatabase()">Update Application Data</button>
+    <button ion-button large backgroundColor="primary" (click)="updateDatabase()">{{'Update Application Data'|translate}}</button>
   </div>
   <div text-center>
-      <button ion-button backgroundColor="twitter" (click)="showTutorial()">Show tutorial again</button>
+      <button ion-button backgroundColor="twitter" (click)="showTutorial()">{{'Show tutorial again' | translate}}</button>
     </div>
   
     <div text-center padding-top>
-        <button ion-button backgroundColor="danger" small (click)="resetData()">Reset Application</button>
+        <button ion-button backgroundColor="danger" small (click)="resetData()">{{'Reset Application'|translate}}</button>
 
     </div>
 

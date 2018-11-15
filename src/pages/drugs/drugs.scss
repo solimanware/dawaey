@@ -1,5 +1,25 @@
 page-drugs {
   .drugs-screen {
+    .bounceIn{
+      animation-name: bounceIn;
+      animation-duration: 1.2s;
+      animation-direction: alternate;
+      animation-timing-function: linear;
+      animation-iteration-count: 2;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease;
+    }
+    @keyframes bounceIn {
+      from,
+      20%,
+      40%,
+      60%,
+      80%,
+      to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+        transform: scale3d(1, 1, 1);
+      }
+    }
     .selectable{
       user-select: text !important;
     }

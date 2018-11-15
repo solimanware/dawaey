@@ -8,24 +8,18 @@ let drugs;
 onmessage = function (e) {
     //get drugs and store it in worker object so can increase performance
     if (e.data.drugs && e.data.drugs.length) {
-        console.log('Message received from main script');
         drugs = e.data.drugs
-        console.log("received dataset from main thread")
     }
 
     //get term and search exactly with that term according to searchBy key
     if (e.data.key && e.data.term && e.data.type === "exact") {
-        console.log("received search terms... doing search now");
         let workerResult = doSearch(drugs, e.data.key, e.data.term)
-        console.log('Posting workerResult back to main script');
         postMessage(workerResult);
     }
 
     //get term and search approximatly with that term according to searchBy key
     if (e.data.term && e.data.term && e.data.type === "approximate") {
-        console.log("received search term... doing approximate search now");
         let workerResult = doApproximate(drugs, e.data.key, e.data.term)
-        console.log('Posting workerResult back to main script');
         postMessage(workerResult);
     }
 }

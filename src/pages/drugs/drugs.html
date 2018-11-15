@@ -25,20 +25,17 @@
   <ion-toolbar no-border-top>
     <!-- todo: ux better showing user what search category he's searching in -->
     <ion-searchbar placeholder="{{'Search by'|translate}} {{schema[searchBy] | translate}}" (ionInput)="searchTerm$.next($event.target.value)"
-      (keyup.enter)="onEnterKey()" (ionClear)="searchResult = [];noResults=false;">
+      (keyup.enter)="onEnterKey()" (ionClear)="clear()">
     </ion-searchbar>
 
   </ion-toolbar>
 </ion-header>
 <!-- todo: better ux teaching users how to use basic app features -->
 <ion-content class="drugs-screen">
-  <p *ngIf="!sampleDrug">{{'fetching drugs please wait' | translate}}</p>
-  <h1 *ngIf="this.searchResult.length === 0 && !loading && !shouldShowDidYouMean" class="animate text-center">{{'You can search now'|translate}} <span>↑↑↑</span></h1>
-  <div *ngIf="loading" class="spinner-container">
-    <ion-spinner duration="250"></ion-spinner>
-  </div>
+  <p *ngIf="noDrugsYet()">{{'fetching drugs please wait' | translate}}</p>
+  <h1 *ngIf="shouldShowSearchTextGuide()" class="animate text-center">{{'You can search now'|translate}}</h1>
   <!--todo: report bug when using *ngIf with virtualScroll-->
-  <ion-list [class.hidden]="loading" #virtualScroll [virtualScroll]="searchResult" approxItemHeight="64px"
+  <ion-list [class.hidden]="loading" #virtualScroll [virtualScroll]="searchResults$ | async" approxItemHeight="64px"
     approxItemWidth="360px" bufferRatio="20">
     <ion-item *virtualItem="let drug" class="drug" (click)="openDrug(drug)">
       <ion-avatar item-start>
@@ -197,7 +194,7 @@
       <ion-icon name="log-in" color="primary" item-end></ion-icon>
     </ion-item>
   </ion-list>
-  <div *ngIf="!loading&&this.searchResult.length === 0&&shouldShowDidYouMean" text-center>
+  <div *ngIf="showAI()" text-center>
     <p *ngIf="searchTerm.length">Oops Sorry, We Didn't find
       <strong>{{searchTerm}}</strong> you can recheck spelling it... <br> or try our <span ion-text color="green">🤖
         AI (Artificial Intelligence)</span> Search</p>

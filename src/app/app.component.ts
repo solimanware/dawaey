@@ -52,7 +52,7 @@ export class MyApp {
       icon: "cog"
     },
     {
-      title: "Invite Your Friends 👌",
+      title: "Invite Your Friends",
       component: InvitePage,
       icon: "share"
     },

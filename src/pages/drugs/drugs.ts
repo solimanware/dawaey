@@ -23,13 +23,14 @@ import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/switchMap";
 import { TranslateService } from "@ngx-translate/core";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 @Component({ selector: "page-drugs", templateUrl: "drugs.html" })
 export class DrugsPage {
   shouldShowDidYouMean: boolean = false;
-  searchResult: Drug[] = [];
+  searchResults$ = new BehaviorSubject(<Drug[]>[]);
   remmemberedState: Drug[];
   doYouMean: string;
   schema: any = {};
@@ -92,7 +93,7 @@ export class DrugsPage {
       this.sampleDrug = data[0]
       //posting data to worker thread
       this.searchWorker.postMessage({
-        drugs:data
+        drugs: data
       })
       //initializing search options visuals
       this.initSearchByOptions();
@@ -152,7 +153,7 @@ export class DrugsPage {
       .filter(str => {
         //sample drug means data loaded (safe check)
         if (this.sampleDrug &&
-          
+
           //make sure at least term is 2 chars
           ((str.length > 2)) ||
           //or search by any price term length
@@ -175,11 +176,11 @@ export class DrugsPage {
         (res: Drug[]) => {
           //found in our data
           if (res.length >= 1) {
-            this.searchResult = res;
+            this.searchResults$.next(res)
             this.smoothHideLoading();
           } else {
             //not found reset
-            this.searchResult = [];
+            this.searchResults$.next(res)
             this.loading = true;
             this.doApproximate().then((res: Drug[]) => {
               this.shouldShowDidYouMean = true;
@@ -196,7 +197,8 @@ export class DrugsPage {
   }
 
   handleBadSearchTerm(): void {
-    this.searchResult = [];
+    this.searchResults$.next([])
+    //false as it's just bad search term
     this.shouldShowDidYouMean = false;
     this.smoothHideLoading();
   }
@@ -210,7 +212,7 @@ export class DrugsPage {
     this.loading = true;
     return new Promise((res, rej) => {
       this.doApproximate().then(async (drugs: Drug[]) => {
-        this.searchResult = drugs;
+        this.searchResults$.next(drugs)
         this.smoothHideLoading();
         res("done");
       })
@@ -228,7 +230,7 @@ export class DrugsPage {
         this.searchTerm$.next(this.navParams.data.inputToSearch);
         this.doSearch(this.navParams.get("inputToSearch"))
           .then((res: Drug[]) => {
-            this.searchResult = res;
+            this.searchResults$.next(res)
             this.smoothHideLoading();
             resolve("handled");
           })
@@ -262,19 +264,20 @@ export class DrugsPage {
 
   toggleSegments(): void {
     if (this.segment === "history") {
-      this.remmemberedState = this.searchResult;
+      this.remmemberedState = this.searchResults$.getValue();
       this.storage
         .get("history")
         .then(history => {
-          this.searchResult = history || [];
+          this.searchResults$.next(history || [])
         })
         .catch(err => console.log(err));
     } else if (this.segment === "all") {
-      this.searchResult = this.remmemberedState;
+      this.searchResults$.next(this.remmemberedState)
     }
   }
 
   doApproximate(): Promise<Drug[]> {
+    console.time('Approximate Search Took')
     this.searchWorker.postMessage({
       key: this.searchBy,
       term: this.searchTerm,
@@ -282,22 +285,25 @@ export class DrugsPage {
     })
     return new Promise((resolve, reject) => {
       this.searchWorker.onmessage = function (event) {
+        console.timeEnd('Approximate Search Took')
+        //render resolved data
         resolve(event.data)
       }
     })
   }
 
   doSearch(searchTerm$): Promise<Drug[]> {
-    console.time('doing search')
+    console.time('Exact Search Took')
     this.searchWorker.postMessage({
       key: this.searchBy,
       term: searchTerm$,
-      type:"exact"
+      type: "exact"
     })
     return new Promise((resolve, reject) => {
       this.searchWorker.onmessage = function (event) {
+        console.timeEnd('Exact Search Took')
+        //render resolved data
         resolve(event.data)
-        console.timeEnd('doing search')
       }
     })
   }
@@ -341,15 +347,42 @@ export class DrugsPage {
     alert.present();
   }
 
+  //not loaded yet
+  noDrugsYet(): boolean {
+    return !this.sampleDrug
+  }
+
+  //loaded and sample found
+  searchReady(): boolean {
+    return !!this.sampleDrug
+  }
+
+
+  shouldShowSearchTextGuide(): boolean {
+    return !this.searchResults$.getValue().length && !this.loading && !this.shouldShowDidYouMean
+  }
+
+  showAI(): boolean {
+    return !this.searchResults$.getValue().length && !this.loading && this.shouldShowDidYouMean
+  }
+
+  noSearchFound(): boolean {
+    return !this.searchResults$.getValue().length
+  }
+
+  //handle UX
   onEnterKey() {
-    //handle UX
-    if (this.searchResult.length == 0) {
+    if (this.noSearchFound()) {
       this.showApproximate().then(() => {
         this.closeKeyboard();
       });
     } else {
       this.closeKeyboard();
     }
+  }
+
+  clear() {
+    this.searchResults$.next([]);
   }
 
   closeKeyboard() {

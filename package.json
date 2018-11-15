@@ -7,7 +7,7 @@
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",
         "ionic:build": "ionic-app-scripts build",
-        "pwa": "ionic build --prod && cp -R www/ app",
+        "pwa": "ionic build --prod && cp -R www/ ../Dawaey.github.io/pwa",
         "prod:android": "ionic cordova build android --prod --release",
         "prod:ios": "ionic cordova build ios --prod",
         "copy:signkey": "cp /Users/osama/Documents/Keys/Dawaey.keystore ./platforms/android/app/build/outputs/apk/release",
