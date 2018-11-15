@@ -1,0 +1,14 @@
+{
+  "name": "Dawaey App",
+  "short_name": "Dawaey",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "assets/imgs/icon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "background_color": "#4e8ef7",
+  "theme_color": "#4e8ef7",
+  "play_store_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqaPCSiMKuFSCq+BCT3ondsLl3Hce6r9atHlEH+Wii08MoXjxJzZoITuD/3pwy96etbAMX8kPKb71qjDPL/+pfMFzdKqnLfsjephRfiOCvxV2xnoSNh0OPQsxdkx2V+KbL4AxBd9s6zyc8grYf3Uh8blMa053M28v8BBvPHdb0UN6ECXZwsSC0Hb6U7V8tMytnIjJjbgKRN1sb9QR36quREeChsOM049HPVE2vLS/PmU1VkPMNI3SLgfwIUi+d+kOPUKgtRtQgBxlqMJDhGCzvlGOljZR6kF+/W/9/WMOD5QR094f0ALTsbD54OwPylxwYbOY22TVgcVO3F1EAbNmnwIDAQAB"
+}
