@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <script data-ionic="inject">
-    (function(w){var i=w.Ionic=w.Ionic||{};i.version='3.9.2';i.angular='^5.1.0';i.staticDir='build/';})(window);
+    (function (w) { var i = w.Ionic = w.Ionic || {}; i.version = '3.9.2'; i.angular = '^5.1.0'; i.staticDir = 'build/'; })(window);
   </script>
   <meta charset="UTF-8">
   <title>Dawaey App</title>
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <link rel="icon" type="image/x-icon" href="assets/icon/favicon.ico">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4e8ef7">
-  
 
-  <!-- un-comment this code to enable service worker-->
+
+  <!-- un-comment this code to enable service worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
@@ -24,19 +26,20 @@
   <link href="build/main.css" rel="stylesheet" lazyload>
 
 </head>
+
 <body>
 
-    <noscript>
-      <h1>Your browser does not support JavaScript!</h1>
-    </noscript>
-  
+  <noscript>
+    <h1>Your browser does not support JavaScript!</h1>
+  </noscript>
+
   <!-- Ionic's root component and where the app will load -->
   <ion-app></ion-app>
 
   <!-- custom fuzzy search lib -->
   <!-- included to be used in worker files -->
   <script src="assets/libs/fuse.js"></script>
-  
+
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
 
@@ -45,10 +48,13 @@
 
   <!-- The bundle js is generated during the build process -->
   <script src="build/main.js"></script>
-<script>
-setTimeout(()=>{
-console.clear();
-},2000)
-</script>
+
+  <script>
+    setTimeout(() => {
+      console.clear();
+    }, 2000)
+  </script>
+
 </body>
+
 </html>
