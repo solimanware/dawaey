@@ -10,6 +10,7 @@
         "pwa": "ionic build --prod && cp -R www/ app/ && say done",
         "prod:android": "ionic cordova build android --prod --release",
         "prod:ios": "ionic cordova build ios --prod",
+        "pushpwa": "git subtree push --prefix app origin gh-pages",
         "copy:signkey": "cp /Users/osama/Documents/Keys/Dawaey.keystore ./platforms/android/app/build/outputs/apk/release",
         "align": "cd ./platforms/android/app/build/outputs/apk/release && zipalign -v 4 app-release-unsigned.apk dawaey-release.apk"
     },
