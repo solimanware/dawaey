@@ -7,10 +7,10 @@
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build",
         "ionic:build": "ionic-app-scripts build",
-        "pwa": "ionic build --prod && cp -R www/ app/ && say done",
+        "pwa": "ionic build --prod && cp -R www/ app/",
         "prod:android": "ionic cordova build android --prod --release",
         "prod:ios": "ionic cordova build ios --prod",
-        "pushpwa": "git subtree push --prefix app origin gh-pages",
+        "pushpwa": "git subtree push --prefix app origin gh-pages --force",
         "copy:signkey": "cp /Users/osama/Documents/Keys/Dawaey.keystore ./platforms/android/app/build/outputs/apk/release",
         "align": "cd ./platforms/android/app/build/outputs/apk/release && zipalign -v 4 app-release-unsigned.apk dawaey-release.apk"
     },
@@ -60,7 +60,7 @@
     },
     "devDependencies": {
         "@angular/cli": "^7.0.6",
-        "@ionic/app-scripts": "^3.1.8",
+        "@ionic/app-scripts": "3.2.0",
         "@ionic/lab": "^1.0.13",
         "typescript": "2.4.2"
     },
