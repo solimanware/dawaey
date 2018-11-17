@@ -6,11 +6,10 @@ import { MenuController, NavController, Slides, Events, Content } from 'ionic-an
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import firebase from 'firebase/app';
+import firebase from 'firebase';
 import { AuthProvider } from '../../providers/auth/auth';
 
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { AngularFirestore} from '@angular/fire/firestore';
 import { Drug } from "./../../interfaces";
 
 export interface User {

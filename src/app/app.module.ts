@@ -33,27 +33,26 @@ import { PartnerProvider } from '../providers/partner/partner';
 import { IonicStorageModule } from '@ionic/storage';
 
 
-import { HttpClientModule,HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DirectivesModule } from '../directives/directives.module';
 import { SplashPage } from '../pages/splash/splash';
-import { UserProvider } from '../providers/user/user';
 
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuthModule, AngularFireAuth } from '@angular/fire/auth';
 import { AuthProvider } from '../providers/auth/auth';
 import { firebaseConfig } from './config';
 import { Facebook } from '@ionic-native/facebook';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
-    http, 
+    http,
     './assets/i18n/', // or whatever path you're using
     '.json'
   );
@@ -85,11 +84,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserModule,
     TranslateModule.forRoot({
       loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
       }
-  }),
+    }),
     HttpClientModule,
     IonicModule.forRoot(MyApp, {
       tabsHideOnSubPages: true,
@@ -104,17 +103,17 @@ export function HttpLoaderFactory(http: HttpClient) {
           { component: SettingsPage, name: 'SettingsPage', segment: 'settings' },
           { component: AboutPage, name: 'AboutPage', segment: 'about' },
           { component: InvitePage, name: 'InvitePage', segment: 'invite' },
-          { component: TutorialPage, name: 'TutorialPage', segment:'tutorial'}
+          { component: TutorialPage, name: 'TutorialPage', segment: 'tutorial' }
         ]
       }),
-      IonicStorageModule.forRoot({
-        name: '__dawaeyapp',
-        driverOrder: ['indexeddb', 'sqlite', 'websql']
-      }), //<-add this
-      DirectivesModule,
-      AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireDatabaseModule,
-    AngularFireAuthModule
+    IonicStorageModule.forRoot({
+      name: '__dawaeyapp',
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }), //<-add this
+    DirectivesModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireAuthModule // imports firebase/auth, only needed for auth features,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -143,7 +142,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     InAppBrowser,
     DrugProvider,
     PartnerProvider,
-    UserProvider,
     AuthProvider,
     AngularFireAuth,
     AngularFirestore,

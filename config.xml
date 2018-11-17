@@ -104,13 +104,12 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-sqlite-storage" spec="^2.5.1" />
-    <engine name="android" spec="7.1.2" />
-    <engine name="ios" spec="4.5.5" />
-    <engine name="browser" spec="5.0.4" />
     <plugin name="cordova-plugin-facebook4" spec="3.1.0">
         <variable name="APP_ID" value="367660157318572" />
         <variable name="APP_NAME" value="Dawaey" />
         <variable name="FACEBOOK_ANDROID_SDK_VERSION" value="4.37.0" />
     </plugin>
     <plugin name="onesignal-cordova-plugin" spec="^2.4.5" />
+    <engine name="ios" spec="4.5.5" />
+    <engine name="browser" spec="5.0.4" />
 </widget>

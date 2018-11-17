@@ -48,7 +48,6 @@ $colors: (
   @each $key, $value in $colors {
     --color-#{$key}: #{$value};
   }
-  --color-background: red;
 }
 
 @function variablecolor($color-name) {

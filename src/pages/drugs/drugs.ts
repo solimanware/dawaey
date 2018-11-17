@@ -1,5 +1,5 @@
 
-import {switchMap, map, filter, debounceTime, tap} from 'rxjs/operators';
+import { switchMap, map, filter, debounceTime,distinctUntilChanged, tap } from 'rxjs/operators';
 import { Drug } from "./../../interfaces";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { DrugDetails } from "./../drug-details/drug-details";
@@ -17,7 +17,7 @@ import { Keyboard } from "@ionic-native/keyboard";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 
 import { Storage } from "@ionic/storage";
-import { Subject ,  BehaviorSubject } from "rxjs";
+import { Subject, BehaviorSubject } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -39,8 +39,8 @@ export class DrugsPage {
   @ViewChild(Content)
   content: Content;
   loading: boolean = true;
-  @ViewChild("virtualScroll", { read: VirtualScroll })
-  virtualScroll: VirtualScroll;
+  // @ViewChild("virtualScroll", { read: VirtualScroll })
+  // virtualScroll: VirtualScroll;
   searchWorker: any;
 
   constructor(
@@ -70,19 +70,30 @@ export class DrugsPage {
     this.searchWorker = new Worker('./assets/workers/search.js');
   }
 
+  //completly removing view
+  ionViewWillUnload() {
+    this.storage.set('term', this.searchTerm)
+  }
+
   //is view did enter? just loaded?
   ionViewDidEnter() {
     //this happens so fast > careful
     this.loading = true;
+    //Initialize Search term observing
+    this.initSearch();
+    this.storage.get('term').then(res => {
+      if (res.length) {
+        this.searchTerm$.next(res);
+      }
+    })
+    this.loading = false;
+    //don't forget to end loading flag
   }
 
 
   //is view all elemnts did loaded?
   ionViewDidLoad() {
     this.loading = true;
-
-    //Initialize Search term observing
-    this.initSearch();
 
     //report analytics
     this.ga.trackView("Main Screen");
@@ -134,11 +145,12 @@ export class DrugsPage {
         console.log(term);
         this.loading = true
         console.log(this.sampleDrug);
-        
-        
+
+
       }),
       //deboucing to left load from search thread
       debounceTime(100),
+      distinctUntilChanged(),
       //filter out non terms
       filter(event => {
         if (typeof event === "undefined") {
@@ -180,8 +192,7 @@ export class DrugsPage {
           //found in our data
           if (res.length >= 1) {
             this.searchResults$.next(res)
-            this.virtualScroll.writeUpdate(true)
-            this.smoothHideLoading();
+            this.loading = false;
           } else {
             //not found reset
             this.searchResults$.next([])
@@ -204,11 +215,10 @@ export class DrugsPage {
     this.searchResults$.next([])
     //false as it's just bad search term
     this.shouldShowDidYouMean = false;
-    this.smoothHideLoading();
+    this.hideLoading();
   }
 
-  async smoothHideLoading() {
-    await wait(10);
+  hideLoading() {
     this.loading = false;
   }
 
@@ -217,7 +227,7 @@ export class DrugsPage {
     return new Promise((res, rej) => {
       this.doApproximate().then(async (drugs: Drug[]) => {
         this.searchResults$.next(drugs)
-        this.smoothHideLoading();
+        this.hideLoading();
         res("done");
       })
         .catch((err) => console.log(err));
@@ -235,7 +245,7 @@ export class DrugsPage {
         this.doSearch(this.navParams.get("inputToSearch"))
           .then((res: Drug[]) => {
             this.searchResults$.next(res)
-            this.smoothHideLoading();
+            this.hideLoading();
             resolve("handled");
           })
           .catch(err => console.log(err));
@@ -268,8 +278,8 @@ export class DrugsPage {
   }
 
   toggleSegments(): void {
+    this.remmemberedState = this.searchResults$.getValue();
     if (this.segment === "history") {
-      this.remmemberedState = this.searchResults$.getValue();
       this.storage
         .get("history")
         .then(history => {
@@ -393,7 +403,6 @@ export class DrugsPage {
   closeKeyboard() {
     this.keyboard.close();
   }
-
 
   isEmptyHistory() {
     return (
