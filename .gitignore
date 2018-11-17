@@ -32,7 +32,7 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
-src/app/keys.ts
+src/app/config.ts
 
 package-lock.json
 *.sourcemaps/
