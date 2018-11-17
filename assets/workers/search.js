@@ -8,7 +8,7 @@ let drugs;
 onmessage = function (e) {
     //get drugs and store it in worker object so can increase performance
     if (e.data.drugs && e.data.drugs.length) {
-        drugs = e.data.drugs
+        drugs = e.data.drugs        
     }
 
     //get term and search exactly with that term according to searchBy key
