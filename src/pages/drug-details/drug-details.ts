@@ -160,6 +160,7 @@ export class DrugDetails {
       .then(history => {
         const arr = history || [];
         arr.push(drug);
+        this.drugProvider.saveDrugSearch(drug)
         this.storage.set("history", arr);
       })
       .catch(err => console.log(err));

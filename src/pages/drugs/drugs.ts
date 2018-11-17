@@ -1,3 +1,5 @@
+
+import {switchMap, map, filter, debounceTime, tap} from 'rxjs/operators';
 import { Drug } from "./../../interfaces";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { DrugDetails } from "./../drug-details/drug-details";
@@ -15,15 +17,8 @@ import { Keyboard } from "@ionic-native/keyboard";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 
 import { Storage } from "@ionic/storage";
-import { Subject } from "rxjs/Subject";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/filter";
-import "rxjs/add/operator/do";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/switchMap";
+import { Subject ,  BehaviorSubject } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
@@ -77,13 +72,17 @@ export class DrugsPage {
 
   //is view did enter? just loaded?
   ionViewDidEnter() {
-    //Initialize Search term observing
-    this.initSearch();
+    //this happens so fast > careful
+    this.loading = true;
   }
+
 
   //is view all elemnts did loaded?
   ionViewDidLoad() {
     this.loading = true;
+
+    //Initialize Search term observing
+    this.initSearch();
 
     //report analytics
     this.ga.trackView("Main Screen");
@@ -130,14 +129,18 @@ export class DrugsPage {
 
   initSearch() {
     //observing search term behaviour subject
-    this.searchTerm$
-      .do(term => (this.loading = true))
+    this.searchTerm$.pipe(
+      tap(term => {
+        console.log(term);
+        this.loading = true
+        console.log(this.sampleDrug);
+        
+        
+      }),
       //deboucing to left load from search thread
-      .debounceTime(100)
-      //wait until user end typing
-      .distinctUntilChanged()
+      debounceTime(100),
       //filter out non terms
-      .filter(event => {
+      filter(event => {
         if (typeof event === "undefined") {
           this.handleBadSearchTerm();
           //false means filter it out and stop here
@@ -146,11 +149,11 @@ export class DrugsPage {
           //true mean pass it to next operator
           return true;
         }
-      })
+      }),
       //trimming white spaces of string prefrals
-      .map(term => term.trim())
+      map(term => term.trim()),
       //make sure term 3 letters or more?
-      .filter(str => {
+      filter(str => {
         //sample drug means data loaded (safe check)
         if (this.sampleDrug &&
 
@@ -166,21 +169,22 @@ export class DrugsPage {
           //false means filter it out and stop here
           return false;
         }
-      })
+      }),
       //set term string to that term
-      .do(term => (this.searchTerm = term))
+      tap(term => (this.searchTerm = term)),
       //do the search > todo: move to search provider
-      .switchMap((searchTerm: string) => this.doSearch(searchTerm))
+      switchMap((searchTerm$) => this.doSearch(searchTerm$)))
       //get results
       .subscribe(
         (res: Drug[]) => {
           //found in our data
           if (res.length >= 1) {
             this.searchResults$.next(res)
+            this.virtualScroll.writeUpdate(true)
             this.smoothHideLoading();
           } else {
             //not found reset
-            this.searchResults$.next(res)
+            this.searchResults$.next([])
             this.loading = true;
             this.doApproximate().then((res: Drug[]) => {
               this.shouldShowDidYouMean = true;
@@ -257,6 +261,7 @@ export class DrugsPage {
       .then(history => {
         const arr = history || [];
         arr.push(drug);
+        this.drugProvider.saveDrugSearch(drug)
         this.storage.set("history", arr);
       })
       .catch(err => console.log(err));

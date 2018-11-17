@@ -8,14 +8,21 @@ import { AboutPage } from "./../pages/about/about";
 import { PartnersPage } from "./../pages/partners/partners";
 import { TabsPage } from "./../pages/tabs/tabs";
 import { Component, ViewChild } from "@angular/core";
-import { Nav, Platform, Events, ModalController, AlertController } from "ionic-angular";
+import { Nav, Platform, Events, ModalController, AlertController, ActionSheetController } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
-import { OneSignal } from "@ionic-native/onesignal";
+import { OneSignal, OSNotification } from "@ionic-native/onesignal";
 import { SplashPage } from "../pages/splash/splash";
 import { TranslateService } from "@ngx-translate/core";
+import { AuthProvider } from "../providers/auth/auth";
+import { User } from "firebase";
+import firebase from 'firebase/app';
+import { AngularFireAuth } from "@angular/fire/auth";
+import { switchMap, map, filter, distinctUntilChanged, debounceTime, tap } from 'rxjs/operators';
+import { Observable } from "rxjs";
+
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const root = document.documentElement;
@@ -65,6 +72,8 @@ export class MyApp {
   firstTime: boolean;
 
   matColors: MaterialColors;
+  user: firebase.User;
+
 
 
   constructor(
@@ -78,7 +87,10 @@ export class MyApp {
     public storage: Storage,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public actionCtrl: ActionSheetController,
+    public authProvider: AuthProvider,
+    private afAuth: AngularFireAuth,
   ) {
     this.matColors = {
       red: {
@@ -166,6 +178,10 @@ export class MyApp {
     //ignored at first app run
     if (localStorage.hasSeenTutorial === "true") {
       this.rootPage = TabsPage;
+      //show his info:
+      this.storage.get('user').then(res => {
+        this.user = res;
+      })
     } else {
       //first app run go to tutorial page and set flag to true
       this.rootPage = TutorialPage;
@@ -200,7 +216,7 @@ export class MyApp {
         this.startPushService();
       }
       this.storage.get('language').then(l => {
-        if(l){
+        if (l) {
           console.log(l);
           this.translate.use(l)
         }
@@ -210,7 +226,21 @@ export class MyApp {
       splash.present();
       this.listenToEvents();
       this.startBackgroundJobs();
+
+      (() => {
+        window.alert = null;
+        window.alert = (msg) => {
+          console.warn(msg)
+          const alert = this.alertCtrl.create({
+            title: 'Info!',
+            subTitle: msg,
+            buttons: ['OK']
+          });
+          alert.present();
+        }
+      })()
     });
+    //careful doing something before ready
   }
 
   startBackgroundJobs() {
@@ -237,20 +267,20 @@ export class MyApp {
 
   startPushService() {
     //start registring and getting pushs
-    this.oneSignal.startInit(
-      "daaa8674-68e2-49a3-aa58-3844d767a9aa",
-      "1061030166084"
-    );
-    this.oneSignal.handleNotificationReceived().subscribe(jsonData => {
-      console.log(JSON.stringify(jsonData));
-    });
-
-    this.oneSignal.handleNotificationOpened().subscribe(jsonData => {
-      // do something when a notification is opened
-      console.log(JSON.stringify(jsonData));
-    });
-
-    this.oneSignal.endInit();
+    this.oneSignal
+      .startInit(
+        "daaa8674-68e2-49a3-aa58-3844d767a9aa",
+        "1061030166084"
+      )
+      .handleNotificationReceived((msg: OSNotification) => {
+        let payload = msg.payload
+        alert(payload.body)
+      })
+      .handleNotificationOpened((msg: OSNotification) => {
+        let payload = msg.payload
+        alert(payload.body)
+      })
+      .endInit();
   }
 
   startCheckingForUpdates() {
@@ -261,6 +291,17 @@ export class MyApp {
     this.events.subscribe("country:changed", c => {
       console.log("country:changed getAndStoreDrugs for " + c);
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
+    });
+    this.events.subscribe("user:login", user => {
+      console.log("user has logined", user);
+      if (user) {
+        this.user = this.afAuth.auth.currentUser
+      } else {
+        this.storage.get('user').then(res => {
+          this.user = res;
+        })
+      }
+
     });
     this.events.subscribe("color:changed", (color) => {
       root.style.setProperty(`--color-primary`, this.matColors[color].primary);

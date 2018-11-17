@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map } from "rxjs/operators";
 import { API } from "../../app/global";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { Storage } from "@ionic/storage";
 
 @Injectable()

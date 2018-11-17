@@ -10,6 +10,17 @@
 
     <ion-content>
       <ion-list>
+
+        <div class="user">
+          <h2 text-center padding-top no-margin color="primary">{{user?.displayName}}</h2>
+          <p text-center no-margin color="primary">Hi, Welcome to Dawaey 👋😃</p>
+          <img [src]="user?.photoURL" alt="">
+
+        </div>
+
+
+
+
         <button menuClose ion-item *ngFor="let p of menuPages" (click)="openPage(p)" icon-start>
           <ion-icon name="{{p.icon}}"></ion-icon>
           <span ion-text color="primary">{{p.title | translate}}</span>

@@ -22,7 +22,7 @@ export class SplashPage {
  
     setTimeout(() => {
       this.viewCtrl.dismiss();
-    }, 1500);
+    }, 500);
  
   }
 

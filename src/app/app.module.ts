@@ -39,7 +39,15 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DirectivesModule } from '../directives/directives.module';
 import { SplashPage } from '../pages/splash/splash';
+import { UserProvider } from '../providers/user/user';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireAuthModule, AngularFireAuth } from '@angular/fire/auth';
+import { AuthProvider } from '../providers/auth/auth';
+import { firebaseConfig } from './config';
+import { Facebook } from '@ionic-native/facebook';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 
 // AoT requires an exported function for factories
@@ -103,7 +111,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         name: '__dawaeyapp',
         driverOrder: ['indexeddb', 'sqlite', 'websql']
       }), //<-add this
-      DirectivesModule
+      DirectivesModule,
+      AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -131,7 +142,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     SocialSharing,
     InAppBrowser,
     DrugProvider,
-    PartnerProvider
+    PartnerProvider,
+    UserProvider,
+    AuthProvider,
+    AngularFireAuth,
+    AngularFirestore,
+    AngularFireDatabase,
+    Facebook
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

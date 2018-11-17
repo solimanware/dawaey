@@ -1,6 +1,7 @@
 //importing fuse script to be used in web worker
 //note that web worker is completely separate than dom and only communicate with messages
 importScripts('./../libs/fuse.js');
+console.log('worker is working');
 
 let drugs;
 
@@ -9,6 +10,7 @@ onmessage = function (e) {
     //get drugs and store it in worker object so can increase performance
     if (e.data.drugs && e.data.drugs.length) {
         drugs = e.data.drugs
+        console.log('data size',drugs.length);        
     }
 
     //get term and search exactly with that term according to searchBy key

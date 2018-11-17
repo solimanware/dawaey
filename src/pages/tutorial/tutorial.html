@@ -1,7 +1,7 @@
 <ion-header no-border class="transparent-bg">
   <ion-navbar>
     <ion-buttons end *ngIf="showSkip">
-      <button ion-button (click)="startApp()" color="darker">Skip</button>
+      <button ion-button (click)="skipToLogin()" color="darker">Skip</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -10,63 +10,133 @@
   <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager>
     <ion-slide>
       <ion-content>
-        <img src="assets/img/stars.gif" id="stars" alt="">
-          <img src="assets/img/ica-slidebox-img-1.png" class="slide-image"/>
-          <h2 class="slide-title" ion-text color="primary">
-            {{ 'Welcome to Dawaey 🎉' | translate }}
-          </h2>
-          <div>
-              <p text-left>
-                  <b ion-text color="primary">Dawaey</b> is a smart medical refrence for healthcare providers that working out of the box 🏄‍♂️.
-                </p>
-                <p text-left>
-                    It uses new technologies to assist you and make your life easier 😉
-                </p>
-                <!-- <p text-left>
+        <img src="assets/img/stars.gif" class="stars" alt="">
+        <img src="assets/img/ica-slidebox-img-1.png" class="slide-image" />
+        <h2 class="slide-title" ion-text color="primary">
+          {{ 'Welcome to Dawaey 🎉' | translate }}
+        </h2>
+        <div>
+          <p text-left>
+            <b ion-text color="primary">Dawaey</b> is a smart medical refrence for healthcare providers that working
+            out of the box 🏄‍♂️.
+          </p>
+          <p text-left>
+            It uses new technologies to assist you and make your life easier 😉
+          </p>
+          <!-- <p text-left>
                     It's <span ion-text color="danger">free</span>  and will remain free with your help and <a href="mailto:sponsor@dawaey.com">support</a> 😇
                 </p> -->
-          </div>
+        </div>
       </ion-content>
 
     </ion-slide>
     <ion-slide>
-        <ion-content>
+      <ion-content>
+        <img src="assets/img/stars.gif" class="stars" alt="">
+        <img src="assets/img/ica-slidebox-img-2.png" class="slide-image" />
+        <h2 padding-left text-left ion-text color="success" id="features">Explore new features:</h2>
+        <ol text-left padding-bottom>
+          <li>🤖 <span ion-text color="danger">AI</span> (Artificial Intelligence) Assistance</li>
+          <li>🔍 Ability to search medications by</li>
+          <ul>
+            <li>Tradenames</li>
+            <li>Active ingredients</li>
+            <li>Medication <span ion-text color="warning">updated</span> local price </li>
+            <li>Medication company</li>
+            <li>Medication group</li>
+            <li>Verbose pharmacology information</li>
+          </ul>
+          <li>💊 Drug-Drug Interactions</li>
+          <li>📷 View for medication pictures</li>
+          <li>📚 Search linked application information</li>
+          <li>ℹ️ Ablibity to ask Google for more medication information</li>
+          <li>➕ Add <a href="mailto:app@dawaey.com?subject=Adding new drug information (drug name)">new</a> market
+            medications</li>
+          <li>♻️ Update app data via internet</li>
+          <li>🗣 Multi language support</li>
+          <li>🌏 Multiple countries support</li>
+          <li>✔️ Ability to save search histories</li>
 
-      <img src="assets/img/ica-slidebox-img-2.png" class="slide-image"/>
-      <h2 padding-left text-left ion-text color="success">Explore new features:</h2>
-      <ol text-left padding-bottom>
-            <li>🤖 <span ion-text color="danger">AI</span> (Artificial Intelligence) Assistance</li>
-            <li>🔍 Ability to search medications by</li>
-            <ul>
-              <li>Tradenames</li>
-              <li>Active ingredients</li>
-              <li>Medication <span ion-text color="warning">updated</span> local price </li>
-              <li>Medication company</li>
-              <li>Medication group</li>
-              <li>Verbose pharmacology information</li>
-            </ul>
-            <li>💊 Drug-Drug Interactions</li>
-            <li>📷 View for medication pictures</li>
-            <li>📚 Search linked application information</li>
-            <li>ℹ️ Ablibity to ask Google for more medication information</li>
-            <li>➕ Add <a href="mailto:app@dawaey.com?subject=Adding new drug information (drug name)">new</a> market medications</li>
-            <li>♻️ Update app data via internet</li>
-            <li>🗣 Multi language support</li>
-            <li>🌏 Multiple countries support</li>
-            <li>✔️ Ability to save search histories</li>
-
-          </ol>
-    </ion-content>
-  </ion-slide>
+        </ol>
+      </ion-content>
+    </ion-slide>
 
     <ion-slide>
-      <img src="assets/img/ica-slidebox-img-4.png" class="slide-image"/>
-      <h2 class="slide-title">Ready to Try?</h2>
-      <button ion-button icon-end large clear (click)="startApp()">
-        Continue
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
+      <img src="assets/img/stars.gif" class="stars" alt="">
+      <img src="assets/img/ica-slidebox-img-4.png" class="slide-image" />
+      <h2 class="slide-title" color="primary" (click)="skipToLogin()">Ready to Try? 👍</h2>
     </ion-slide>
+
+    <ion-slide class="auth-slide">
+      <h1 text-center color="primary">Start now 😍</h1>
+      <ion-list class="auth-wrapper">
+        
+
+        <div class="continue-with" padding-top>
+          <img (click)="loginGoogle()" src="../../assets/img/google.jpg" alt="">
+          <img (click)="loginFacebook()" padding-top src="../../assets/img/facebook.jpg" alt="">
+        </div>
+
+
+        <h1 text-center padding-top color="primary">Have account?</h1>
+
+        <div class="sign-up-form">
+          <ion-segment [(ngModel)]="segment" style="background:#eee">
+            <ion-segment-button value="login" color="darker">
+              Login
+            </ion-segment-button>
+            <ion-segment-button value="signup" color="darker">
+              Signup
+            </ion-segment-button>
+          </ion-segment>
+
+
+
+          <ion-item>
+            <ion-label>email</ion-label>
+            <ion-input required type="email" [(ngModel)]="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>password</ion-label>
+            <ion-input required type="password" [(ngModel)]="password"></ion-input>
+          </ion-item>
+          <div text-right>
+            <button ion-button icon-end large clear *ngIf="segment === 'signup'" (click)="signup()">
+              Signup
+              <ion-icon name="arrow-forward"></ion-icon>
+            </button>
+            <button ion-button icon-end large clear *ngIf="segment === 'login'" (click)="login()">
+              Login
+              <ion-icon name="arrow-forward"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+
+        <p text-center padding-top (click)="guestLogin()" style="color:#dadada;text-decoration:underline;">continue as guest</p>
+
+
+
+
+
+
+        <!-- <ion-item>
+                  <ion-label>profession</ion-label>
+                  <ion-select required [(ngModel)]="profession">
+                    <ion-option value="doctor">Physician</ion-option>
+                    <ion-option value="pharmacist">Pharmacist</ion-option>
+                    <ion-option value="other">Other</ion-option>
+                  </ion-select>
+                </ion-item> -->
+
+      </ion-list>
+
+
+
+
+    </ion-slide>
+
+
 
   </ion-slides>
 </ion-content>
