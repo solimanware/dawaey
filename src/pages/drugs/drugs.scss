@@ -1,5 +1,50 @@
 page-drugs {
   .drugs-screen {
+    height: 100%;
+    .ads{
+      position: absolute;
+      bottom: 0;
+      //left: -50%;
+      text-align: center;
+      width: 100%;
+      
+    }
+
+    @keyframes zoomInDown {
+      from {
+        opacity: 0;
+        transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -1000px, 0);
+        transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 60px, 0);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+      }
+    }
+    
+    .zoomInDown {
+      animation-name: zoomInDown;
+      animation-duration: 1.2s;
+      animation-direction: alternate;
+      animation-iteration-count: 2;
+      animation-fill-mode: backwards;
+    }
+
+    .ads .buttons{
+      margin: 20px;
+      padding: 5px;
+    }
+    .ads a{
+      display: block;
+      margin: 0 auto;
+      width: 80%;
+      height: 60px;
+      color:var(--color-snow) !important;
+      background:var(--color-primary) !important;
+      border: 5px solid gold;
+    }
+    @keyframes border {
+      to {
+        stroke-dashoffset: -800;
+      }
+    }
     .bounceIn{
       animation-name: bounceIn;
       animation-duration: 1.2s;

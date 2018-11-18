@@ -25,6 +25,10 @@
           <ion-icon name="{{p.icon}}"></ion-icon>
           <span ion-text color="primary">{{p.title | translate}}</span>
         </button>
+        <button menuClose ion-item (click)="logOut()" icon-start>
+            <ion-icon name="swap"></ion-icon>
+          <span ion-text color="primary">Logout</span>
+        </button>
       </ion-list>
     </ion-content>
 

@@ -47,6 +47,7 @@ import { AuthProvider } from '../providers/auth/auth';
 import { firebaseConfig } from './config';
 import { Facebook } from '@ionic-native/facebook';
 import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
+import { PharmaciesPage } from '../pages/pharmacies/pharmacies';
 
 
 // AoT requires an exported function for factories
@@ -78,7 +79,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsPage,
     InvitePage,
     TutorialPage,
-    SplashPage
+    SplashPage,
+    PharmaciesPage
   ],
   imports: [
     BrowserModule,
@@ -103,7 +105,9 @@ export function HttpLoaderFactory(http: HttpClient) {
           { component: SettingsPage, name: 'SettingsPage', segment: 'settings' },
           { component: AboutPage, name: 'AboutPage', segment: 'about' },
           { component: InvitePage, name: 'InvitePage', segment: 'invite' },
-          { component: TutorialPage, name: 'TutorialPage', segment: 'tutorial' }
+          { component: TutorialPage, name: 'TutorialPage', segment: 'tutorial' },
+          { component: PharmaciesPage, name: 'PharmaciesPage', segment: 'pharmacies' },
+          { component: PharmaciesPage, name: 'PharmaciesPage', segment: 'pharmacies/:id' },
         ]
       }),
     IonicStorageModule.forRoot({
@@ -128,7 +132,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsPage,
     InvitePage,
     TutorialPage,
-    SplashPage
+    SplashPage,
+    PharmaciesPage
   ],
   providers: [
     StatusBar,

@@ -73,10 +73,8 @@ export class SettingsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
-   // this.translate.setDefaultLang('en')
   }
   updateDefaultCountry(ev) {
-    console.log(ev);
     this.settingsProvider.setCountry(ev)
     this.presentToast('You have successfully updated the default country')
   }
@@ -89,18 +87,15 @@ export class SettingsPage {
     this.presentToast('Wait this feature in the next version')
   }
   changeColor(color){
-    console.log('change color');
-    console.log(color);
-    
     this.settingsProvider.setColor(color)
   }
   updateDatabase() {
     this.presentToast('Updating ...')
     this.drugProvider.updateDrugs().subscribe(data => {
-      console.log(data.length);
       this.presentToast('You have successfully updated the application data')
     });
   }
+  
   presentToast(msg) {
     let toast = this.toastCtrl.create({
       message: msg,

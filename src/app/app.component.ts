@@ -22,6 +22,7 @@ import firebase from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { switchMap, map, filter, distinctUntilChanged, debounceTime, tap } from 'rxjs/operators';
 import { Observable } from "rxjs";
+import { PharmaciesPage } from "../pages/pharmacies/pharmacies";
 
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -47,6 +48,11 @@ export class MyApp {
       title: "Home",
       component: TabsPage,
       icon: "home"
+    },
+    {
+      title: "Nearby Pharmacies",
+      component: PharmaciesPage,
+      icon: "medkit"
     },
     {
       title: "Partners",
@@ -173,60 +179,71 @@ export class MyApp {
     this.platformReady();
   }
 
-  recoverRememberedState() {
-    //not firing at first until flag is set
-    //ignored at first app run
-    if (localStorage.hasSeenTutorial === "true") {
+  async recoverRememberedState() {
+    //get saved user
+    const savedUser: User = await this.storage.get('user')
+    if (savedUser && savedUser.displayName && savedUser.displayName.length) {
       this.rootPage = TabsPage;
-      //show his info:
-      this.storage.get('user').then(res => {
-        this.user = res;
-      })
+      this.user = savedUser;
     } else {
-      //first app run go to tutorial page and set flag to true
-      this.rootPage = TutorialPage;
-      localStorage.hasSeenTutorial = "true";
+      this.rootPage = TutorialPage
     }
-    this.storage.get("color").then((color: string) => {
-      if (color && color.length) {
-        root.style.setProperty(`--color-primary`, this.matColors[color].primary);
-        root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
-      }
+    
+    //get saved color
+    const savedColor: string = await this.storage.get("color")
+    if (savedColor && savedColor.length) {
+      root.style.setProperty(`--color-primary`, this.matColors[savedColor].primary);
+      root.style.setProperty(`--color-secondary`, this.matColors[savedColor].secondary);
+    }
+
+    //get saved language
+    const savedLanguage: string = await this.storage.get('language')
+    if (savedLanguage && savedLanguage.length) {
+      this.translate.use(savedLanguage)
+    }
+  }
+
+  logOut(){
+    this.storage.remove('user')
+
+    this.authProvider.afAuth.auth.signOut()
+    .then(()=>{
+      this.platform.exitApp()
     })
+    .catch((err)=>{
+      alert(err)
+    })
+
   }
 
   platformReady() {
     // Call any initial plugins when ready
-    this.platform.ready().then(() => {
-      this.recoverRememberedState()
+    this.platform.ready().then(async () => {
+      //platform is ready?
+      await this.recoverRememberedState();
+      //is it cordova?
       if (this.platform.is("cordova")) {
         //change status bar color
         if (this.platform.is("android")) {
-          //set statusbar color
+          //set statusbar color to match theme
           this.statusBar.backgroundColorByHexString("#7b1fa2");
-          this.storage.get("color").then(color => {
-            if (color) {
-              this.statusBar.backgroundColorByHexString(this.matColors[color].primary);
-            }
-          })
+          const savedColor: string = await this.storage.get("color")
+          if (savedColor) {
+            this.statusBar.backgroundColorByHexString(this.matColors[savedColor].primary);
+          }
         }
         //google analytics
         this.startAnalytics();
         //oneSignal
         this.startPushService();
       }
-      this.storage.get('language').then(l => {
-        if (l) {
-          console.log(l);
-          this.translate.use(l)
-        }
-      })
-
       let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
       splash.present();
       this.listenToEvents();
       this.startBackgroundJobs();
 
+
+      //change alert behavior
       (() => {
         window.alert = null;
         window.alert = (msg) => {
@@ -239,7 +256,11 @@ export class MyApp {
           alert.present();
         }
       })()
+      //end platform ready
     });
+
+
+
     //careful doing something before ready
   }
 

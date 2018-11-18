@@ -1,5 +1,5 @@
 
-import { switchMap, map, filter, debounceTime,distinctUntilChanged, tap } from 'rxjs/operators';
+import { switchMap, map, filter, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { Drug } from "./../../interfaces";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { DrugDetails } from "./../drug-details/drug-details";
@@ -19,6 +19,7 @@ import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { Storage } from "@ionic/storage";
 import { Subject, BehaviorSubject } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
+import { PharmaciesPage } from '../pharmacies/pharmacies';
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
@@ -39,9 +40,10 @@ export class DrugsPage {
   @ViewChild(Content)
   content: Content;
   loading: boolean = true;
-  // @ViewChild("virtualScroll", { read: VirtualScroll })
-  // virtualScroll: VirtualScroll;
+  @ViewChild("virtualScroll", { read: VirtualScroll })
+  virtualScroll: VirtualScroll;
   searchWorker: any;
+  approximateValues: Drug[];
 
   constructor(
     public keyboard: Keyboard,
@@ -185,30 +187,30 @@ export class DrugsPage {
       //set term string to that term
       tap(term => (this.searchTerm = term)),
       //do the search > todo: move to search provider
-      switchMap((searchTerm$) => this.doSearch(searchTerm$)))
-      //get results
-      .subscribe(
-        (res: Drug[]) => {
-          //found in our data
-          if (res.length >= 1) {
-            this.searchResults$.next(res)
-            this.loading = false;
-          } else {
-            //not found reset
-            this.searchResults$.next([])
-            this.loading = true;
-            this.doApproximate().then((res: Drug[]) => {
-              this.shouldShowDidYouMean = true;
-              //or string is a fallback to not found using fuzz search
-              this.doYouMean = res[0].tradename || "";
-              this.loading = false;
-            });
-          }
-        },
-        err => {
-          console.log(err);
+      switchMap((searchTerm$) => this.doSearch(searchTerm$)),
+      //push results
+      map((results: Drug[]) => {
+        //there's results? push them
+        if (results.length >= 1) {
+          return results
+        } else {
+          //else show the nearest drug
+          this.shouldShowDidYouMean = true;
+          this.doApproximate().then((result) => {
+            this.approximateValues = result
+            this.doYouMean = result[0][this.searchBy]
+          })
+          //return empty array just for displaying nothing in UI until user click button
+          return [];
         }
-      );
+      }),
+      tap((results: Drug[]) => {
+        this.searchResults$.next(results);
+        this.loading = false;
+      })
+    ).subscribe();
+    //Don't Forget SUBSCRIBE
+
   }
 
   handleBadSearchTerm(): void {
@@ -222,16 +224,8 @@ export class DrugsPage {
     this.loading = false;
   }
 
-  showApproximate(): Promise<string> {
-    this.loading = true;
-    return new Promise((res, rej) => {
-      this.doApproximate().then(async (drugs: Drug[]) => {
-        this.searchResults$.next(drugs)
-        this.hideLoading();
-        res("done");
-      })
-        .catch((err) => console.log(err));
-    });
+  showApproximate(): void {
+    this.searchResults$.next(this.approximateValues)
   }
 
   handleComingFromOtherPage(): Promise<string> {
@@ -388,9 +382,8 @@ export class DrugsPage {
   //handle UX
   onEnterKey() {
     if (this.noSearchFound()) {
-      this.showApproximate().then(() => {
-        this.closeKeyboard();
-      });
+      this.showApproximate()
+      this.closeKeyboard();
     } else {
       this.closeKeyboard();
     }
@@ -410,5 +403,9 @@ export class DrugsPage {
       this.loading !== true &&
       this.segment == "history"
     );
+  }
+
+  registerNewPharmacy() {
+    this.navCtrl.push(PharmaciesPage)
   }
 }
