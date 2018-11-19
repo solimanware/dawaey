@@ -13,16 +13,14 @@ import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
-import { OneSignal, OSNotification } from "@ionic-native/onesignal";
 import { SplashPage } from "../pages/splash/splash";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthProvider } from "../providers/auth/auth";
 import { User } from "firebase";
 import firebase from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
-import { switchMap, map, filter, distinctUntilChanged, debounceTime, tap } from 'rxjs/operators';
-import { Observable } from "rxjs";
 import { PharmaciesPage } from "../pages/pharmacies/pharmacies";
+import { FcmProvider } from "../providers/fcm/fcm";
 
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -87,7 +85,6 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     private ga: GoogleAnalytics,
-    private oneSignal: OneSignal,
     private drugProvider: DrugProvider,
     private events: Events,
     public storage: Storage,
@@ -97,6 +94,7 @@ export class MyApp {
     public actionCtrl: ActionSheetController,
     public authProvider: AuthProvider,
     private afAuth: AngularFireAuth,
+    private fcm: FcmProvider
   ) {
     this.matColors = {
       red: {
@@ -188,7 +186,7 @@ export class MyApp {
     } else {
       this.rootPage = TutorialPage
     }
-    
+
     //get saved color
     const savedColor: string = await this.storage.get("color")
     if (savedColor && savedColor.length) {
@@ -203,16 +201,16 @@ export class MyApp {
     }
   }
 
-  logOut(){
+  logOut() {
     this.storage.remove('user')
 
     this.authProvider.afAuth.auth.signOut()
-    .then(()=>{
-      this.platform.exitApp()
-    })
-    .catch((err)=>{
-      alert(err)
-    })
+      .then(() => {
+        this.platform.exitApp()
+      })
+      .catch((err) => {
+        alert(err)
+      })
 
   }
 
@@ -234,7 +232,7 @@ export class MyApp {
         }
         //google analytics
         this.startAnalytics();
-        //oneSignal
+        //fcm
         this.startPushService();
       }
       let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
@@ -288,20 +286,13 @@ export class MyApp {
 
   startPushService() {
     //start registring and getting pushs
-    this.oneSignal
-      .startInit(
-        "daaa8674-68e2-49a3-aa58-3844d767a9aa",
-        "1061030166084"
-      )
-      .handleNotificationReceived((msg: OSNotification) => {
-        let payload = msg.payload
-        alert(payload.body)
-      })
-      .handleNotificationOpened((msg: OSNotification) => {
-        let payload = msg.payload
-        alert(payload.body)
-      })
-      .endInit();
+    // Get a FCM token
+    this.fcm.getToken()
+
+    // Listen to incoming messages
+    this.fcm.listenToNotifications().subscribe((data:any)=>{
+      alert(data.message)
+    })
   }
 
   startCheckingForUpdates() {

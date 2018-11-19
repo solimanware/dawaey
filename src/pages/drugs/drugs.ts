@@ -83,11 +83,11 @@ export class DrugsPage {
     this.loading = true;
     //Initialize Search term observing
     this.initSearch();
-    this.storage.get('term').then(res => {
-      if (res.length) {
-        this.searchTerm$.next(res);
-      }
-    })
+    // this.storage.get('term').then(res => {
+    //   if (res.length) {
+    //     this.searchTerm$.next(res);
+    //   }
+    // })
     this.loading = false;
     //don't forget to end loading flag
   }

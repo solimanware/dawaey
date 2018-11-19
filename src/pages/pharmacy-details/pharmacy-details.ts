@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 @Component({
-  selector: 'page-pharmacies-detials',
-  templateUrl: 'pharmacies-detials.html',
+  selector: 'page-pharmacy-details',
+  templateUrl: 'pharmacy-details.html',
 })
-export class PharmaciesDetialsPage {
+export class PharmacyDetailsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad PharmaciesDetialsPage');
+    console.log('ionViewDidLoad PharmacyDetailsPage');
   }
 
 }

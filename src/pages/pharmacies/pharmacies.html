@@ -4,16 +4,45 @@
     <button ion-button menuToggle>
       <ion-icon color="light" name="menu"></ion-icon>
     </button>
+    <ion-title color="light">Nearby Pharmacies</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label>Choose Governate</ion-label>
+      <ion-select [(ngModel)]="choosenGov" (ionChange)="govChoosen($event)">
+        <ion-option *ngFor="let gov of govs" [value]="gov">{{gov}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Choose Location</ion-label>
+      <ion-select [(ngModel)]="choosenLocation" (ionChange)="locationChoosen($event)">
+        <ion-option *ngFor="let location of locations" [value]="gov">{{location}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-list #virtualScroll [virtualScroll]="filteredPharmacies" approxItemHeight="64px" approxItemWidth="360px"
+      bufferRatio="50">
+      <ion-item *virtualItem="let pharmacy" dir="rtl">
+        <ion-avatar item-start>
+          <img src="assets/img/pharmacy.png">
+        </ion-avatar>
+        <h2>{{ pharmacy?.name }}</h2>
+        <p>{{ pharmacy?.address }}</p>
+        <a href="tel:{{pharmacy.tel}}">Call now</a>
+      </ion-item>
+    </ion-list>
 
-  <p><button (click)="geoFindMe()">Show my location</button></p>
-  <div id="out"></div>
+  </ion-list>
 
-  <h1>Hello</h1>
+  <div class="ads" ion-fixed>
+    <div class="buttons zoomInDown">
+      <a ion-button backgroundColor="google" (click)="registerNewPharmacy()">Register Your Pharmacy To Get Online
+        Orders For Free Now</a>
+    </div>
+  </div>
 
 </ion-content>

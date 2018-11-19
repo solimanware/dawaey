@@ -21,11 +21,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 
 import { GoogleAnalytics } from '@ionic-native/google-analytics';
-import { OneSignal } from '@ionic-native/onesignal';
 
 import { SettingsProvider } from '../providers/settings/settings';
-
-import { SocialSharing } from '@ionic-native/social-sharing';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { DrugProvider } from '../providers/drug/drug';
@@ -48,6 +45,11 @@ import { firebaseConfig } from './config';
 import { Facebook } from '@ionic-native/facebook';
 import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { PharmaciesPage } from '../pages/pharmacies/pharmacies';
+import { PharmacyProvider } from '../providers/pharmacy/pharmacy';
+import { PharmacyDetailsPage } from '../pages/pharmacy-details/pharmacy-details';
+import { FcmProvider } from '../providers/fcm/fcm';
+import { Push } from '@ionic-native/push';
+
 
 
 // AoT requires an exported function for factories
@@ -80,7 +82,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     InvitePage,
     TutorialPage,
     SplashPage,
-    PharmaciesPage
+    PharmaciesPage,
+    PharmacyDetailsPage
   ],
   imports: [
     BrowserModule,
@@ -133,17 +136,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     InvitePage,
     TutorialPage,
     SplashPage,
-    PharmaciesPage
+    PharmaciesPage,
+    PharmacyDetailsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Keyboard,
     GoogleAnalytics,
-    OneSignal,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     SettingsProvider,
-    SocialSharing,
     InAppBrowser,
     DrugProvider,
     PartnerProvider,
@@ -151,7 +153,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     AngularFireAuth,
     AngularFirestore,
     AngularFireDatabase,
-    Facebook
+    Facebook,
+    PharmacyProvider,
+    FcmProvider,
+    Push
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
