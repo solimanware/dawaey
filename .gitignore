@@ -41,3 +41,7 @@ package-lock.json
 package-lock.json
 app/assets/dbs/pharmacies.json
 src/assets/dbs/pharmacies.json
+app/assets/dbs/pharmacies.json
+src/assets/dbs/pharmacies.json
+GoogleService-Info.plist
+google-services.json
