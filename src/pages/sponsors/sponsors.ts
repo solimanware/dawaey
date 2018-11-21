@@ -18,13 +18,13 @@ export class SponsorsPage {
   ) { 
     this.sponsors = [
       {
-        img:"assets/img/angular.png",
+        img:"assets/imgs/angular.png",
         name:"Google Angular",
         since:"7 Jan 2018",
         link:"https://angular.io"
       },
       {
-        img:"assets/img/ionic.png",
+        img:"assets/imgs/ionic.png",
         name:"Ionic Team",
         since:"9 Dec 2017",
         link:"https://ionicframework.com"

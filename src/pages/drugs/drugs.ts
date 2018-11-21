@@ -405,7 +405,8 @@ export class DrugsPage {
     );
   }
 
-  registerNewPharmacy() {
+  goPharmaciesPage(){
     this.navCtrl.push(PharmaciesPage)
   }
+
 }

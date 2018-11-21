@@ -47,8 +47,14 @@ import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestor
 import { PharmaciesPage } from '../pages/pharmacies/pharmacies';
 import { PharmacyProvider } from '../providers/pharmacy/pharmacy';
 import { PharmacyDetailsPage } from '../pages/pharmacy-details/pharmacy-details';
-import { FcmProvider } from '../providers/fcm/fcm';
 import { Push } from '@ionic-native/push';
+import { GooglePlus } from '@ionic-native/google-plus';
+import { PushProvider } from '../providers/push/push';
+
+import { OneSignal } from '@ionic-native/onesignal';
+import { AnalyticsProvider } from '../providers/analytics/analytics';
+import { AuthPage } from '../pages/auth/auth';
+import { ComponentsModule } from '../components/components.module';
 
 
 
@@ -83,7 +89,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TutorialPage,
     SplashPage,
     PharmaciesPage,
-    PharmacyDetailsPage
+    PharmacyDetailsPage,
+    AuthPage
   ],
   imports: [
     BrowserModule,
@@ -110,7 +117,8 @@ export function HttpLoaderFactory(http: HttpClient) {
           { component: InvitePage, name: 'InvitePage', segment: 'invite' },
           { component: TutorialPage, name: 'TutorialPage', segment: 'tutorial' },
           { component: PharmaciesPage, name: 'PharmaciesPage', segment: 'pharmacies' },
-          { component: PharmaciesPage, name: 'PharmaciesPage', segment: 'pharmacies/:id' },
+          { component: PharmacyDetailsPage, name: 'PharmaciesPage', segment: 'pharmacies/:id' },
+          { component: AuthPage, name: 'AuthPage', segment: 'auth' }
         ]
       }),
     IonicStorageModule.forRoot({
@@ -118,6 +126,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       driverOrder: ['indexeddb', 'sqlite', 'websql']
     }), //<-add this
     DirectivesModule,
+    ComponentsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule // imports firebase/auth, only needed for auth features,
@@ -137,7 +146,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     TutorialPage,
     SplashPage,
     PharmaciesPage,
-    PharmacyDetailsPage
+    PharmacyDetailsPage,
+    AuthPage
   ],
   providers: [
     StatusBar,
@@ -155,8 +165,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     AngularFireDatabase,
     Facebook,
     PharmacyProvider,
-    FcmProvider,
-    Push
+    Push,
+    Facebook,
+    GooglePlus,
+    PushProvider,
+    OneSignal,
+    AnalyticsProvider,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

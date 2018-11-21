@@ -14,7 +14,7 @@ export class PartnersPage {
   partners = [];
   ionViewDidLoad() {
     this.partners = [
-      { img:"assets/img/osama.jpg",name: "Osama Soliman", since: "The Start", fb: "DrOs96" },
+      { img:"assets/imgs/osama.jpg",name: "Osama Soliman", since: "The Start", fb: "DrOs96" },
     ]
     this.partnerProvider.getPartnersByDefaultCountry().subscribe(partners=>{
       if(partners.length >= 1){

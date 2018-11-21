@@ -10,8 +10,8 @@
   <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager>
     <ion-slide>
       <ion-content>
-        <img src="assets/img/stars.gif" class="stars" alt="">
-        <img src="assets/img/ica-slidebox-img-1.png" class="slide-image" />
+        <img src="assets/imgs/stars.gif" class="stars" alt="">
+        <img src="assets/imgs/ica-slidebox-img-1.png" class="slide-image" />
         <h2 class="slide-title" ion-text color="primary">
           {{ 'Welcome to Dawaey 🎉' | translate }}
         </h2>
@@ -32,8 +32,8 @@
     </ion-slide>
     <ion-slide>
       <ion-content>
-        <img src="assets/img/stars.gif" class="stars" alt="">
-        <img src="assets/img/ica-slidebox-img-2.png" class="slide-image" />
+        <img src="assets/imgs/stars.gif" class="stars" alt="">
+        <img src="assets/imgs/ica-slidebox-img-2.png" class="slide-image" />
         <h2 padding-left text-left ion-text color="success" id="features">Explore new features:</h2>
         <ol text-left padding-bottom>
           <li>🤖 <span ion-text color="danger">AI</span> (Artificial Intelligence) Assistance</li>
@@ -62,81 +62,10 @@
     </ion-slide>
 
     <ion-slide>
-      <img src="assets/img/stars.gif" class="stars" alt="">
-      <img src="assets/img/ica-slidebox-img-4.png" class="slide-image" />
+      <img src="assets/imgs/stars.gif" class="stars" alt="">
+      <img src="assets/imgs/ica-slidebox-img-4.png" class="slide-image" />
       <h2 class="slide-title" color="primary" (click)="skipToLogin()">Ready to Try? 👍</h2>
     </ion-slide>
-
-    <ion-slide class="auth-slide">
-      <h1 text-center color="primary">Start now 😍</h1>
-      <ion-list class="auth-wrapper">
-        
-
-        <div class="continue-with" padding-top>
-          <img (click)="loginGoogle()" src="../../assets/img/google.jpg" alt="">
-          <img (click)="loginFacebook()" padding-top src="../../assets/img/facebook.jpg" alt="">
-        </div>
-
-
-        <h1 text-center padding-top color="primary">Have account?</h1>
-
-        <div class="sign-up-form">
-          <ion-segment [(ngModel)]="segment" style="background:#eee">
-            <ion-segment-button value="login" color="darker">
-              Login
-            </ion-segment-button>
-            <ion-segment-button value="signup" color="darker">
-              Signup
-            </ion-segment-button>
-          </ion-segment>
-
-
-
-          <ion-item>
-            <ion-label>email</ion-label>
-            <ion-input required type="email" [(ngModel)]="email"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>password</ion-label>
-            <ion-input required type="password" [(ngModel)]="password"></ion-input>
-          </ion-item>
-          <div text-right>
-            <button ion-button icon-end large clear *ngIf="segment === 'signup'" (click)="signup()">
-              Signup
-              <ion-icon name="arrow-forward"></ion-icon>
-            </button>
-            <button ion-button icon-end large clear *ngIf="segment === 'login'" (click)="login()">
-              Login
-              <ion-icon name="arrow-forward"></ion-icon>
-            </button>
-          </div>
-        </div>
-
-
-        <p text-center padding-top (click)="guestLogin()" style="color:#dadada;text-decoration:underline;">continue as guest</p>
-
-
-
-
-
-
-        <!-- <ion-item>
-                  <ion-label>profession</ion-label>
-                  <ion-select required [(ngModel)]="profession">
-                    <ion-option value="doctor">Physician</ion-option>
-                    <ion-option value="pharmacist">Pharmacist</ion-option>
-                    <ion-option value="other">Other</ion-option>
-                  </ion-select>
-                </ion-item> -->
-
-      </ion-list>
-
-
-
-
-    </ion-slide>
-
-
 
   </ion-slides>
 </ion-content>

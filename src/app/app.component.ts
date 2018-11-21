@@ -1,11 +1,6 @@
 import { Storage } from "@ionic/storage";
 import { TutorialPage } from "./../pages/tutorial/tutorial";
 import { DrugProvider } from "./../providers/drug/drug";
-import { InvitePage } from "./../pages/invite/invite";
-import { SettingsPage } from "./../pages/settings/settings";
-
-import { AboutPage } from "./../pages/about/about";
-import { PartnersPage } from "./../pages/partners/partners";
 import { TabsPage } from "./../pages/tabs/tabs";
 import { Component, ViewChild } from "@angular/core";
 import { Nav, Platform, Events, ModalController, AlertController, ActionSheetController } from "ionic-angular";
@@ -19,11 +14,16 @@ import { AuthProvider } from "../providers/auth/auth";
 import { User } from "firebase";
 import firebase from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
+import { matColors } from "./global";
+import { AnalyticsProvider } from "../providers/analytics/analytics";
+import { PushProvider } from "../providers/push/push";
 import { PharmaciesPage } from "../pages/pharmacies/pharmacies";
-import { FcmProvider } from "../providers/fcm/fcm";
+import { PartnersPage } from "../pages/partners/partners";
+import { SettingsPage } from "../pages/settings/settings";
+import { InvitePage } from "../pages/invite/invite";
+import { AboutPage } from "../pages/about/about";
+import { AuthPage } from "../pages/auth/auth";
 
-
-const wait = ms => new Promise(r => setTimeout(r, ms));
 const root = document.documentElement;
 export interface MaterialColors {
   [key: string]: MaterialColor
@@ -39,7 +39,6 @@ export interface MaterialColor {
 export class MyApp {
   @ViewChild(Nav)
   nav: Nav;
-
   rootPage: any;
   menuPages = [
     {
@@ -74,17 +73,12 @@ export class MyApp {
     }
   ];
   firstTime: boolean;
-
   matColors: MaterialColors;
   user: firebase.User;
-
-
-
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
-    private ga: GoogleAnalytics,
     private drugProvider: DrugProvider,
     private events: Events,
     public storage: Storage,
@@ -94,91 +88,15 @@ export class MyApp {
     public actionCtrl: ActionSheetController,
     public authProvider: AuthProvider,
     private afAuth: AngularFireAuth,
-    private fcm: FcmProvider
+    private analytics: AnalyticsProvider,
+    private push: PushProvider
   ) {
-    this.matColors = {
-      red: {
-        "primary": "#B71C1C",
-        "secondary": "#E53935",
-      },
-      pink: {
-        "primary": "#880E4F",
-        "secondary": "#D81B60",
-      },
-      purple: {
-        "primary": "#4A148C",
-        "secondary": "#8E24AA",
-      },
-      deepPurple: {
-        "primary": "#311B92",
-        "secondary": "#5E35B1",
-      },
-      indigo: {
-        "primary": "#1A237E",
-        "secondary": "#3949AB",
-      },
-      blue: {
-        "primary": "#0D47A1",
-        "secondary": "#1E88E5",
-      },
-      lightBlue: {
-        "primary": "#01579B",
-        "secondary": "#039BE5",
-      },
-      cyan: {
-        "primary": "#006064",
-        "secondary": "#00ACC1",
-      },
-      teal: {
-        "primary": "#004D40",
-        "secondary": "#00897B",
-      },
-      green: {
-        "primary": "#1B5E20",
-        "secondary": "#43A047",
-      },
-      lightGreen: {
-        "primary": "#33691E",
-        "secondary": "#7CB342",
-      },
-      lime: {
-        "primary": "#827717",
-        "secondary": "#C0CA33",
-      },
-      yello: {
-        "primary": "#F57F17",
-        "secondary": "#FDD835",
-      },
-      amber: {
-        "primary": "#FF6F00",
-        "secondary": "#FFB300",
-      },
-      orange: {
-        "primary": "#E65100",
-        "secondary": "#FB8C00",
-      },
-      deepOrange: {
-        "primary": "#BF360C",
-        "secondary": "#F4511E",
-      },
-      brown: {
-        "primary": "#3E2723",
-        "secondary": "#6D4C41",
-      },
-      gray: {
-        "primary": "#212121",
-        "secondary": "#757575",
-      },
-      blueGray: {
-        "primary": "#263238",
-        "secondary": "#546E7A",
-      }
-    };
+    this.matColors = matColors;
     this.platformReady();
   }
 
   async recoverRememberedState() {
-    //get saved user
+    /*****************remember saved user*****************/
     const savedUser: User = await this.storage.get('user')
     if (savedUser && savedUser.displayName && savedUser.displayName.length) {
       this.rootPage = TabsPage;
@@ -186,34 +104,29 @@ export class MyApp {
     } else {
       this.rootPage = TutorialPage
     }
-
-    //get saved color
+    /*******************remember saved color*******************/
     const savedColor: string = await this.storage.get("color")
     if (savedColor && savedColor.length) {
       root.style.setProperty(`--color-primary`, this.matColors[savedColor].primary);
       root.style.setProperty(`--color-secondary`, this.matColors[savedColor].secondary);
     }
-
-    //get saved language
+    /********************remember saved language********************/
     const savedLanguage: string = await this.storage.get('language')
     if (savedLanguage && savedLanguage.length) {
       this.translate.use(savedLanguage)
     }
   }
-
+  //logout button
   logOut() {
-    this.storage.remove('user')
-
-    this.authProvider.afAuth.auth.signOut()
+    this.authProvider.signOut()
       .then(() => {
         this.platform.exitApp()
       })
       .catch((err) => {
         alert(err)
       })
-
   }
-
+  //is platform ready? all things are loaded?
   platformReady() {
     // Call any initial plugins when ready
     this.platform.ready().then(async () => {
@@ -235,17 +148,22 @@ export class MyApp {
         //fcm
         this.startPushService();
       }
+
+      //PWA splash
       let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
       splash.present();
+
+      //Listen to app events
       this.listenToEvents();
+      //Start app background intelligent jobs
       this.startBackgroundJobs();
 
-
-      //change alert behavior
+      //change alert in browser behavior
       (() => {
         window.alert = null;
         window.alert = (msg) => {
           console.warn(msg)
+          if (!msg || msg.length === 0) return;
           const alert = this.alertCtrl.create({
             title: 'Info!',
             subTitle: msg,
@@ -256,9 +174,6 @@ export class MyApp {
       })()
       //end platform ready
     });
-
-
-
     //careful doing something before ready
   }
 
@@ -274,38 +189,34 @@ export class MyApp {
     }
   }
 
+  //Start behaviour analytics jobs
   startAnalytics() {
-    //start getting analytics
-    this.ga
-      .startTrackerWithId("UA-88642709-1")
-      .then(() => {
-        console.log("Google analytics is ready now");
-      })
-      .catch(e => console.log("Error starting GoogleAnalytics", e));
+    this.analytics.setup();
   }
 
+  //Start push notification services
   startPushService() {
-    //start registring and getting pushs
-    // Get a FCM token
-    this.fcm.getToken()
-
-    // Listen to incoming messages
-    this.fcm.listenToNotifications().subscribe((data:any)=>{
-      alert(data.message)
-    })
+    this.push.handleNotifications()
+      .subscribe(res => {
+        alert(res.notification.data)
+      }, err => {
+        alert(err)
+      })
   }
 
+  //Check for new updates?
   startCheckingForUpdates() {
     this.drugProvider.checkForUpdates().subscribe();
   }
 
+  //Listen to App Events
   listenToEvents() {
+    /*************country change event*************/
     this.events.subscribe("country:changed", c => {
-      console.log("country:changed getAndStoreDrugs for " + c);
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
     });
+    /***************user login event****************/
     this.events.subscribe("user:login", user => {
-      console.log("user has logined", user);
       if (user) {
         this.user = this.afAuth.auth.currentUser
       } else {
@@ -313,8 +224,8 @@ export class MyApp {
           this.user = res;
         })
       }
-
     });
+    /**************app color change event***************/
     this.events.subscribe("color:changed", (color) => {
       root.style.setProperty(`--color-primary`, this.matColors[color].primary);
       root.style.setProperty(`--color-secondary`, this.matColors[color].secondary);
@@ -332,20 +243,11 @@ export class MyApp {
 
 //TODO: add user rating intellegience and feedback
 //TODO: better market MEO
-//TODO: change app licence for open source
-//TODO: reduce app size by optimizing resources folder ionic cordova resources not very optimized
-//TODO: app upload autimation
+//TODO: app upload automation
 //TODO: cross-walk support for lower api than 19 > second apk than normal one
-//TODO: push updates to appstore
 //TODO: handle user segments
-//TODO: fix history bugs and rename it and add more functionality
 //TODO: add the ability to write prescription and scan drugs
 //TODO: add the ability to enter drug by camera or voice
-//TODO: fix undefined when click seachbar clear button
-//TODO: optimize resources generation >
 //TODO: active-user counting implementation
-//TODO: fix undefined when after firing cancel event
-//TODO: edit report templates
-//TODO: be more ready for pwa
 //TODO: Charge ppl outside egypt
-//TODO: share ability
+//TODO: add share ability

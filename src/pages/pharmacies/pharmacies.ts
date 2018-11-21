@@ -28,7 +28,11 @@ export class PharmaciesPage {
   choosenGov: string;
   choosenLocation: string;
   filteredPharmacies: Pharmacy[] = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, private pharmacyProvider: PharmacyProvider) {
+  loading = true;
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private pharmacyProvider: PharmacyProvider) {
   }
 
 
@@ -65,9 +69,9 @@ export class PharmaciesPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad PharmaciesPage');
     this.pharmacyProvider.getAll().subscribe((res: Pharmacies[]) => {
       this.pharmacies = res;
+      this.loading = false;
       for (let pharm of this.pharmacies) {
         this.govs.push(pharm.gov)
       }
@@ -76,7 +80,9 @@ export class PharmaciesPage {
 
     })
   }
-
+  goAddPharmacyPage(){
+    this.navCtrl.push(PharmacyDetailsPage)
+  }
 
 
   geoFindMe() {

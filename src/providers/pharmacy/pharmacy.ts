@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { API } from '../../app/global';
 
 /*
   Generated class for the PharmacyProvider provider.
@@ -14,8 +15,8 @@ export class PharmacyProvider {
     console.log('Hello PharmacyProvider Provider');
   }
 
-  getAll(){
-    return this.http.get('./assets/dbs/pharmacies.json')
+  getAll() {
+    return this.http.get(API.pharmacies('eg'))
   }
 
 }

@@ -1,10 +1,11 @@
 import { TutorialPage } from './../tutorial/tutorial';
 import { Storage } from '@ionic/storage';
-import { DrugProvider } from './../../providers/drug/drug';
-import { SettingsProvider } from './../../providers/settings/settings';
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, ToastController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+import { SettingsProvider } from '../../providers/settings/settings';
+import { Events } from 'ionic-angular';
+
 
 @Component({
   selector: 'page-settings',
@@ -20,12 +21,11 @@ export class SettingsPage {
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams,
-    public settingsProvider: SettingsProvider,
     private storage: Storage,
-    private drugProvider: DrugProvider,
     private toastCtrl: ToastController,
-    private translate: TranslateService
+    public translate: TranslateService,
+    public settings:SettingsProvider,
+    private events:Events
   ) {
     this.languageChoices = [
       { value: "ar", name: 'Arabic' },
@@ -54,6 +54,10 @@ export class SettingsPage {
       { value: "gray", name: 'Gray' },
       { value: "blueGray", name: 'blueGray' },
     ]
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad SettingsPage');
     this.storage.get('country')
       .then(c => {
         this.defaultCountry = c || 'eg';
@@ -66,36 +70,27 @@ export class SettingsPage {
       .then(color => {
         this.defaultColor = color || 'red';
       })
-
-      
-
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsPage');
   }
   updateDefaultCountry(ev) {
-    this.settingsProvider.setCountry(ev)
+    this.settings.setCountry(ev)
     this.presentToast('You have successfully updated the default country')
   }
   updateDefaultLanguage(ev) {
     this.translate.use(ev)
     this.defaultLanguage = ev;
-    this.storage.set('language',ev)
+    this.storage.set('language', ev)
   }
-  waitNextVersion(ev){
+  waitNextVersion(ev) {
     this.presentToast('Wait this feature in the next version')
   }
-  changeColor(color){
-    this.settingsProvider.setColor(color)
+  changeColor(color) {
+    this.settings.setColor(color)
   }
   updateDatabase() {
     this.presentToast('Updating ...')
-    this.drugProvider.updateDrugs().subscribe(data => {
-      this.presentToast('You have successfully updated the application data')
-    });
+    this.events.publish('drugs:update');
   }
-  
+
   presentToast(msg) {
     let toast = this.toastCtrl.create({
       message: msg,
@@ -105,11 +100,11 @@ export class SettingsPage {
   }
 
 
-  resetData(){
+  resetData() {
     this.storage.clear();
   }
 
-  showTutorial(){
+  showTutorial() {
     this.navCtrl.setRoot(TutorialPage);
   }
 

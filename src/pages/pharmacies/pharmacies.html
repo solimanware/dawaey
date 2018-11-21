@@ -11,6 +11,7 @@
 
 
 <ion-content padding>
+  <p *ngIf="loading">loading please wait...</p>
   <ion-list>
     <ion-item>
       <ion-label>Choose Governate</ion-label>
@@ -28,7 +29,7 @@
       bufferRatio="50">
       <ion-item *virtualItem="let pharmacy" dir="rtl">
         <ion-avatar item-start>
-          <img src="assets/img/pharmacy.png">
+          <img src="assets/imgs/pharmacy.png">
         </ion-avatar>
         <h2>{{ pharmacy?.name }}</h2>
         <p>{{ pharmacy?.address }}</p>
@@ -37,12 +38,7 @@
     </ion-list>
 
   </ion-list>
-
-  <div class="ads" ion-fixed>
-    <div class="buttons zoomInDown">
-      <a ion-button backgroundColor="google" (click)="registerNewPharmacy()">Register Your Pharmacy To Get Online
-        Orders For Free Now</a>
-    </div>
-  </div>
+  
+  <ads click="goAddPharmacyPage()"></ads>
 
 </ion-content>

@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/observable';
 import { Injectable } from '@angular/core';
 
 import { Storage } from '@ionic/storage'
@@ -14,7 +13,10 @@ import { Events } from 'ionic-angular';
 */
 @Injectable()
 export class SettingsProvider {
-  constructor(public http: HttpClient, public storage: Storage, public events: Events) {
+  constructor(
+    public http: HttpClient, 
+    public storage: Storage, 
+    public events: Events) {
     console.log('Hello SettingsProvider Provider');
   }
 
@@ -35,6 +37,10 @@ export class SettingsProvider {
 
   getCountry() {
 
+  }
+
+  updateDrugs(){
+   // return this.drugProvider.updateDrugs()
   }
 
   // getAllUserInfoFromStorage(): Observable<any> {
