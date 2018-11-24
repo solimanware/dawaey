@@ -15,15 +15,20 @@ export class PushProvider {
     console.log('Hello PushProvider Provider');
   }
 
-
   init() {
     this.oneSignal.startInit('daaa8674-68e2-49a3-aa58-3844d767a9aa', '1061030166084')
-    this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.InAppAlert)
   }
 
-  handleNotifications() {
-    this.init();
-    return this.oneSignal.handleNotificationOpened()
+  handleNotificationReceived(){
+    return this.oneSignal.handleNotificationReceived();
+  }
+
+  handleNotificationOpened(){
+    return this.oneSignal.handleNotificationOpened();
+  }
+
+  endInit(){
+    this.oneSignal.endInit()
   }
 
 }

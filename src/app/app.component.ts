@@ -10,8 +10,7 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { SplashPage } from "../pages/splash/splash";
 import { TranslateService } from "@ngx-translate/core";
-import { AuthProvider } from "../providers/auth/auth";
-import { User } from "firebase";
+import { AuthProvider, User } from "../providers/auth/auth";
 import firebase from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { matColors } from "./global";
@@ -23,6 +22,7 @@ import { SettingsPage } from "../pages/settings/settings";
 import { InvitePage } from "../pages/invite/invite";
 import { AboutPage } from "../pages/about/about";
 import { AuthPage } from "../pages/auth/auth";
+import { OSNotificationOpenedResult, OSNotification } from "@ionic-native/onesignal";
 
 const root = document.documentElement;
 export interface MaterialColors {
@@ -74,7 +74,7 @@ export class MyApp {
   ];
   firstTime: boolean;
   matColors: MaterialColors;
-  user: firebase.User;
+  user: User
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
@@ -98,7 +98,7 @@ export class MyApp {
   async recoverRememberedState() {
     /*****************remember saved user*****************/
     const savedUser: User = await this.storage.get('user')
-    if (savedUser && savedUser.displayName && savedUser.displayName.length) {
+    if (savedUser && savedUser.logged === true) {
       this.rootPage = TabsPage;
       this.user = savedUser;
     } else {
@@ -131,6 +131,16 @@ export class MyApp {
     // Call any initial plugins when ready
     this.platform.ready().then(async () => {
       //platform is ready?
+      if (this.platform.is("cordova")) {
+        setTimeout(() => {
+          this.splashScreen.hide()
+        }, 500);;
+      } else {
+        //PWA splash
+        let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
+        splash.present();
+      }
+      this.splashScreen.hide();
       await this.recoverRememberedState();
       //is it cordova?
       if (this.platform.is("cordova")) {
@@ -148,10 +158,6 @@ export class MyApp {
         //fcm
         this.startPushService();
       }
-
-      //PWA splash
-      let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
-      splash.present();
 
       //Listen to app events
       this.listenToEvents();
@@ -196,12 +202,21 @@ export class MyApp {
 
   //Start push notification services
   startPushService() {
-    this.push.handleNotifications()
-      .subscribe(res => {
+    this.push.init();
+    this.push.handleNotificationOpened()
+      .subscribe((res: OSNotificationOpenedResult) => {
         alert(res.notification.data)
       }, err => {
         alert(err)
       })
+    this.push.handleNotificationReceived()
+      .subscribe((res: OSNotification) => {
+        alert(res.payload.body)
+      }, err => {
+        alert(err)
+      })
+    //important end init
+    this.push.endInit();
   }
 
   //Check for new updates?

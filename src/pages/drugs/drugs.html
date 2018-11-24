@@ -211,5 +211,8 @@
     <p>You didn't make view any medications yet :)!</p>
   </div>
 
-  <ads click="goPharmaciesPage()"></ads>
+  <div *ngIf="shouldShowAds">
+    <ads (click)="goPharmaciesPage()"></ads>
+  </div>
+
 </ion-content>

@@ -25,6 +25,7 @@
         <ion-option *ngFor="let location of locations" [value]="gov">{{location}}</ion-option>
       </ion-select>
     </ion-item>
+    <a class="register" (click)="goAddPharmacyPage()" ion-button backgroundColor="success">Register Now</a>
     <ion-list #virtualScroll [virtualScroll]="filteredPharmacies" approxItemHeight="64px" approxItemWidth="360px"
       bufferRatio="50">
       <ion-item *virtualItem="let pharmacy" dir="rtl">
@@ -38,7 +39,7 @@
     </ion-list>
 
   </ion-list>
-  
-  <ads click="goAddPharmacyPage()"></ads>
+
+  <ads *ngIf="shouldShowAds" (click)="goAddPharmacyPage()"></ads>
 
 </ion-content>

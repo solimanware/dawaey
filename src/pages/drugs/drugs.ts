@@ -44,6 +44,7 @@ export class DrugsPage {
   virtualScroll: VirtualScroll;
   searchWorker: any;
   approximateValues: Drug[];
+  shouldShowAds: boolean = true;
 
   constructor(
     public keyboard: Keyboard,
@@ -96,7 +97,6 @@ export class DrugsPage {
   //is view all elemnts did loaded?
   ionViewDidLoad() {
     this.loading = true;
-
     //report analytics
     this.ga.trackView("Main Screen");
 
@@ -146,9 +146,7 @@ export class DrugsPage {
       tap(term => {
         console.log(term);
         this.loading = true
-        console.log(this.sampleDrug);
-
-
+        this.shouldShowAds = true;
       }),
       //deboucing to left load from search thread
       debounceTime(100),
@@ -206,6 +204,7 @@ export class DrugsPage {
       }),
       tap((results: Drug[]) => {
         this.searchResults$.next(results);
+        this.shouldShowAds = false;
         this.loading = false;
       })
     ).subscribe();
@@ -405,7 +404,7 @@ export class DrugsPage {
     );
   }
 
-  goPharmaciesPage(){
+  goPharmaciesPage() {
     this.navCtrl.push(PharmaciesPage)
   }
 

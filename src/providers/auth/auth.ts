@@ -14,7 +14,8 @@ export interface User {
   email?: string,
   emailVerified?: boolean,
   phoneNumber?: any,
-  photoURL?: string
+  photoURL?: string,
+  logged?:boolean
 }
 @Injectable()
 export class AuthProvider {
@@ -40,8 +41,7 @@ export class AuthProvider {
     return new Promise((resolve, reject) => {
       if (this.plt.is('cordova')) {
         this.google.login({
-          'webClientId': '1061030166084-6ga7bg3irrgh2sqekdkti3slb7jda6f6.apps.googleusercontent.com',
-          'offline': true
+          'webClientId': '1061030166084-6ga7bg3irrgh2sqekdkti3slb7jda6f6.apps.googleusercontent.com'
         })
           .then(loginResponse => {
             let credential = firebase.auth.GoogleAuthProvider.credential(loginResponse.idToken)
@@ -120,7 +120,8 @@ export class AuthProvider {
       displayName: user.displayName,
       email: user.email,
       phoneNumber: user.phoneNumber,
-      photoURL: user.photoURL
+      photoURL: user.photoURL,
+      logged:true
     }
 
     this.afs.
@@ -201,7 +202,8 @@ export class AuthProvider {
 
 
   signOut() {
-    this.storage.remove('user')
+    //this.storage.remove('user')
+    this.storage.clear()
     return this.afAuth.auth.signOut()
   }
 }

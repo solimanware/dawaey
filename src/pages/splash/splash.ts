@@ -8,7 +8,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 })
 export class SplashPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private splashScreen:SplashScreen,private viewCtrl: ViewController,private platform:Platform) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private splashScreen: SplashScreen, private viewCtrl: ViewController, private platform: Platform) {
   }
 
   ionViewDidLoad() {
@@ -16,14 +16,9 @@ export class SplashPage {
   }
 
   ionViewDidEnter() {
-    if (this.platform.is("cordova")) {
-    this.splashScreen.hide();
-  }
- 
     setTimeout(() => {
       this.viewCtrl.dismiss();
     }, 500);
- 
   }
 
 }

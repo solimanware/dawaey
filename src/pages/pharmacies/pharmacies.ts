@@ -29,6 +29,7 @@ export class PharmaciesPage {
   choosenLocation: string;
   filteredPharmacies: Pharmacy[] = [];
   loading = true;
+  shouldShowAds: boolean;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -60,7 +61,7 @@ export class PharmaciesPage {
         })
       }
     }
-
+    this.shouldShowAds = false;
   }
 
 
@@ -69,6 +70,7 @@ export class PharmaciesPage {
   }
 
   ionViewDidLoad() {
+    this.shouldShowAds = true;
     this.pharmacyProvider.getAll().subscribe((res: Pharmacies[]) => {
       this.pharmacies = res;
       this.loading = false;
