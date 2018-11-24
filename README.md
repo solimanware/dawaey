@@ -2,7 +2,7 @@
   <a href="https://dawaey.com/">
     <img
       alt="Dawaey App"
-      src="https://i.imgur.com/qpcJR4q.png"
+      src="https://i.imgur.com/wWCc67N.png"
       width="400"
     />
   </a>
