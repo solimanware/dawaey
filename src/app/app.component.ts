@@ -7,11 +7,9 @@ import { Nav, Platform, Events, ModalController, AlertController, ActionSheetCon
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
 
-import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { SplashPage } from "../pages/splash/splash";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthProvider, User } from "../providers/auth/auth";
-import firebase from 'firebase/app';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { matColors } from "./global";
 import { AnalyticsProvider } from "../providers/analytics/analytics";
@@ -21,7 +19,6 @@ import { PartnersPage } from "../pages/partners/partners";
 import { SettingsPage } from "../pages/settings/settings";
 import { InvitePage } from "../pages/invite/invite";
 import { AboutPage } from "../pages/about/about";
-import { AuthPage } from "../pages/auth/auth";
 import { OSNotificationOpenedResult, OSNotification } from "@ionic-native/onesignal";
 
 const root = document.documentElement;
@@ -227,7 +224,7 @@ export class MyApp {
   //Listen to App Events
   listenToEvents() {
     /*************country change event*************/
-    this.events.subscribe("country:changed", c => {
+    this.events.subscribe("country:changed", () => {
       this.drugProvider.getAndStoreDrugsByDefaultCountry().subscribe();
     });
     /***************user login event****************/
@@ -259,7 +256,6 @@ export class MyApp {
 //TODO: add user rating intellegience and feedback
 //TODO: better market MEO
 //TODO: app upload automation
-//TODO: cross-walk support for lower api than 19 > second apk than normal one
 //TODO: handle user segments
 //TODO: add the ability to write prescription and scan drugs
 //TODO: add the ability to enter drug by camera or voice

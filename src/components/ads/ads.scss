@@ -1,6 +1,14 @@
 ads {
-
     .ads{
+      .hide-button{
+        margin-top: -30px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        float: left;
+        border: 2px solid black; 
+      }
         position: absolute;
         bottom: 0;
         //left: -50%;

@@ -1,6 +1,9 @@
-<div class="ads" ion-fixed>
+<div class="ads" ion-fixed *ngIf="shouldShowAds" >
   <div class="buttons zoomInDown">
-    <a ion-button backgroundColor="google">Register Your Pharmacy To Get Online Orders
+    <div class="hide-button" (click)="hide()">⌽ hide</div>
+    <a (click)="goPharmaciesPage()"  ion-button backgroundColor="google">Register Your Pharmacy To Get Online Orders
       For Free Now</a>
+    <!-- <a (click)="goSettingsPage()"  ion-button backgroundColor="google">You can Change App Color Now
+      For Free Now</a> -->
   </div>
 </div>
