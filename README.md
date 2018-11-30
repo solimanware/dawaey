@@ -1,3 +1,14 @@
+<p align="center">
+  <a href="https://dawaey.com/">
+    <img
+      alt="Dawaey App"
+      src="https://i.imgur.com/wWCc67N.png"
+      width="400"
+    />
+  </a>
+</p>
+
+
 # Dawaey - دوائي
 Dawaey is a smart medical refrence for healthcare providers that working out of the box
 
