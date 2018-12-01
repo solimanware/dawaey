@@ -1,4 +1,4 @@
-//mess with browser please
+//mess with browser please 😂
 import { messNative } from './native-override';
 //import native please
 import { Storage } from "@ionic/storage";
@@ -34,7 +34,7 @@ const root = document.documentElement;
 export class MyApp {
   @ViewChild(Nav)
   nav: Nav; //nav to avoid circular dipendency
-  rootPage: any; //Caution: careful using Page type here (framework bug)
+  rootPage: any; //Caution: careful using Page type here (framework bug 😭)
   menuPages = []; //this can't be anything but array
   firstTime: boolean;  // is this first time to visit the app?
   matColors: MaterialColors; // app color choises where we normally use Material Colors
@@ -56,7 +56,7 @@ export class MyApp {
     private push: PushProvider
   ) {
     this.matColors = matColors;
-    // Caution: DONING ANYTHING ABOVE THIS LINE IS DANGEROUS
+    // Caution: DONING ANYTHING ABOVE THIS LINE IS DANGEROUS ⚠️
     this.platformReady();
     this.menuPages = sideMenuPages;
   }
