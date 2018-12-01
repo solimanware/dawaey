@@ -9,3 +9,10 @@ export interface Drug {
   dosage: string;
   composition: string;
 }
+export interface MaterialColors {
+  [key: string]: MaterialColor
+}
+export interface MaterialColor {
+  primary: string;
+  secondary: string;
+}

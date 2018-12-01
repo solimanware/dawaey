@@ -14,7 +14,7 @@
         <div class="user">
           <h2 text-center padding-top no-margin color="primary">{{user?.displayName}}</h2>
           <p text-center no-margin color="primary">Hi, Welcome to Dawaey 👋😃</p>
-          <img src="{{user?.photoURL}}" alt="">
+          <img *ngIf="user?.photoURL"  src="{{user?.photoURL}}" alt="">
 
         </div>
 

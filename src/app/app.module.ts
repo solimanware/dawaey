@@ -55,6 +55,8 @@ import { OneSignal } from '@ionic-native/onesignal';
 import { AnalyticsProvider } from '../providers/analytics/analytics';
 import { AuthPage } from '../pages/auth/auth';
 import { ComponentsModule } from '../components/components.module';
+import { ProfilePage } from '../pages/profile/profile';
+import { UserProvider } from '../providers/user/user';
 
 
 
@@ -90,7 +92,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SplashPage,
     PharmaciesPage,
     PharmacyDetailsPage,
-    AuthPage
+    AuthPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -118,6 +121,7 @@ export function HttpLoaderFactory(http: HttpClient) {
           { component: TutorialPage, name: 'TutorialPage', segment: 'tutorial' },
           { component: PharmaciesPage, name: 'PharmaciesPage', segment: 'pharmacies' },
           { component: PharmacyDetailsPage, name: 'PharmaciesPage', segment: 'pharmacies/:id' },
+          { component: ProfilePage, name: 'ProfilePage', segment: 'profile' },
           { component: AuthPage, name: 'AuthPage', segment: 'auth' }
         ]
       }),
@@ -147,7 +151,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SplashPage,
     PharmaciesPage,
     PharmacyDetailsPage,
-    AuthPage
+    AuthPage,
+    ProfilePage
   ],
   providers: [
     StatusBar,
@@ -171,6 +176,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PushProvider,
     OneSignal,
     AnalyticsProvider,
+    UserProvider,
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
