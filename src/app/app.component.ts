@@ -1,77 +1,44 @@
+//mess with browser please 😂
+import { messNative } from './native-override';
+//import native please
 import { Storage } from "@ionic/storage";
-import { TutorialPage } from "./../pages/tutorial/tutorial";
-import { DrugProvider } from "./../providers/drug/drug";
-import { TabsPage } from "./../pages/tabs/tabs";
-import { Component, ViewChild } from "@angular/core";
-import { Nav, Platform, Events, ModalController, AlertController, ActionSheetController } from "ionic-angular";
-import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
-
+import { StatusBar } from "@ionic-native/status-bar";
+import { OSNotificationOpenedResult, OSNotification } from "@ionic-native/onesignal";
+//import pages please
+import { TutorialPage } from "./../pages/tutorial/tutorial";
 import { SplashPage } from "../pages/splash/splash";
-import { TranslateService } from "@ngx-translate/core";
+import { TabsPage } from "./../pages/tabs/tabs";
+//import providers
+import { DrugProvider } from "./../providers/drug/drug";
 import { AuthProvider, User } from "../providers/auth/auth";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { matColors } from "./global";
 import { AnalyticsProvider } from "../providers/analytics/analytics";
 import { PushProvider } from "../providers/push/push";
-import { PharmaciesPage } from "../pages/pharmacies/pharmacies";
-import { PartnersPage } from "../pages/partners/partners";
-import { SettingsPage } from "../pages/settings/settings";
-import { InvitePage } from "../pages/invite/invite";
-import { AboutPage } from "../pages/about/about";
-import { OSNotificationOpenedResult, OSNotification } from "@ionic-native/onesignal";
-
+//import ionic angular
+import { Nav, Platform, Events, ModalController, AlertController, ActionSheetController } from "ionic-angular";
+//import angular stuff please
+import { AngularFireAuth } from "@angular/fire/auth";
+import { Component, ViewChild } from "@angular/core";
+//import angular libs
+import { TranslateService } from "@ngx-translate/core";
+//import globals please
+import { matColors } from "./global";
+import { sideMenuPages } from './sidemenu';
+import { MaterialColors } from '../interfaces';
+// get root
 const root = document.documentElement;
-export interface MaterialColors {
-  [key: string]: MaterialColor
-}
-export interface MaterialColor {
-  primary: string;
-  secondary: string;
-}
-
 @Component({
   templateUrl: "app.html"
 })
+//App Entry Class //This is JavaScript in C# flavor.. this is TypeScript https://www.typescriptlang.org/
 export class MyApp {
   @ViewChild(Nav)
-  nav: Nav;
-  rootPage: any;
-  menuPages = [
-    {
-      title: "Home",
-      component: TabsPage,
-      icon: "home"
-    },
-    {
-      title: "Nearby Pharmacies",
-      component: PharmaciesPage,
-      icon: "medkit"
-    },
-    {
-      title: "Partners",
-      component: PartnersPage,
-      icon: "cash"
-    },
-    {
-      title: "Settings",
-      component: SettingsPage,
-      icon: "cog"
-    },
-    {
-      title: "Invite Your Friends",
-      component: InvitePage,
-      icon: "share"
-    },
-    {
-      title: "About",
-      component: AboutPage,
-      icon: "information-circle"
-    }
-  ];
-  firstTime: boolean;
-  matColors: MaterialColors;
-  user: User
+  nav: Nav; //nav to avoid circular dipendency
+  rootPage: any; //Caution: careful using Page type here (framework bug 😭)
+  menuPages = []; //this can't be anything but array
+  firstTime: boolean;  // is this first time to visit the app?
+  matColors: MaterialColors; // app color choises where we normally use Material Colors
+  user: User //user of app interface
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
@@ -89,99 +56,109 @@ export class MyApp {
     private push: PushProvider
   ) {
     this.matColors = matColors;
+    // Caution: DONING ANYTHING ABOVE THIS LINE IS DANGEROUS ⚠️
     this.platformReady();
+    this.menuPages = sideMenuPages;
+  }
+  // Is platform ready? all browser things are loaded?
+  platformReady() {
+    this.platform.ready().then(async () => {
+      //is this cordova platform? give me native plugins please
+      if (this.platform.is("cordova")) {
+        this.doNativeStuff();
+      } else {
+        this.doPWAStuff();
+      }
+      //give me your memory please
+      await this.recoverRememberedState();
+      //Listen to app events
+      this.listenToEvents();
+      //Start app background intelligent jobs
+      this.startBackgroundJobs();
+      //mess normal browser behaviors
+      messNative();
+      //end platform ready
+    });
+    //Caution: careful doing something before ready
+  }
+  //do native stuff while you have power to
+  async doNativeStuff(){
+    setTimeout(() => {
+      //hide splash
+      this.splashScreen.hide()
+    }, 500);;
+    //change status bar color if it's android platform
+    if (this.platform.is("android")) {
+      this.rememberAndroidStatusColor();
+    }
+    //google analytics
+    this.startAnalytics();
+    //fcm
+    this.startPushService();
   }
 
+  //is it browser with limited native power?
+  doPWAStuff(){
+    //PWA splash
+    let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
+    splash.present();
+  }
+  async rememberAndroidStatusColor(){
+    //set statusbar color to match theme
+    this.statusBar.backgroundColorByHexString("#7b1fa2");
+    const savedColor: string = await this.storage.get("color")
+    //remember saved color
+    if (savedColor) {
+      this.statusBar.backgroundColorByHexString(this.matColors[savedColor].primary);
+    }
+  }
+
+  //recover app state in newer usages
   async recoverRememberedState() {
-    /*****************remember saved user*****************/
-    const savedUser: User = await this.storage.get('user')
+    await this.rememberSavedUser();
+    await this.rememberSavedColor();
+    await this.rememberSavedLanguage();
+  }
+
+  //do you remember the user?
+  async rememberSavedUser(){
+    const savedUser: User = await this.storage.get('user');
     if (savedUser && savedUser.logged === true) {
       this.rootPage = TabsPage;
       this.user = savedUser;
     } else {
       this.rootPage = TutorialPage
     }
-    /*******************remember saved color*******************/
+  }
+  //do you remember user color choise?
+  async rememberSavedColor(){
     const savedColor: string = await this.storage.get("color")
     if (savedColor && savedColor.length) {
       root.style.setProperty(`--color-primary`, this.matColors[savedColor].primary);
       root.style.setProperty(`--color-secondary`, this.matColors[savedColor].secondary);
     }
-    /********************remember saved language********************/
+  }
+
+  //do you remember use language?
+  async rememberSavedLanguage(){
     const savedLanguage: string = await this.storage.get('language')
     if (savedLanguage && savedLanguage.length) {
       this.translate.use(savedLanguage)
     }
   }
-  //logout button
+  
+  //logout please
   logOut() {
     this.authProvider.signOut()
       .then(() => {
-        this.platform.exitApp()
+        window.location.reload();
       })
       .catch((err) => {
         alert(err)
       })
   }
-  //is platform ready? all things are loaded?
-  platformReady() {
-    // Call any initial plugins when ready
-    this.platform.ready().then(async () => {
-      //platform is ready?
-      if (this.platform.is("cordova")) {
-        setTimeout(() => {
-          this.splashScreen.hide()
-        }, 500);;
-      } else {
-        //PWA splash
-        let splash = this.modalCtrl.create(SplashPage, undefined, { cssClass: "modal-fullscreen" });
-        splash.present();
-      }
-      this.splashScreen.hide();
-      await this.recoverRememberedState();
-      //is it cordova?
-      if (this.platform.is("cordova")) {
-        //change status bar color
-        if (this.platform.is("android")) {
-          //set statusbar color to match theme
-          this.statusBar.backgroundColorByHexString("#7b1fa2");
-          const savedColor: string = await this.storage.get("color")
-          if (savedColor) {
-            this.statusBar.backgroundColorByHexString(this.matColors[savedColor].primary);
-          }
-        }
-        //google analytics
-        this.startAnalytics();
-        //fcm
-        this.startPushService();
-      }
-
-      //Listen to app events
-      this.listenToEvents();
-      //Start app background intelligent jobs
-      this.startBackgroundJobs();
-
-      //change alert in browser behavior
-      (() => {
-        window.alert = null;
-        window.alert = (msg) => {
-          console.warn(msg)
-          if (!msg || msg.length === 0) return;
-          const alert = this.alertCtrl.create({
-            title: 'Info!',
-            subTitle: msg,
-            buttons: ['OK']
-          });
-          alert.present();
-        }
-      })()
-      //end platform ready
-    });
-    //careful doing something before ready
-  }
-
+  //Starts intelligent backgroud jobs for better user experince
   startBackgroundJobs() {
-    //for better UX
     //load data at first time app launch
     //not has seen tutorial === first time
     if (localStorage.hasSeenTutorial !== "true") {
@@ -192,12 +169,12 @@ export class MyApp {
     }
   }
 
-  //Start behaviour analytics jobs
+  //Starts behaviour analytics jobs
   startAnalytics() {
     this.analytics.setup();
   }
 
-  //Start push notification services
+  //Starts push notification services
   startPushService() {
     this.push.init();
     this.push.handleNotificationOpened()
@@ -216,9 +193,10 @@ export class MyApp {
     this.push.endInit();
   }
 
-  //Check for new updates?
+  //Check for app new updates?
   startCheckingForUpdates() {
     this.drugProvider.checkForUpdates().subscribe();
+    //TODO listen for newer pharmacy added
   }
 
   //Listen to App Events
@@ -256,6 +234,7 @@ export class MyApp {
 //TODO: add user rating intellegience and feedback
 //TODO: better market MEO
 //TODO: app upload automation
+//TODO: cross-walk support for lower api than 19 > second apk than normal one
 //TODO: handle user segments
 //TODO: add the ability to write prescription and scan drugs
 //TODO: add the ability to enter drug by camera or voice
