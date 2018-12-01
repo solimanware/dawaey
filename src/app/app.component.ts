@@ -76,7 +76,7 @@ export class MyApp {
       //Start app background intelligent jobs
       this.startBackgroundJobs();
       //mess normal browser behaviors
-      messNative();
+      messNative(this.alertCtrl);
       //end platform ready
     });
     //Caution: careful doing something before ready

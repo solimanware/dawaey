@@ -1,10 +1,9 @@
-// change alert in browser behavior
-export const messNative = () => {
+export const messNative = (alertCtrl) => {
     window.alert = null;
     window.alert = (msg) => {
         console.warn(msg)
         if (!msg || msg.length === 0) return;
-        const alert = this.alertCtrl.create({
+        const alert = alertCtrl.create({
             title: 'Info!',
             subTitle: msg,
             buttons: ['OK']
