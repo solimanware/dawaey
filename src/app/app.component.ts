@@ -234,7 +234,6 @@ export class MyApp {
 //TODO: add user rating intellegience and feedback
 //TODO: better market MEO
 //TODO: app upload automation
-//TODO: cross-walk support for lower api than 19 > second apk than normal one
 //TODO: handle user segments
 //TODO: add the ability to write prescription and scan drugs
 //TODO: add the ability to enter drug by camera or voice
