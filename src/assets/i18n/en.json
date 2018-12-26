@@ -1,5 +1,6 @@
 {
     "Welcome to Dawaey":"Welcome to Dawaey",
+    "loading": "Loading please wait..",
     "fetching drugs please wait":"fetching drugs please wait",
     "You can search now":"You can search now ↑↑↑",
     "all":"all",
@@ -34,5 +35,10 @@
     "Choose App Color":"Choose App Color",
     "Update Application Data":"Update Application Data",
     "Show tutorial again":"Show tutorial again",
-    "Reset Application":"Reset Application"
+    "Reset Application":"Reset Application",
+    "Nearby Pharmacies": "Nearby Pharmacies",
+    "Choose Governate": "Choose Governate",
+    "Choose Location": "Choose Location",
+    "Call now": "Call now",
+    "Register Now": "Register Now"
 }

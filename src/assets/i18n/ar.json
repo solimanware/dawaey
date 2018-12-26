@@ -1,5 +1,6 @@
 {
     "Welcome to Dawaey":"أهلاً بك في تطبيق دوائي",
+    "loading": "...جاري التحميل",
     "fetching drugs please wait":"جاري احضار الأدوية",
     "You can search now":"↑↑↑ يمكنك البحث الآن ",
     "all":"الكل",
@@ -34,5 +35,10 @@
     "Choose App Color":"إختر لون التطبيق",
     "Update Application Data":"حدث بيانات التطبيق",
     "Show tutorial again":"إظهر تعليمات البدءً",
-    "Reset Application":"إستعادة الإعدادات الإفتراضية"
+    "Reset Application":"إستعادة الإعدادات الإفتراضية",
+    "Nearby Pharmacies": "الصيدليات القريبة",
+    "Choose Governate": "أختر المحافظه",
+    "Choose Location": "أختر المكان",
+    "Call now": "أتصل الأن",
+    "Register Now": "سجل الأن"
 }
