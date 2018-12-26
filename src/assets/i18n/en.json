@@ -40,5 +40,13 @@
     "Choose Governate": "Choose Governate",
     "Choose Location": "Choose Location",
     "Call now": "Call now",
-    "Register Now": "Register Now"
+    "auth": "Login Page",
+    "Register Now": "Register Now",
+    "Start now": "Start now  😍",
+    "Have account?": "Have account?",
+    "Login": "Login",
+    "Signup": "Sign-up",
+    "email": "E-mail",
+    "password": "Password",
+    "continue as guest": "Continue as guest"
 }
