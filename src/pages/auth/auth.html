@@ -1,69 +1,50 @@
 <!--
   Generated template for the AuthPage page.
-
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title color="snow">auth</ion-title>
+    <ion-title color="snow">{{'auth' | translate}}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-
-        <h1 text-center color="primary">Start now 😍</h1>
-        <ion-list class="auth-wrapper">
-          
-  
-          <div class="continue-with" padding-top>
-            <img (click)="loginGoogle()" src="assets/imgs/google.jpg" alt="">
-            <img (click)="loginFacebook()" padding-top src="assets/imgs/facebook.jpg" alt="">
-          </div>
-  
-  
-          <h1 text-center padding-top color="primary">Have account?</h1>
-  
-          <div class="sign-up-form">
-            <ion-segment [(ngModel)]="segment" style="background:#eee">
-              <ion-segment-button value="login" class="segment-button">
-                Login
-              </ion-segment-button>
-              <ion-segment-button value="signup" class="segment-button">
-                Signup
-              </ion-segment-button>
-            </ion-segment>
-  
-  
-  
-            <ion-item>
-              <ion-label>email</ion-label>
-              <ion-input required type="email" [(ngModel)]="email"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>password</ion-label>
-              <ion-input required type="password" [(ngModel)]="password"></ion-input>
-            </ion-item>
-            <div text-right>
-              <button ion-button icon-end large clear *ngIf="segment === 'signup'" (click)="signup()">
-                Signup
-                <ion-icon name="arrow-forward"></ion-icon>
-              </button>
-              <button ion-button icon-end large clear *ngIf="segment === 'login'" (click)="login()">
-                Login
-                <ion-icon name="arrow-forward"></ion-icon>
-              </button>
-            </div>
-          </div>
-  
-  
-          <p text-center padding-top (click)="guestLogin()" style="color:#dadada;text-decoration:underline;">continue as guest</p>
-  
-  
-  
-        </ion-list>
-
+  <h1 text-center color="primary">{{'Start now' | translate}}</h1>
+  <ion-list class="auth-wrapper">
+    <div class="continue-with" padding-top>
+      <img (click)="loginGoogle()" src="assets/imgs/google.jpg" alt="">
+      <img (click)="loginFacebook()" padding-top src="assets/imgs/facebook.jpg" alt="">
+    </div>
+    <h1 text-center padding-top color="primary">{{'Have account?' | translate}}</h1>
+    <div class="sign-up-form">
+      <ion-segment [(ngModel)]="segment" style="background:#eee">
+        <ion-segment-button value="login" class="segment-button">
+          {{'Login' | translate}}
+        </ion-segment-button>
+        <ion-segment-button value="signup" class="segment-button">
+          {{'Signup' | translate}}
+        </ion-segment-button>
+      </ion-segment>
+      <ion-item>
+        <ion-label>{{'email' | translate}}</ion-label>
+        <ion-input required type="email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{'password' | translate}}</ion-label>
+        <ion-input required type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+      <div text-right>
+        <button ion-button icon-end large clear *ngIf="segment === 'signup'" (click)="signup()">
+          {{'Signup' | translate}}
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+        <button ion-button icon-end large clear *ngIf="segment === 'login'" (click)="login()">
+          {{'Login' | translate}}
+          <ion-icon name="arrow-forward"></ion-icon>
+        </button>
+      </div>
+    </div>
+    <p text-center padding-top (click)="guestLogin()" style="color:#dadada;text-decoration:underline;">{{'continue as guest' | translate}}</p>
+  </ion-list>
 </ion-content>

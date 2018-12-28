@@ -4,28 +4,28 @@
     <button ion-button menuToggle>
       <ion-icon color="light" name="menu"></ion-icon>
     </button>
-    <ion-title color="light">Nearby Pharmacies</ion-title>
+    <ion-title color="light">{{'Nearby Pharmacies' | translate}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <p *ngIf="loading">loading please wait...</p>
+  <p *ngIf="loading">{{'loading' | translate}}</p>
   <ion-list>
     <ion-item>
-      <ion-label>Choose Governate</ion-label>
+      <ion-label>{{'Choose Governate' | translate}}</ion-label>
       <ion-select [(ngModel)]="choosenGov" (ionChange)="govChoosen($event)">
         <ion-option *ngFor="let gov of govs" [value]="gov">{{gov}}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label>Choose Location</ion-label>
+      <ion-label>{{'Choose Location' | translate}}</ion-label>
       <ion-select [(ngModel)]="choosenLocation" (ionChange)="locationChoosen($event)">
         <ion-option *ngFor="let location of locations" [value]="gov">{{location}}</ion-option>
       </ion-select>
     </ion-item>
-    <a class="register" (click)="goAddPharmacyPage()" ion-button backgroundColor="success">Register Now</a>
+    <a class="register" (click)="goAddPharmacyPage()" ion-button backgroundColor="success">{{'Register Now' | translate}}</a>
     <ion-list #virtualScroll [virtualScroll]="filteredPharmacies" approxItemHeight="64px" approxItemWidth="360px"
       bufferRatio="50">
       <ion-item *virtualItem="let pharmacy" dir="rtl">
@@ -34,7 +34,7 @@
         </ion-avatar>
         <h2>{{ pharmacy?.name }}</h2>
         <p>{{ pharmacy?.address }}</p>
-        <a href="tel:{{pharmacy.tel}}">Call now</a>
+        <a href="tel:{{pharmacy.tel}}">{{'Call now' | translate}}</a>
       </ion-item>
     </ion-list>
 
