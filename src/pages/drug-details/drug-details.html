@@ -20,7 +20,7 @@
     <ion-card-content>
       <h2 class="title">{{'Tradename' | translate}}:</h2>
       <h1 class="cap" text-center ion-text color="primary">{{drug?.tradename}}</h1>
-      <h2 no-margin class="title" >{{activeingredients?.length>1? "Active Ingredient(s) :":"Active Ingredient :"}}</h2>
+      <h2 no-margin class="title" >{{(activeingredients?.length > 1 ? 'Active Ingredient(s)' : 'Active Ingredient') | translate}}</h2>
       <h2 class="detail-item lowercase" *ngFor="let item of activeingredients; let i= index" (click)="searchActiveIngredient(item)">
         <span color="primary" margin-left>{{ activeingredients?.length > 1 ? i+1+'-' :''}}</span>
         <span class="clickable cap" color="primary">{{item}}</span>
@@ -28,7 +28,7 @@
       <h3 class="title">
         {{'Price' | translate}}:
         <span ion-text color="danger">
-          <strong>{{drug?.price}} EGP</strong>
+          <strong>{{drug?.price}} {{'EGP' | translate}}</strong>
         </span>
       </h3>
       <h3 class="title" *ngIf="drug?.group" class="title">{{'Drug group' | translate}}:</h3>
@@ -82,7 +82,7 @@
     <ion-item-divider color="light">{{'More Information' | translate}}:</ion-item-divider>
     <ion-card-content text-center>
       <a ion-button backgroundColor="primary" (click)="togglePharma()">
-        {{showPharma === true ? 'Hide Detailed Pharma' : 'View Detailed Pharma'}}
+        {{(showPharma === true ? 'Hide Detailed Pharma' : 'View Detailed Pharma') | translate}}
       </a>
       <br />
       <a ion-button backgroundColor="google" (click)="viewPicture()">{{'View Picture' | translate}}</a>
@@ -93,7 +93,7 @@
   <ion-item-group *ngIf="similars.length>0">
     <ion-item-divider color="light">{{'Similars' | translate}}:</ion-item-divider>
     <ion-item *ngFor="let similar of similars" (click)="openDrug(similar)">
-      {{similar.tradename}} <span class="price" style="float:right;" color="primary">{{similar?.price}} EGP</span>
+      {{similar.tradename}} <span class="price" style="float:right;" color="primary">{{similar?.price}} {{'EGP' | translate}}</span>
     </ion-item>
   </ion-item-group>
 </ion-content>
