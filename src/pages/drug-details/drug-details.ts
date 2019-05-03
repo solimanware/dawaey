@@ -48,6 +48,7 @@ export class DrugDetails {
     this.similars = await this.loadDrugSimilars();
   }
 
+
   //load this drug information
   loadDrugDetails(): Promise<Drug> {
     return new Promise((resolve, reject) => {
@@ -69,39 +70,48 @@ export class DrugDetails {
 
   //load similar drugs for this current drug in view
   loadDrugSimilars(): Promise<Drug[]> {
+    let similarDrugs = [];
     //function to push similar drugs to class similars array
     const pushSimilars = () => {
       //loop to find which have the save ingredienets;
       for (let i = 0; i < this.drugs.length; i++) {
         if (this.drug.activeingredient === this.drugs[i].activeingredient) {
           //push if similar -> similar has the same active ingredient
-          this.similars.push(this.drugs[i]);
+          similarDrugs.push(this.drugs[i]);
         }
       }
     };
 
+    const quickRank = (drugs) => {
+      const lowestPrice = (a, b) => Number(a.price) - Number(b.price);
+      return drugs.sort(lowestPrice)
+    }
+
     //method returns promise of similar drugs...
     return new Promise((resolve, reject) => {
-      //check we have data here //usually we have it when we use direct link
+      //we have data already loaded 
+      //usually we have it when we use direct link
       if (this.drugs.length) {
-        pushSimilars();
+          pushSimilars();
+          quickRank(similarDrugs);
       } else {
-        //load it //current data is limited to data coming from nav object
+        //coming from navigation page
+        //load the drugs to pick similar 
+        //current data is limited to data coming from nav object
         this.drugProvider.displayDrugs().subscribe((result: Drug[]) => {
           this.drugs = result;
           pushSimilars();
+          quickRank(similarDrugs);
         });
       }
 
-      //TODO: implement our ranking function
-      //function to sort lowest price first
-      const lowestFirst = (a, b) => Number(a.price) - Number(b.price);
+      
 
-      //resolve the promise waiting when done
-      let result = this.similars.sort(lowestFirst)
-      resolve(result);
+      
+      resolve(similarDrugs);
     });
   }
+
 
   //open link with company search parameter in main screen
   viewCompanyProducts() {
