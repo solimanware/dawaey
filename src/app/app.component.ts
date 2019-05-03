@@ -25,6 +25,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { matColors } from "./global";
 import { sideMenuPages } from './sidemenu';
 import { MaterialColors } from '../interfaces';
+import { DrugsPage } from '../pages/drugs/drugs';
 // get root
 const root = document.documentElement;
 @Component({
@@ -124,7 +125,7 @@ export class MyApp {
   async rememberSavedUser(){
     const savedUser: User = await this.storage.get('user');
     if (savedUser && savedUser.logged === true) {
-      this.rootPage = TabsPage;
+      this.rootPage = DrugsPage;
       this.user = savedUser;
     } else {
       this.rootPage = TutorialPage
@@ -146,7 +147,7 @@ export class MyApp {
       this.translate.use(savedLanguage)
     }
   }
-  
+
   //logout please
   logOut() {
     this.authProvider.signOut()
