@@ -125,7 +125,7 @@ export class MyApp {
   async rememberSavedUser(){
     const savedUser: User = await this.storage.get('user');
     if (savedUser && savedUser.logged === true) {
-      this.rootPage = DrugsPage;
+      this.rootPage = TabsPage;
       this.user = savedUser;
     } else {
       this.rootPage = TutorialPage

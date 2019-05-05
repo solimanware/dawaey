@@ -10,20 +10,25 @@ import {
   AlertController,
   Content,
   NavParams,
-  VirtualScroll
+  VirtualScroll,
+  Platform
 } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
 
 import { GoogleAnalytics } from "@ionic-native/google-analytics";
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 
 import { Storage } from "@ionic/storage";
 import { Subject, BehaviorSubject } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
 import { PharmaciesPage } from '../pharmacies/pharmacies';
 
+
+
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 @Component({ selector: "page-drugs", templateUrl: "drugs.html" })
+
 export class DrugsPage {
   shouldShowDidYouMean: boolean = false;
   searchResults$ = new BehaviorSubject(<Drug[]>[]);
@@ -54,7 +59,9 @@ export class DrugsPage {
     private drugProvider: DrugProvider,
     private ga: GoogleAnalytics,
     private storage: Storage,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private plt: Platform,
+    private adMob: AdMobFree
   ) {
     //setting up schema for visual searchby options
     this.schema = {
@@ -82,15 +89,24 @@ export class DrugsPage {
   ionViewDidEnter() {
     //this happens so fast > careful
     this.loading = true;
+    this.showAdsForAndroid();
     //Initialize Search term observing
     this.initSearch();
-    // this.storage.get('term').then(res => {
-    //   if (res.length) {
-    //     this.searchTerm$.next(res);
-    //   }
-    // })
     this.loading = false;
     //don't forget to end loading flag
+  }
+
+  showAdsForAndroid() {
+    if (this.plt.is('android')) {
+      //show ads
+      const options: AdMobFreeBannerConfig = {
+        id: 'ca-app-pub-4457719262099261/7277493403',
+      };
+      this.adMob.banner.config(options)
+      this.adMob.banner.prepare().then(() => {
+        this.adMob.banner.show();
+      })
+    }
   }
 
 

@@ -70,13 +70,7 @@ export class AuthPage {
   }
 
   guestLogin() {
-    this.auth.guestLogin()
-      .then(res => {
-        this.startApp();
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    this.startApp();
   }
 
   startApp() {

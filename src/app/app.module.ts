@@ -58,6 +58,8 @@ import { ComponentsModule } from '../components/components.module';
 import { ProfilePage } from '../pages/profile/profile';
 import { UserProvider } from '../providers/user/user';
 
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
+
 
 
 // AoT requires an exported function for factories
@@ -177,6 +179,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     OneSignal,
     AnalyticsProvider,
     UserProvider,
+    AdMobFree
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

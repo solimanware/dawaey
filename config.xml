@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="190160000" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="16.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="190180000" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="18.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Dawaey - دوائي</name>
     <description>Top Updated Drug Index</description>
     <author email="drusama2@gmail.com" href="https://microsmsm.github.io">Osama Soliman</author>
@@ -111,7 +111,6 @@
     </plugin>
     <plugin name="cordova-sqlite-storage" spec="^2.5.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
-    <plugin name="cordova-plugin-buildinfo" spec="^2.0.2" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="dawaey" />
         <variable name="ANDROID_SCHEME" value=" " />
@@ -123,6 +122,15 @@
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.1061030166084-rv5296chqmsbki0esaiilbvp921eru1f" />
         <variable name="WEB_APPLICATION_CLIENT_ID" value="1061030166084-6ga7bg3irrgh2sqekdkti3slb7jda6f6.apps.googleusercontent.com" />
     </plugin>
-    <engine name="android" spec="6.4.0" />
-    <engine name="ios" spec="4.5.5" />
+    <plugin name="cordova-plugin-buildinfo" spec="^2.0.2" />
+    <plugin name="cordova-plugin-admob-free" spec="0.26.0">
+        <variable name="ADMOB_APP_ID" value="ca-app-pub-4457719262099261~5544296256" />
+    </plugin>
+    <plugin name="cordova-plugin-facebook4" spec="4.2.1">
+        <variable name="APP_ID" value="319204808764679" />
+        <variable name="APP_NAME" value="Dawaey" />
+        <variable name="FACEBOOK_HYBRID_APP_EVENTS" value="false" />
+        <variable name="FACEBOOK_ANDROID_SDK_VERSION" value="4.40.0" />
+    </plugin>
+    <engine name="android" spec="7.1.4" />
 </widget>
