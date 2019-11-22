@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { Firebase } from '@ionic-native/firebase';
 
 
 @IonicPage({
@@ -13,10 +13,10 @@ import { GoogleAnalytics } from '@ionic-native/google-analytics';
 })
 export class AboutPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private ga: GoogleAnalytics) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams, private firebase:Firebase) { }
 
   ionViewDidLoad() {
-    this.ga.trackView('Developer Screen')
+    this.firebase.setScreenName("Developer Screen");
   }
 
   openLink(url){

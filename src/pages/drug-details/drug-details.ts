@@ -8,8 +8,8 @@ import {
   NavParams,
   AlertController
 } from "ionic-angular";
-import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { Drug } from "../../interfaces";
+import { Firebase } from "@ionic-native/firebase";
 
 @Component({
   selector: "page-drug-details",
@@ -29,7 +29,7 @@ export class DrugDetails {
     public navCtrl: NavController,
     public navParams: NavParams,
     private drugProvider: DrugProvider,
-    private ga: GoogleAnalytics,
+    private firebase:Firebase,
     private storage: Storage
   ) {}
 
@@ -42,7 +42,7 @@ export class DrugDetails {
     this.loading = false;
 
     //set analytics
-    this.ga.trackView(this.drug.tradename);
+    this.firebase.setScreenName(this.drug.tradename);
 
     //load similars
     this.similars = await this.loadDrugSimilars();

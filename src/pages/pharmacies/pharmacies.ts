@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { PharmacyProvider } from '../../providers/pharmacy/pharmacy';
 import { PharmacyDetailsPage } from '../pharmacy-details/pharmacy-details';
+import { Firebase } from '@ionic-native/firebase';
 
 export interface Pharmacies {
   gov: string
@@ -33,7 +34,8 @@ export class PharmaciesPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
-    private pharmacyProvider: PharmacyProvider) {
+    private pharmacyProvider: PharmacyProvider,
+    private firebase:Firebase) {
   }
 
 
@@ -70,6 +72,7 @@ export class PharmaciesPage {
   }
 
   ionViewDidLoad() {
+    this.firebase.setScreenName("Pharmacies Screen");
     this.shouldShowAds = true;
     this.pharmacyProvider.getAll().subscribe((res: Pharmacies[]) => {
       this.pharmacies = res;

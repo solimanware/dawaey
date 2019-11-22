@@ -1,12 +1,59 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title color="light">profile</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon color="light" name="menu"></ion-icon>
+    </button>
+    <ion-title color="light">Profile</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+  <ion-card>
+
+    <ion-item>
+      <ion-avatar item-start>
+        <img [src]="user?.photoURL">
+      </ion-avatar>
+      <h2 color="primary">{{user?.displayName}}</h2>
+      <p>{{user?.email}}</p>
+    </ion-item>
+
+    <h1 padding-left padding-right color="primary">Hi, Welcome to Dawaey</h1>
+
+    <ion-card-content>
+      <p>Wait a minute. please complete your profile for the best user experience...</p>
+    </ion-card-content>
+  </ion-card>
+  <h3 color="primary">Mobile Number:</h3>
+  <div class="mobile-number">
+    <ion-item class="third-width">
+      <ion-select class="max-width" [(ngModel)]="countryCode">
+        <ion-option value="eg">+20</ion-option>
+        <ion-option value="kw">+965</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="two-third-width" [(ngModel)]="mobileNumber">
+      <ion-input type="number" placeholder="Enter your mobile number"></ion-input>
+    </ion-item>
+  </div>
+
+  <h3 color="primary">Job:</h3>
+  <ion-item>
+    <ion-label>Occupation</ion-label>
+    <ion-select [(ngModel)]="occupation">
+      <ion-option value="doctor">Doctor</ion-option>
+      <ion-option value="pharmacist">Pharmacist</ion-option>
+      <ion-option value="other">Other</ion-option>
+    </ion-select>
+  </ion-item>
+  <div text-center padding-top>
+    <a ion-button backgroundColor="primary" (click)="submitInfo()">
+      complete profile
+    </a>
+  </div>
 
 </ion-content>

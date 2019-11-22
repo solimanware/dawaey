@@ -26,6 +26,7 @@ import { matColors } from "./global";
 import { sideMenuPages } from './sidemenu';
 import { MaterialColors } from '../interfaces';
 import { DrugsPage } from '../pages/drugs/drugs';
+import { ProfilePage } from '../pages/profile/profile';
 // get root
 const root = document.documentElement;
 @Component({
@@ -123,6 +124,7 @@ export class MyApp {
 
   //do you remember the user?
   async rememberSavedUser(){
+    //TODO: do the user have details?
     const savedUser: User = await this.storage.get('user');
     if (savedUser && savedUser.logged === true) {
       this.rootPage = TabsPage;

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { Firebase } from '@ionic-native/firebase';
 
 
 
@@ -14,7 +14,7 @@ export class SponsorsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private ga: GoogleAnalytics
+    private firebase:Firebase
   ) { 
     this.sponsors = [
       {
@@ -33,7 +33,7 @@ export class SponsorsPage {
   }
 
   ionViewDidLoad() {
-    this.ga.trackView('Sponsors Screen')
+    this.firebase.setScreenName("Sponsors Screen");
   }
 
 }

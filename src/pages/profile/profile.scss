@@ -1,3 +1,27 @@
 page-profile {
+    .mobile-number{
+        display: inline;
+    }
+    .third-width{
+        width: 30% !important;
+        display: inline-block;
+    }
+    .two-third-width{
+        width: 65% !important;
+        display: inline-block;
+    }
+    .select-text{
+        text-overflow: unset !important;
+        overflow: visible;
+    }
 
+    .max-width{
+        max-width: 100% !important;
+    }
+    
+    ion-label{
+
+        white-space:normal !important;
+        
+        }
 }

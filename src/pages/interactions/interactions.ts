@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { GoogleAnalytics } from '@ionic-native/google-analytics';
+import { Firebase } from '@ionic-native/firebase';
 
 
 
@@ -10,10 +10,10 @@ import { GoogleAnalytics } from '@ionic-native/google-analytics';
 })
 export class InteractionsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private ga: GoogleAnalytics) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams,private firebase: Firebase) {}
 
   ionViewDidLoad() {
-    this.ga.trackView('Interactions Screen')
+    this.firebase.setScreenName("Interactions Screen");
   }
 
 }

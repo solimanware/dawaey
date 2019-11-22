@@ -20,8 +20,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 
-import { GoogleAnalytics } from '@ionic-native/google-analytics';
-
 import { SettingsProvider } from '../providers/settings/settings';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
@@ -59,7 +57,9 @@ import { ProfilePage } from '../pages/profile/profile';
 import { UserProvider } from '../providers/user/user';
 
 import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
+import { SurveyPage } from '../pages/survey/survey';
 
+import { Firebase } from '@ionic-native/firebase';
 
 
 // AoT requires an exported function for factories
@@ -95,7 +95,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     PharmaciesPage,
     PharmacyDetailsPage,
     AuthPage,
-    ProfilePage
+    ProfilePage,
+    SurveyPage
   ],
   imports: [
     BrowserModule,
@@ -124,6 +125,7 @@ export function HttpLoaderFactory(http: HttpClient) {
           { component: PharmaciesPage, name: 'PharmaciesPage', segment: 'pharmacies' },
           { component: PharmacyDetailsPage, name: 'PharmaciesPage', segment: 'pharmacies/:id' },
           { component: ProfilePage, name: 'ProfilePage', segment: 'profile' },
+          { component: SurveyPage, name: 'SurveyPage', segment: 'survey' },
           { component: AuthPage, name: 'AuthPage', segment: 'auth' }
         ]
       }),
@@ -154,13 +156,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     PharmaciesPage,
     PharmacyDetailsPage,
     AuthPage,
-    ProfilePage
+    ProfilePage,
+    SurveyPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Keyboard,
-    GoogleAnalytics,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     SettingsProvider,
     InAppBrowser,
@@ -179,7 +181,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     OneSignal,
     AnalyticsProvider,
     UserProvider,
-    AdMobFree
+    AdMobFree,
+    Firebase
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

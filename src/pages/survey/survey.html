@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon color="light" name="menu"></ion-icon>
+    </button>
+    <ion-title ion-text text-start color="light">Survey 💭</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content >
+  <div *ngIf="showFirst">
+      <ion-list radio-group [(ngModel)]="areYou">
+          <ion-list-header >
+            <h2 color="primary">
+                Are you?
+            </h2>
+            
+          </ion-list-header>
+        
+          <ion-item>
+            <ion-label>Student</ion-label>
+            <ion-radio checked="true" value="student"></ion-radio>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label>Working</ion-label>
+            <ion-radio value="working"></ion-radio>
+          </ion-item>
+        </ion-list>
+        
+        <ion-list radio-group [(ngModel)]="fieldOfStudy">
+          <ion-list-header>
+            <h2 color="primary">
+                Your field of Study?
+            </h2>   
+          </ion-list-header>
+        
+          <ion-item>
+            <ion-label>Medicine</ion-label>
+            <ion-radio checked="true" value="medicine"></ion-radio>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label>Pharmacy</ion-label>
+            <ion-radio value="pharmacy"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Dentistry</ion-label>
+            <ion-radio value="dentistry"></ion-radio>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label>Veterinary</ion-label>
+            <ion-radio value="veterinary"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Other</ion-label>
+            <ion-radio value="other"></ion-radio>
+          </ion-item>
+        </ion-list>
+
+  </div>
+
+  <div text-center padding-bottom>
+      <button ion-button large backgroundColor="primary" (click)="submit()">Submit</button>
+    </div>
+  
+  
+</ion-content>

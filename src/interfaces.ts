@@ -9,6 +9,15 @@ export interface Drug {
   dosage: string;
   composition: string;
 }
+export interface UserDetails extends Array<UserDetail> { }{
+
+} 
+export interface UserDetail {
+  mobileNumber:number
+  occupation: string
+  areYou: string
+  fieldOfStudy: string
+}
 export interface MaterialColors {
   [key: string]: MaterialColor
 }

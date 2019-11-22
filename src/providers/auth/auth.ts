@@ -15,7 +15,7 @@ export interface User {
   emailVerified?: boolean,
   phoneNumber?: any,
   photoURL?: string,
-  logged?:boolean
+  logged?: boolean
 }
 @Injectable()
 export class AuthProvider {
@@ -48,11 +48,15 @@ export class AuthProvider {
             this.afAuth.auth.signInAndRetrieveDataWithCredential(credential)
               .then(info => {
                 resolve(info)
+                this.loginJobs().then(() => {
+                  resolve(info);
+                })
               })
               .catch(err => {
-                reject(err)
-                alert(err)
-                this.loginJobs();
+                this.loginJobs().then(() => {
+                  reject(err)
+                  alert(err)
+                });
               })
           })
           .catch(err => {
@@ -66,8 +70,9 @@ export class AuthProvider {
           .then(result => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             let token = result.credential["accessToken"];
-            resolve(result)
-            this.loginJobs()
+            this.loginJobs().then(() => {
+              resolve(result);
+            })
           })
           .catch(err => {
             reject(err)
@@ -85,8 +90,9 @@ export class AuthProvider {
             let credential = firebase.auth.FacebookAuthProvider.credential(loginResponse.authResponse.accessToken)
             this.afAuth.auth.signInAndRetrieveDataWithCredential(credential)
               .then(info => {
-                resolve(info)
-                this.loginJobs();
+                this.loginJobs().then(() => {
+                  resolve(info);
+                })
               })
               .catch(err => {
                 reject(err)
@@ -102,8 +108,9 @@ export class AuthProvider {
         this.afAuth.auth
           .signInWithPopup(new firebase.auth.FacebookAuthProvider())
           .then(info => {
-            resolve(info)
-            this.loginJobs();
+            this.loginJobs().then(() => {
+              resolve(info);
+            })
           })
           .catch(err => {
             reject(err)
@@ -113,7 +120,8 @@ export class AuthProvider {
     })
   }
 
-  loginJobs() {
+  loginJobs(): Promise<string> {
+
     const user = this.afAuth.auth.currentUser;
     const userInfo: User = {
       uid: user.uid,
@@ -121,20 +129,24 @@ export class AuthProvider {
       email: user.email,
       phoneNumber: user.phoneNumber,
       photoURL: user.photoURL,
-      logged:true
+      logged: true
     }
-
-    this.afs.
-      collection<User>(`users`)
-      .doc(user.uid)
-      .set({ ...userInfo })
-      .then(res => {
-        console.log(res);
-      }).catch(err => {
-        alert(err)
+    return new Promise((resolve, reject) => {
+      this.afs.
+        collection<User>(`users`)
+        .doc(user.uid)
+        .set({ ...userInfo })
+        .then(res => {
+          console.log(res);
+        }).catch(err => {
+          alert(err)
+        })
+      this.storage.set('user', userInfo).then(() => {
+        resolve('done')
+        this.events.publish('user:login', user)
       })
-    this.storage.set('user', userInfo)
-    this.events.publish('user:login', user)
+    })
+
   }
 
   guestLogin() {
@@ -153,8 +165,9 @@ export class AuthProvider {
       this.afAuth.auth.signInWithEmailAndPassword(email, password)
         .then(result => {
           let token = result.credential["accessToken"];
-          resolve(result)
-          this.loginJobs()
+          this.loginJobs().then(() => {
+            resolve(result);
+          })
         })
         .catch(function (error) {
           reject(error)
@@ -164,32 +177,33 @@ export class AuthProvider {
     })
 
   }
-  trySilent() {
-    return new Promise((resolve, reject) => {
-      if (this.plt.is('cordova')) {
-        this.google
-          .trySilentLogin({})
-          .then(result => {
-            let token = result.credential["accessToken"];
-            resolve(result)
-            this.loginJobs()
-          })
-          .catch(function (error) {
-            reject(error)
-            alert(error.message)
-          });
-      } else {
-        reject('not cordova')
-      }
-    })
-  }
+  // trySilent() {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.plt.is('cordova')) {
+  //       this.google
+  //         .trySilentLogin({})
+  //         .then(result => {
+  //           let token = result.credential["accessToken"];
+  //           resolve(result)
+  //           this.loginJobs()
+  //         })
+  //         .catch(function (error) {
+  //           reject(error)
+  //           alert(error.message)
+  //         });
+  //     } else {
+  //       reject('not cordova')
+  //     }
+  //   })
+  // }
   signup(email, password) {
     return new Promise((resolve, reject) => {
       this.afAuth.auth.createUserWithEmailAndPassword(email, password)
         .then(result => {
           let token = result.credential["accessToken"];
-          resolve(result)
-          this.loginJobs()
+          this.loginJobs().then(() => {
+            resolve(result);
+          })
         })
         .catch(function (error) {
           reject(error)

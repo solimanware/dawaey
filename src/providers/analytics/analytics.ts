@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GoogleAnalytics } from '@ionic-native/google-analytics';
 
 /*
   Generated class for the AnalyticsProvider provider.
@@ -11,19 +10,13 @@ import { GoogleAnalytics } from '@ionic-native/google-analytics';
 @Injectable()
 export class AnalyticsProvider {
 
-  constructor(public http: HttpClient, private googleAnalytics: GoogleAnalytics) {
+  constructor(public http: HttpClient) {
     console.log('Hello AnalyticsProvider Provider');
   }
 
 
   setup() {
-    //start getting analytics
-    this.googleAnalytics
-      .startTrackerWithId("UA-88642709-1")
-      .then(() => {
-        console.log("Google analytics is ready now");
-      })
-      .catch(e => console.log("Error starting GoogleAnalytics", e));
+
   }
 
 }

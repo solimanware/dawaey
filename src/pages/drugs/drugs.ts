@@ -1,6 +1,6 @@
 
 import { switchMap, map, filter, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { Drug } from "./../../interfaces";
+import { Drug, UserDetails, UserDetail } from "./../../interfaces";
 import { DrugProvider } from "./../../providers/drug/drug";
 import { DrugDetails } from "./../drug-details/drug-details";
 import { Component, ViewChild } from "@angular/core";
@@ -11,17 +11,21 @@ import {
   Content,
   NavParams,
   VirtualScroll,
-  Platform
+  Platform,
+  ModalController
 } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
 
-import { GoogleAnalytics } from "@ionic-native/google-analytics";
 import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 
 import { Storage } from "@ionic/storage";
 import { Subject, BehaviorSubject } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
 import { PharmaciesPage } from '../pharmacies/pharmacies';
+import { SurveyPage } from '../survey/survey';
+import { UserProvider } from '../../providers/user/user';
+import { User } from '../../providers/auth/auth';
+import { Firebase } from '@ionic-native/firebase';
 
 
 
@@ -57,11 +61,13 @@ export class DrugsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private drugProvider: DrugProvider,
-    private ga: GoogleAnalytics,
+    private firebase:Firebase,
     private storage: Storage,
     public translate: TranslateService,
     private plt: Platform,
-    private adMob: AdMobFree
+    private adMob: AdMobFree,
+    public modalCtrl: ModalController,
+    private userDetials: UserProvider
   ) {
     //setting up schema for visual searchby options
     this.schema = {
@@ -90,10 +96,49 @@ export class DrugsPage {
     //this happens so fast > careful
     this.loading = true;
     this.showAdsForAndroid();
+    //show surveys
+    this.userDetials.hasCompletedSurveyOne().then(res => {
+      //if has completed
+      if (res) {
+        console.log("Congrats you completed Survey1")
+      } else {
+        console.log("Please complete Survey1")
+        //know the user name
+        this.storage.get("user").then((user: User) => {
+          let name = user.displayName.split(" ")[0];
+          const alert = this.alertCtrl.create({
+            title: `Hello, ${name} 👋😃`,
+            subTitle: 'Please Complete The Following Survey 😍',
+            buttons: [
+              {
+                text: 'Okay',
+                handler: () => {
+                  alert.dismiss().then(() => {
+                    this.showSurveyModal()
+                  });
+                  return false;
+                }
+              }
+            ]
+          });
+          //after pressing okay
+          alert.present()
+
+
+        })
+
+      }
+
+    })
     //Initialize Search term observing
     this.initSearch();
     this.loading = false;
     //don't forget to end loading flag
+  }
+
+  showSurveyModal() {
+    const modal = this.modalCtrl.create(SurveyPage);
+    modal.present();
   }
 
   showAdsForAndroid() {
@@ -114,7 +159,7 @@ export class DrugsPage {
   ionViewDidLoad() {
     this.loading = true;
     //report analytics
-    this.ga.trackView("Main Screen");
+    this.firebase.setScreenName("Main Screen");
 
     this.drugProvider.displayDrugs().subscribe(data => {
       //setting up sample drug of dataset

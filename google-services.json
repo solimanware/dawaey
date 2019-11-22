@@ -1,42 +1,39 @@
 {
   "project_info": {
-    "project_number": "1061030166084",
-    "firebase_url": "https://dawaey-d6076.firebaseio.com",
-    "project_id": "dawaey-d6076",
-    "storage_bucket": "dawaey-d6076.appspot.com"
+    "project_number": "544209182607",
+    "firebase_url": "https://dawaey-app.firebaseio.com",
+    "project_id": "dawaey-app",
+    "storage_bucket": "dawaey-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1061030166084:android:531b0e56bf803ec1",
+        "mobilesdk_app_id": "1:544209182607:android:d71960489fffdb5e47f5fa",
         "android_client_info": {
           "package_name": "com.brilliantapp.dawaey"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1061030166084-94nlg92ep9aejnepvggfr72pkg4h2lnc.apps.googleusercontent.com",
+          "client_id": "544209182607-c8l29bp6b2aft3cku8i5bp30dr559eb3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZ-Oin5qTLHMdvCkuvyl465FxFO0OjvtA"
+          "current_key": "AIzaSyDP2NzdWkfLOC7-a6kbnAY5-eSLOdR5OzU"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544209182607-c8l29bp6b2aft3cku8i5bp30dr559eb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
-      },
-      "admob_app_id": "ca-app-pub-6343631388099543~7616532118"
+      }
     }
   ],
   "configuration_version": "1"
