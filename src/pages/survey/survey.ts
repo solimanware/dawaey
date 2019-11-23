@@ -6,6 +6,7 @@ import { DrugsPage } from '../drugs/drugs';
 import { UserDetail } from '../../interfaces';
 import { ThrowStmt } from '@angular/compiler';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 @Component({
   selector: 'page-survey',
@@ -22,12 +23,12 @@ export class SurveyPage {
     public navParams: NavParams,
     private userDetails: UserProvider,
     public storage: Storage,
-    private firebase: Firebase) {
+    private analytics:AnalyticsProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SurveyPage');
-    this.firebase.setScreenName("Survey Screen")
+    this.analytics.trackScreen("Survey Screen")
   }
 
   submit() {

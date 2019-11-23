@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { UserProvider } from '../../providers/user/user';
 import { UserDetail } from '../../interfaces';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 @Component({
   selector: 'page-profile',
@@ -22,11 +23,11 @@ export class ProfilePage {
     public navParams: NavParams,
     private storage: Storage,
     private userDetails: UserProvider,
-    private firebase: Firebase) {
+    private analytics:AnalyticsProvider) {
   }
 
   async ionViewDidLoad() {
-    this.firebase.setScreenName("Profile Screen");
+    this.analytics.trackScreen("Profile Screen");
     this.countryCodeNumber = {
       eg: '+20',
       kw: '+965'

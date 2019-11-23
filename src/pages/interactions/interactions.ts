@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 
 
@@ -10,10 +11,10 @@ import { Firebase } from '@ionic-native/firebase';
 })
 export class InteractionsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private firebase: Firebase) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams,private analytics:AnalyticsProvider) {}
 
   ionViewDidLoad() {
-    this.firebase.setScreenName("Interactions Screen");
+    this.analytics.trackScreen("Interactions Screen");
   }
 
 }

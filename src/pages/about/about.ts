@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 
 @IonicPage({
@@ -13,10 +14,10 @@ import { Firebase } from '@ionic-native/firebase';
 })
 export class AboutPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private firebase:Firebase) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams, private analytics:AnalyticsProvider) { }
 
   ionViewDidLoad() {
-    this.firebase.setScreenName("Developer Screen");
+    this.analytics.trackScreen("Developer Screen");
   }
 
   openLink(url){

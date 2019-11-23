@@ -60,7 +60,7 @@ import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 import { SurveyPage } from '../pages/survey/survey';
 
 import { Firebase } from '@ionic-native/firebase';
-
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -182,7 +182,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AnalyticsProvider,
     UserProvider,
     AdMobFree,
-    Firebase
+    Firebase,
+    FirebaseAnalytics
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

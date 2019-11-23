@@ -10,6 +10,7 @@ import {
 } from "ionic-angular";
 import { Drug } from "../../interfaces";
 import { Firebase } from "@ionic-native/firebase";
+import { AnalyticsProvider } from "../../providers/analytics/analytics";
 
 @Component({
   selector: "page-drug-details",
@@ -30,7 +31,8 @@ export class DrugDetails {
     public navParams: NavParams,
     private drugProvider: DrugProvider,
     private firebase:Firebase,
-    private storage: Storage
+    private storage: Storage,
+    private analytics:AnalyticsProvider
   ) {}
 
   //Setting live cycle event of entering this component
@@ -42,7 +44,7 @@ export class DrugDetails {
     this.loading = false;
 
     //set analytics
-    this.firebase.setScreenName(this.drug.tradename);
+    this.analytics.trackScreen(this.drug.tradename);
 
     //load similars
     this.similars = await this.loadDrugSimilars();

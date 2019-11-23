@@ -32,7 +32,7 @@
     "@ionic-native/core": "4.5.3",
     "@ionic-native/facebook": "^4.5.3",
     "@ionic-native/firebase": "^4.20.0",
-    "@ionic-native/google-analytics": "4.5.3",
+    "@ionic-native/firebase-analytics": "^4.20.0",
     "@ionic-native/google-plus": "^4.17.0",
     "@ionic-native/in-app-browser": "4.5.3",
     "@ionic-native/keyboard": "4.5.3",
@@ -54,6 +54,7 @@
     "cordova-plugin-customurlscheme": "^4.4.0",
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-facebook4": "^4.2.1",
+    "cordova-plugin-firebase-analytics": "4.0.0",
     "cordova-plugin-firebasex": "^7.0.1",
     "cordova-plugin-google-analytics": "^1.8.6",
     "cordova-plugin-googleplus": "^5.3.2",
@@ -128,7 +129,8 @@
       },
       "cordova-plugin-firebasex": {},
       "cordova-plugin-androidx": {},
-      "cordova-plugin-androidx-adapter": {}
+      "cordova-plugin-androidx-adapter": {},
+      "cordova-plugin-firebase-analytics": {}
     },
     "platforms": [
       "android"

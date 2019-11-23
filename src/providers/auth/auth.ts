@@ -41,7 +41,7 @@ export class AuthProvider {
     return new Promise((resolve, reject) => {
       if (this.plt.is('cordova')) {
         this.google.login({
-          'webClientId': '1061030166084-6ga7bg3irrgh2sqekdkti3slb7jda6f6.apps.googleusercontent.com'
+          'webClientId': '544209182607-c8l29bp6b2aft3cku8i5bp30dr559eb3.apps.googleusercontent.com'
         })
           .then(loginResponse => {
             let credential = firebase.auth.GoogleAuthProvider.credential(loginResponse.idToken)

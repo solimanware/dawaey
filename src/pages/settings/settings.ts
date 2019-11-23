@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SettingsProvider } from '../../providers/settings/settings';
 import { Events } from 'ionic-angular';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class SettingsPage {
     public translate: TranslateService,
     public settings:SettingsProvider,
     private events:Events,
-    private firebase:Firebase
+    private analytics:AnalyticsProvider
   ) {
     this.languageChoices = [
       { value: "ar", name: 'Arabic' },
@@ -59,7 +60,7 @@ export class SettingsPage {
   }
 
   ionViewDidLoad() {
-    this.firebase.setScreenName("Settings Screen")
+    this.analytics.trackScreen("Settings Screen")
     console.log('ionViewDidLoad SettingsPage');
     this.storage.get('country')
       .then(c => {

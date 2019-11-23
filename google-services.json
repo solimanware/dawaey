@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "544209182607-om7gi4cbehs3597rfmmg5udn5nems54n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.brilliantapp.dawaey",
+            "certificate_hash": "74d724d04ef655473510f131cdb3af9083c19d85"
+          }
+        },
+        {
           "client_id": "544209182607-c8l29bp6b2aft3cku8i5bp30dr559eb3.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { PartnerProvider } from '../../providers/partner/partner';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { Firebase } from '@ionic-native/firebase';
 })
 export class PartnersPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private firebase:Firebase,private partnerProvider: PartnerProvider) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams,private analytics:AnalyticsProvider,private partnerProvider: PartnerProvider) { }
   partners = [];
   ionViewDidLoad() {
     this.partners = [
@@ -24,7 +25,7 @@ export class PartnersPage {
         
       }
     })
-    this.firebase.setScreenName("Parteners Screen");
+    this.analytics.trackScreen("Parteners Screen");
   }
 
   openFacebook(username){

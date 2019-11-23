@@ -26,6 +26,7 @@ import { SurveyPage } from '../survey/survey';
 import { UserProvider } from '../../providers/user/user';
 import { User } from '../../providers/auth/auth';
 import { Firebase } from '@ionic-native/firebase';
+import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 
 
@@ -67,7 +68,8 @@ export class DrugsPage {
     private plt: Platform,
     private adMob: AdMobFree,
     public modalCtrl: ModalController,
-    private userDetials: UserProvider
+    private userDetials: UserProvider,
+    private analytics:AnalyticsProvider
   ) {
     //setting up schema for visual searchby options
     this.schema = {
@@ -159,7 +161,7 @@ export class DrugsPage {
   ionViewDidLoad() {
     this.loading = true;
     //report analytics
-    this.firebase.setScreenName("Main Screen");
+    this.analytics.trackScreen("Main Screen");
 
     this.drugProvider.displayDrugs().subscribe(data => {
       //setting up sample drug of dataset
