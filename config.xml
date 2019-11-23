@@ -132,6 +132,7 @@
         <variable name="FACEBOOK_HYBRID_APP_EVENTS" value="false" />
         <variable name="FACEBOOK_ANDROID_SDK_VERSION" value="4.40.0" />
     </plugin>
-    <plugin name="cordova-plugin-firebase" spec="^2.0.5" />
-    <engine name="android" spec="^7.1.4" />
+    <plugin name="cordova-plugin-androidx" spec="1.0.2" />
+    <plugin name="cordova-plugin-androidx-adapter" spec="1.1.0" />
+    <engine name="android" spec="8.1.0" />
 </widget>
