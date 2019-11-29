@@ -3,9 +3,6 @@ import { NavController, NavParams } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
 import { Storage } from "@ionic/storage";
 import { DrugsPage } from '../drugs/drugs';
-import { UserDetail } from '../../interfaces';
-import { ThrowStmt } from '@angular/compiler';
-import { Firebase } from '@ionic-native/firebase';
 import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 @Component({

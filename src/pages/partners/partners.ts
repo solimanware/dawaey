@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { PartnerProvider } from '../../providers/partner/partner';
-import { Firebase } from '@ionic-native/firebase';
 import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 

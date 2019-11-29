@@ -68,6 +68,7 @@ export class MyApp {
       //is this cordova platform? give me native plugins please
       if (this.platform.is("cordova")) {
         this.doNativeStuff();
+        (<any>window).FirebasePlugin.getToken(token => console.log(`token: ${token}`))
       } else {
         this.doPWAStuff();
       }

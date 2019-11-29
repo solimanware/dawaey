@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from 'firebase';
+
 import { Storage } from "@ionic/storage";
-import { UserDetail } from '../../interfaces';
+
 
 /*
   Generated class for the UserProvider provider.

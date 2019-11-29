@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Firebase } from '@ionic-native/firebase';
 import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 

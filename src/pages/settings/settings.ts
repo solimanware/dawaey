@@ -5,7 +5,6 @@ import { NavController, ToastController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingsProvider } from '../../providers/settings/settings';
 import { Events } from 'ionic-angular';
-import { Firebase } from '@ionic-native/firebase';
 import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 

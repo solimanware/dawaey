@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Firebase } from '@ionic-native/firebase';
+
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 /*
@@ -11,19 +10,18 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 */
 @Injectable()
 export class AnalyticsProvider {
-
-  constructor(public http: HttpClient, private firebaseAnalytics:FirebaseAnalytics) {
+  constructor() {
     console.log('Hello AnalyticsProvider Provider');
   }
 
 
   setup() {
     //starting
-    this.firebaseAnalytics.setEnabled(true);
+    (<any>window).FirebasePlugin.setAnalyticsCollectionEnabled(true);
   }
 
   trackScreen(screenName){
-    this.firebaseAnalytics.setCurrentScreen(screenName);
+    (<any>window).FirebasePlugin.setScreenName(screenName);
   }
 
 }

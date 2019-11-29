@@ -3,11 +3,8 @@ import { NavController, NavParams, MenuController } from 'ionic-angular';
 import { AuthProvider } from '../../providers/auth/auth';
 import { TabsPage } from '../tabs/tabs';
 import { ProfilePage } from '../profile/profile';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from 'firebase';
 import { UserProvider } from '../../providers/user/user';
-import { UserDetails } from '../../interfaces';
 
 
 @Component({
@@ -75,7 +72,7 @@ export class AuthPage {
   }
 
   guestLogin() {
-    //this.startApp();
+    this.startApp();
   }
 
   completeProfile() {

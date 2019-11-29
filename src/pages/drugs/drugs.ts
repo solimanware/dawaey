@@ -25,7 +25,6 @@ import { PharmaciesPage } from '../pharmacies/pharmacies';
 import { SurveyPage } from '../survey/survey';
 import { UserProvider } from '../../providers/user/user';
 import { User } from '../../providers/auth/auth';
-import { Firebase } from '@ionic-native/firebase';
 import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 
@@ -62,7 +61,6 @@ export class DrugsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private drugProvider: DrugProvider,
-    private firebase:Firebase,
     private storage: Storage,
     public translate: TranslateService,
     private plt: Platform,

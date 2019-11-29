@@ -9,7 +9,6 @@ import {
   AlertController
 } from "ionic-angular";
 import { Drug } from "../../interfaces";
-import { Firebase } from "@ionic-native/firebase";
 import { AnalyticsProvider } from "../../providers/analytics/analytics";
 
 @Component({
@@ -30,7 +29,6 @@ export class DrugDetails {
     public navCtrl: NavController,
     public navParams: NavParams,
     private drugProvider: DrugProvider,
-    private firebase:Firebase,
     private storage: Storage,
     private analytics:AnalyticsProvider
   ) {}

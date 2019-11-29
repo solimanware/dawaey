@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { PharmacyProvider } from '../../providers/pharmacy/pharmacy';
 import { PharmacyDetailsPage } from '../pharmacy-details/pharmacy-details';
-import { Firebase } from '@ionic-native/firebase';
 import { AnalyticsProvider } from '../../providers/analytics/analytics';
 
 export interface Pharmacies {
