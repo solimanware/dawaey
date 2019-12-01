@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
+import { Platform } from 'ionic-angular';
 
 /*
   Generated class for the AnalyticsProvider provider.
@@ -10,18 +11,28 @@ import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 */
 @Injectable()
 export class AnalyticsProvider {
-  constructor() {
+  constructor(private platform: Platform) {
     console.log('Hello AnalyticsProvider Provider');
   }
 
 
   setup() {
     //starting
-    (<any>window).FirebasePlugin.setAnalyticsCollectionEnabled(true);
+    if (this.platform.is("cordova")) {
+      (<any>window).FirebasePlugin.setAnalyticsCollectionEnabled(true);
+    } else {
+      //try to do pwa firebase analytics here
+    }
+
   }
 
-  trackScreen(screenName){
-    (<any>window).FirebasePlugin.setScreenName(screenName);
+  trackScreen(screenName) {
+    if (this.platform.is("cordova")) {
+      (<any>window).FirebasePlugin.setScreenName(screenName);
+    } else {
+      //try to do pwa firebase analytics here
+    }
+
   }
 
 }
