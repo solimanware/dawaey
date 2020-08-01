@@ -56,7 +56,6 @@ import { ComponentsModule } from '../components/components.module';
 import { ProfilePage } from '../pages/profile/profile';
 import { UserProvider } from '../providers/user/user';
 
-import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 import { SurveyPage } from '../pages/survey/survey';
 
 
@@ -179,7 +178,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     OneSignal,
     AnalyticsProvider,
     UserProvider,
-    AdMobFree
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

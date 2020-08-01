@@ -4,6 +4,7 @@ import { DrugsPage } from "./../drugs/drugs";
 import { NavParams, Platform } from "ionic-angular";
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { SettingsPage } from "../settings/settings";
 export interface ITab {
   title:string;
   component:any;
@@ -30,9 +31,9 @@ export class TabsPage {
       url: "check"
     },
     {
-      title: "Sponsors",
-      component: SponsorsPage,
-      icon: "ionic",
+      title: "Settings",
+      component: SettingsPage,
+      icon: "cog",
       url: "welcome"
     }
   ];

@@ -16,8 +16,6 @@ import {
 } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
 
-import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
-
 import { Storage } from "@ionic/storage";
 import { Subject, BehaviorSubject } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
@@ -64,7 +62,6 @@ export class DrugsPage {
     private storage: Storage,
     public translate: TranslateService,
     private plt: Platform,
-    private adMob: AdMobFree,
     public modalCtrl: ModalController,
     private userDetials: UserProvider,
     private analytics:AnalyticsProvider
@@ -95,7 +92,6 @@ export class DrugsPage {
   ionViewDidEnter() {
     //this happens so fast > careful
     this.loading = true;
-    this.showAdsForAndroid();
     //show surveys
     this.userDetials.hasCompletedSurveyOne().then(res => {
       //if has completed
@@ -141,18 +137,7 @@ export class DrugsPage {
     modal.present();
   }
 
-  showAdsForAndroid() {
-    if (this.plt.is('android')) {
-      //show ads
-      const options: AdMobFreeBannerConfig = {
-        id: 'ca-app-pub-4457719262099261/7277493403',
-      };
-      this.adMob.banner.config(options)
-      this.adMob.banner.prepare().then(() => {
-        this.adMob.banner.show();
-      })
-    }
-  }
+
 
 
   //is view all elemnts did loaded?

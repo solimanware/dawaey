@@ -13,14 +13,9 @@ export const sideMenuPages = [
         icon: "home"
     },
     {
-        title: "Nearby Pharmacies",
+        title: "Nearby Pharmaacies",
         component: PharmaciesPage,
         icon: "medkit"
-    },
-    {
-        title: "Partners",
-        component: PartnersPage,
-        icon: "cash"
     },
     {
         title: "Settings",
