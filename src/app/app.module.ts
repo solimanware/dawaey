@@ -57,6 +57,7 @@ import { ProfilePage } from '../pages/profile/profile';
 import { UserProvider } from '../providers/user/user';
 
 import { SurveyPage } from '../pages/survey/survey';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 
 // AoT requires an exported function for factories
@@ -178,6 +179,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     OneSignal,
     AnalyticsProvider,
     UserProvider,
+    FirebaseAnalytics
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,

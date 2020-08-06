@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="190220000" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="22.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-packageName="com.brilliantapp.dawaey" android-versionCode="190230000" id="com.brilliantapp.dawaey" ios-CFBundleIdentifier="com.dawaey" version="23.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Dawaey - دوائي</name>
     <description>The Smartest Drug Search Engine Drug Index</description>
     <author email="eng.microsmsm@gmail.com" href="https://microsmsm.github.io">Osama Soliman</author>
@@ -198,5 +198,6 @@
     <plugin name="cordova-plugin-androidx-adapter" spec="1.1.0" />
     <plugin name="cordova-sqlite-storage" spec="^3.4.0" />
     <plugin name="cordova-plugin-enable-multidex" spec="^0.2.0" />
+    <plugin name="cordova-plugin-firebase-analytics" spec="^4.3.1" />
     <engine name="android" spec="8.1.0" />
 </widget>

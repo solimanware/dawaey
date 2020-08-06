@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 import { Platform } from 'ionic-angular';
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics';
 
 /*
   Generated class for the AnalyticsProvider provider.
@@ -11,7 +11,7 @@ import { Platform } from 'ionic-angular';
 */
 @Injectable()
 export class AnalyticsProvider {
-  constructor(private platform: Platform) {
+  constructor(private platform: Platform,private firebase:FirebaseAnalytics) {
     console.log('Hello AnalyticsProvider Provider');
   }
 
@@ -19,7 +19,8 @@ export class AnalyticsProvider {
   setup() {
     //starting
     if (this.platform.is("cordova")) {
-      (<any>window).FirebasePlugin.setAnalyticsCollectionEnabled(true);
+      this.firebase.setEnabled(true)
+      //(<any>window).FirebasePlugin.setAnalyticsCollectionEnabled(true);
     } else {
       //try to do pwa firebase analytics here
     }
@@ -28,7 +29,8 @@ export class AnalyticsProvider {
 
   trackScreen(screenName) {
     if (this.platform.is("cordova")) {
-      (<any>window).FirebasePlugin.setScreenName(screenName);
+      this.firebase.setCurrentScreen(screenName);
+      //(<any>window).FirebasePlugin.setScreenName(screenName);
     } else {
       //try to do pwa firebase analytics here
     }
