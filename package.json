@@ -82,7 +82,7 @@
     "rxjs": "6.3.3",
     "rxjs-compat": "6.3.3",
     "sw-toolbox": "3.6.0",
-    "yarn": "^1.19.1",
+    "yarn": "^1.22.0",
     "zone.js": "0.8.20"
   },
   "devDependencies": {
