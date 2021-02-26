@@ -1,0 +1,29 @@
+cli packages: (/Users/osama/.nvm/versions/node/v10.17.0/lib/node_modules)
+
+    @ionic/cli-utils  : 1.19.2
+    ionic (Ionic CLI) : 3.20.0
+
+global packages:
+
+    cordova (Cordova CLI) : 8.1.2 (cordova-lib@8.1.1) 
+
+local packages:
+
+    @ionic/app-scripts : 3.2.4
+    Cordova Platforms  : android 8.1.0
+    Ionic Framework    : ionic-angular 3.9.2
+
+System:
+
+    Node  : v10.17.0
+    npm   : 6.11.3 
+    OS    : macOS
+    Xcode : Xcode 11.6 Build version 11E708 
+
+Environment Variables:
+
+    ANDROID_HOME : not set
+
+Misc:
+
+    backend : pro
