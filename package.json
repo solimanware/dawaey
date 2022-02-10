@@ -75,7 +75,7 @@
     "ionicons": "3.0.0",
     "native-run": "^0.2.9",
     "node-gyp": "^6.0.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "onesignal-cordova-plugin": "^2.7.0",
     "phonegap-plugin-multidex": "^1.0.0",
     "promise-polyfill": "^8.1.0",
