@@ -8,7 +8,7 @@ interface MedicationCardProps {
   item: Drug;
 }
 
-// iPhone-style Marquee Animation Component
+// Debug Marquee Animation Component
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const [containerWidth, setContainerWidth] = useState(0);
@@ -18,23 +18,28 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const totalIngredientsText = ingredients.join(" + ");
   const shouldAnimate = totalIngredientsText.length > 30;
 
-  console.log("AnimatedMarquee Debug:", {
+  console.log("🔍 AnimatedMarquee Debug:", {
     totalIngredientsText,
     textLength: totalIngredientsText.length,
     containerWidth,
     textWidth,
     shouldAnimate,
     needsAnimation: textWidth > containerWidth,
+    canAnimate: containerWidth > 0 && textWidth > 0,
   });
 
   useEffect(() => {
-    if (
-      shouldAnimate &&
-      containerWidth > 0 &&
-      textWidth > 0 &&
-      textWidth > containerWidth
-    ) {
-      console.log("Starting iPhone-style marquee animation");
+    // Force animation for debugging - let's test with any text longer than 30 chars
+    if (shouldAnimate && containerWidth > 50) {
+      // Reduced threshold for testing
+      console.log("🚀 Starting marquee animation with:", {
+        containerWidth,
+        textWidth,
+        translateDistance:
+          textWidth > containerWidth
+            ? -(textWidth - containerWidth) - 20
+            : -100,
+      });
 
       const startMarquee = () => {
         // Clear any existing animation
@@ -42,48 +47,39 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
           animationRef.current.stop();
         }
 
-        // Reset position to start from the right edge
+        // Reset position
         translateX.setValue(0);
 
-        // Create the marquee animation sequence
+        // Create a simple left-moving animation for testing
         const sequence = Animated.sequence([
-          // Wait 2 seconds before starting
-          Animated.delay(2000),
+          Animated.delay(1000), // Shorter delay for testing
 
-          // Animate from right to left
           Animated.timing(translateX, {
-            toValue: -(textWidth - containerWidth) - 20, // Move left until all text is visible
-            duration: Math.max(3000, (textWidth - containerWidth) * 20), // Slower for longer text
+            toValue: -200, // Fixed distance for testing
+            duration: 4000, // 4 seconds
             useNativeDriver: true,
           }),
 
-          // Wait 2 seconds at the end
-          Animated.delay(2000),
+          Animated.delay(1000),
         ]);
 
-        // Loop the animation
         animationRef.current = Animated.loop(sequence);
-        animationRef.current.start();
+        animationRef.current.start(() => {
+          console.log("✅ Animation cycle completed");
+        });
       };
 
       startMarquee();
 
-      // Cleanup function
       return () => {
         if (animationRef.current) {
           animationRef.current.stop();
         }
       };
-    } else {
-      // Stop animation if conditions aren't met
-      if (animationRef.current) {
-        animationRef.current.stop();
-      }
-      translateX.setValue(0);
     }
-  }, [shouldAnimate, containerWidth, textWidth, translateX]);
+  }, [shouldAnimate, containerWidth, translateX]);
 
-  // If text is short enough, don't animate
+  // If text is short, show normally
   if (!shouldAnimate) {
     return (
       <View className="flex-row flex-wrap gap-2">
@@ -100,36 +96,48 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   }
 
   return (
-    <View
-      className="overflow-hidden"
-      style={{ width: "100%", height: 32 }}
-      onLayout={(event) => {
-        const width = event.nativeEvent.layout.width;
-        console.log("Container width measured:", width);
-        setContainerWidth(width);
-      }}
-    >
-      <Animated.View
-        className="flex-row items-center h-full"
+    <View className="bg-yellow-100 border-2 border-red-500">
+      {" "}
+      {/* Visual debug container */}
+      <Text className="text-xs text-red-600 mb-1">
+        🐛 Container: {containerWidth}px | Text: {textWidth}px
+      </Text>
+      <View
+        className="overflow-hidden bg-blue-100"
         style={{
-          transform: [{ translateX }],
+          width: "100%",
+          height: 40,
+          borderWidth: 1,
+          borderColor: "green",
         }}
         onLayout={(event) => {
           const width = event.nativeEvent.layout.width;
-          console.log("Text width measured:", width);
-          setTextWidth(width);
+          console.log("📏 Container width measured:", width);
+          setContainerWidth(width);
         }}
       >
-        {ingredients.map((ingredient, index) => (
-          <View
-            key={`${ingredient}-${index}`}
-            className="mr-2 bg-white px-2 py-1 rounded-full border border-primary-300"
-            style={{ flexShrink: 0 }} // Prevent text from shrinking
-          >
-            <Text className="text-sm text-gray-700">{ingredient}</Text>
-          </View>
-        ))}
-      </Animated.View>
+        <Animated.View
+          className="flex-row items-center h-full bg-orange-200"
+          style={{
+            transform: [{ translateX }],
+          }}
+          onLayout={(event) => {
+            const width = event.nativeEvent.layout.width;
+            console.log("📏 Text width measured:", width);
+            setTextWidth(width);
+          }}
+        >
+          {ingredients.map((ingredient, index) => (
+            <View
+              key={`${ingredient}-${index}`}
+              className="mr-2 bg-white px-2 py-1 rounded-full border border-primary-300"
+              style={{ flexShrink: 0 }}
+            >
+              <Text className="text-sm text-gray-700">{ingredient}</Text>
+            </View>
+          ))}
+        </Animated.View>
+      </View>
     </View>
   );
 };
@@ -168,7 +176,7 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   const activeIngredients = getActiveIngredients();
   const totalIngredientsText = activeIngredients.join(" + ");
 
-  console.log("MedicationCard Debug:", {
+  console.log("💊 MedicationCard Debug:", {
     tradename: item.tradename,
     rawActiveIngredient: item.activeingredient,
     activeIngredients,
