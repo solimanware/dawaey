@@ -6,7 +6,62 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#2563eb",
+        // Royal Violet Primary variations
+        primary: {
+          50: "#f5f3ff",
+          100: "#ede9fe",
+          200: "#ddd6fe",
+          300: "#c4b5fd",
+          400: "#a78bfa",
+          500: "#8b5cf6", // Main primary
+          600: "#7c3aed", // Royal violet
+          700: "#6d28d9",
+          800: "#5b21b6",
+          900: "#4c1d95",
+          950: "#2e1065",
+        },
+        // Secondary violet shades
+        secondary: {
+          50: "#faf7ff",
+          100: "#f4edff",
+          200: "#e9ddff",
+          300: "#d6c0ff",
+          400: "#bd95ff",
+          500: "#a165ff",
+          600: "#8c3cff",
+          700: "#7524ed",
+          800: "#631fc7",
+          900: "#521ca3",
+          950: "#35106f",
+        },
+        // Accent violet
+        accent: {
+          50: "#fdf4ff",
+          100: "#fae8ff",
+          200: "#f5d0fe",
+          300: "#f0abfc",
+          400: "#e879f9",
+          500: "#d946ef",
+          600: "#c026d3",
+          700: "#a21caf",
+          800: "#86198f",
+          900: "#701a75",
+          950: "#4a044e",
+        },
+        // Background violets
+        background: {
+          50: "#fefcff",
+          100: "#fdf8ff",
+          200: "#fbf1ff",
+          300: "#f7e6ff",
+          400: "#f1d5ff",
+          500: "#e9bfff",
+          600: "#dc9dff",
+          700: "#ca70ff",
+          800: "#b340ff",
+          900: "#9210ff",
+          950: "#5a0080",
+        },
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -59,7 +114,7 @@ module.exports = {
         DEFAULT: "#e5e7eb",
       },
       backgroundColor: {
-        primary: "#2563eb",
+        primary: "#7c3aed", // Royal violet
       },
     },
   },
