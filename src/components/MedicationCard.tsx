@@ -8,52 +8,51 @@ interface MedicationCardProps {
   item: Drug;
 }
 
-// Smooth Continuous Marquee Animation Component
+// Seamless Marquee Animation Component
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const [containerWidth, setContainerWidth] = useState(0);
-  const [textWidth, setTextWidth] = useState(0);
+  const [singleContentWidth, setSingleContentWidth] = useState(0);
   const animationRef = useRef<Animated.CompositeAnimation | null>(null);
 
   const totalIngredientsText = ingredients.join(" + ");
   const shouldAnimate = totalIngredientsText.length > 30;
 
-  console.log("🔍 Smooth Marquee Debug:", {
+  console.log("🔍 Seamless Marquee Debug:", {
     totalIngredientsText,
     textLength: totalIngredientsText.length,
     containerWidth,
-    textWidth,
+    singleContentWidth,
     shouldAnimate,
   });
 
   useEffect(() => {
-    if (shouldAnimate && containerWidth > 50 && textWidth > 0) {
-      console.log("🚀 Starting smooth continuous marquee");
+    if (shouldAnimate && containerWidth > 50 && singleContentWidth > 0) {
+      console.log("🚀 Starting seamless marquee with exact calculations");
 
-      const startSmoothMarquee = () => {
+      const startSeamlessMarquee = () => {
         // Clear any existing animation
         if (animationRef.current) {
           animationRef.current.stop();
         }
 
-        // Reset to starting position
+        // Start from position 0
         translateX.setValue(0);
 
-        // Create smooth continuous animation
-        // Move exactly one text width to the left, then reset seamlessly
+        // Move exactly one content width to the left for perfect seamless loop
         const timing = Animated.timing(translateX, {
-          toValue: -textWidth - 40, // Move one full text width + spacing
-          duration: Math.max(6000, textWidth * 20), // Slower, smoother animation
+          toValue: -singleContentWidth, // Move exactly one content block width
+          duration: Math.max(8000, singleContentWidth * 25), // Smooth, readable speed
           useNativeDriver: true,
         });
 
-        // Loop the animation continuously for seamless effect
+        // Loop continuously for seamless effect
         animationRef.current = Animated.loop(timing);
         animationRef.current.start();
       };
 
-      // Start animation after a short delay
-      const timeoutId = setTimeout(startSmoothMarquee, 1500);
+      // Start animation after delay
+      const timeoutId = setTimeout(startSeamlessMarquee, 2000);
 
       return () => {
         clearTimeout(timeoutId);
@@ -62,7 +61,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         }
       };
     }
-  }, [shouldAnimate, containerWidth, textWidth, translateX]);
+  }, [shouldAnimate, containerWidth, singleContentWidth, translateX]);
 
   // If text is short, show normally
   if (!shouldAnimate) {
@@ -80,7 +79,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
     );
   }
 
-  // Render ingredients as a reusable component
+  // Render single instance of ingredients for measurement
   const renderIngredients = (keyPrefix: string) =>
     ingredients.map((ingredient, index) => (
       <View
@@ -106,30 +105,31 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
           setContainerWidth(width);
         }}
       >
+        {/* Hidden measurement view for single content width */}
+        <View
+          style={{ position: "absolute", opacity: 0, top: -1000 }}
+          onLayout={(event) => {
+            const width = event.nativeEvent.layout.width;
+            console.log("📐 Single content width measured:", width);
+            setSingleContentWidth(width);
+          }}
+        >
+          <View className="flex-row">{renderIngredients("measure")}</View>
+        </View>
+
         <Animated.View
           className="flex-row items-center h-full"
           style={{
             transform: [{ translateX }],
           }}
-          onLayout={(event) => {
-            const width = event.nativeEvent.layout.width;
-            console.log("📏 Text width measured:", width);
-            setTextWidth(width);
-          }}
         >
-          {/* First instance of ingredients */}
+          {/* First instance */}
           {renderIngredients("first")}
 
-          {/* Spacing between instances */}
-          <View style={{ width: 40 }} />
-
-          {/* Second instance for seamless loop */}
+          {/* Second instance - positioned immediately after first with no gap */}
           {renderIngredients("second")}
 
-          {/* Spacing between instances */}
-          <View style={{ width: 40 }} />
-
-          {/* Third instance to ensure smooth continuous flow */}
+          {/* Third instance - for extra smoothness on very wide screens */}
           {renderIngredients("third")}
         </Animated.View>
       </View>
