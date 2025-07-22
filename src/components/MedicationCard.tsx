@@ -11,6 +11,18 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   const paletteColors = item.palette ? item.palette.split(",") : [];
   const primaryColor = paletteColors[0] || "#2563eb";
 
+  // Safely format price
+  const formatPrice = (price: number | string | undefined): string => {
+    if (price === undefined || price === null || price === "") {
+      return "N/A";
+    }
+    const numPrice = typeof price === "string" ? parseFloat(price) : price;
+    if (isNaN(numPrice)) {
+      return "N/A";
+    }
+    return numPrice.toFixed(2);
+  };
+
   return (
     <TouchableOpacity className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border border-gray-100">
       <View className="flex-row">
@@ -62,11 +74,11 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
           {/* Price and Form */}
           <View className="flex-row items-center justify-between">
             <Text className="text-xl font-bold text-blue-600">
-              EGP {item.price.toFixed(2)}
+              EGP {formatPrice(item.price)}
             </Text>
             <View className="bg-gray-100 px-3 py-1 rounded-full">
               <Text className="text-xs text-gray-600 font-medium">
-                {item.form}
+                {item.form || "Unknown"}
               </Text>
             </View>
           </View>

@@ -9,7 +9,7 @@ export type Drug = {
   group: string;
   info: string;
   form: string;
-  price: number;
+  price: number | string | undefined;
   tradenamearabic: string;
   palette: string;
 };
