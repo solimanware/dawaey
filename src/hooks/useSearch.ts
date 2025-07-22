@@ -12,9 +12,10 @@ export const useSearch = (drugs: Drug[]) => {
     return drugs.filter(
       (drug: Drug) =>
         drug.tradename.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        drug.activeIngredients.some((ingredient) =>
-          ingredient.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        (drug.activeingredient &&
+          drug.activeingredient
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()))
     );
   }, [drugs, searchQuery]);
 
