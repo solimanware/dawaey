@@ -100,9 +100,11 @@ export const SearchBar = ({
           autoCorrect={false}
           autoComplete="off"
         />
-        <TouchableOpacity>
-          <Ionicons name="options" size={20} color="#663399" />
-        </TouchableOpacity>
+        {searchQuery ? (
+          <TouchableOpacity onPress={() => onChangeText("")}>
+            <Ionicons name="close-circle" size={20} color="#663399" />
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
