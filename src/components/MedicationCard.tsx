@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { Drug } from "../hooks/useDrugsData";
@@ -87,7 +88,9 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         className="mr-2 bg-white px-2 py-1 rounded-full border-[1px] border-primary-300"
         style={{ flexShrink: 0 }}
       >
-        <Text className="text-sm text-gray-700">{ingredient}</Text>
+        <Text className="text-sm text-gray-700">
+          {index + 1}- {ingredient}
+        </Text>
       </View>
     ));
 
@@ -177,8 +180,29 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
     textLength: totalIngredientsText.length,
   });
 
+  const handlePress = () => {
+    router.push({
+      pathname: "/(modal)/medication-details" as any,
+      params: {
+        id: item.id,
+        tradename: item.tradename,
+        activeingredient: item.activeingredient,
+        company: item.company,
+        group: item.group,
+        info: item.info,
+        form: item.form,
+        price: item.price?.toString() || "",
+        tradenamearabic: item.tradenamearabic,
+        palette: item.palette,
+      },
+    });
+  };
+
   return (
-    <TouchableOpacity className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border-[1px] border-primary-500">
+    <TouchableOpacity
+      className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border-[1px] border-primary-500"
+      onPress={handlePress}
+    >
       <View className="flex-row">
         {/* Drug Image */}
         <View className="mr-4">

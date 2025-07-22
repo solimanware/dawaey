@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SearchResult } from "../hooks/useFuzzySearch";
 
 interface FuzzySearchResultsProps {
@@ -69,6 +69,9 @@ export const FuzzySearchResults = ({
     return "Weak match";
   };
 
+  const predictedTradename =
+    results[0].drug.tradename.split(" ")[0].charAt(0).toUpperCase() +
+    results[0].drug.tradename.split(" ")[0].slice(1).toLowerCase();
   return (
     <View className="mx-6 mb-4">
       {/* Header */}
@@ -81,7 +84,19 @@ export const FuzzySearchResults = ({
             No exact matches for "{searchQuery}"
           </Text>
         </View>
-        <Text className="text-gray-600 text-sm mt-1 ">Do You Mean...</Text>
+        <View className="text-gray-600 text-sm mt-1 flex-row items-start justify-start">
+          <Text className="text-gray-600 text-sm mt-1 flex-row items-center justify-center">
+            Do You Mean{" "}
+          </Text>
+          <TouchableOpacity onPress={() => onSelectResult(predictedTradename)}>
+            <Text className="text-primary-500  border-b-2 border-primary-500">
+              {predictedTradename}
+            </Text>
+          </TouchableOpacity>
+          <Text className="text-gray-600 text-sm mt-1 flex-row items-center justify-center">
+            ?
+          </Text>
+        </View>
       </View>
     </View>
   );

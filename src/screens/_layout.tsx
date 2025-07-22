@@ -1,41 +1,34 @@
-import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { Stack, router } from "expo-router";
 import React from "react";
-import { useColorScheme } from "react-native";
-
-import { TabBarBackground } from "../components/TabBarBackground";
-import {
-  TAB_BAR_COLORS,
-  TAB_BAR_ICON_STYLE,
-  TAB_BAR_LABEL_STYLE,
-  getTabBarStyle,
-} from "../constants/tabBarStyles";
-import { TAB_CONFIGS, createTabIcon } from "../constants/tabsConfig";
+import { TouchableOpacity } from "react-native";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
-  const tabBarOptions = {
-    tabBarActiveTintColor: TAB_BAR_COLORS.active,
-    tabBarInactiveTintColor: TAB_BAR_COLORS.inactive,
-    tabBarStyle: getTabBarStyle(),
-    tabBarBackground: () => <TabBarBackground />,
-    tabBarLabelStyle: TAB_BAR_LABEL_STYLE,
-    tabBarIconStyle: TAB_BAR_ICON_STYLE,
-    headerShown: false,
-  };
-
   return (
-    <Tabs screenOptions={tabBarOptions}>
-      {TAB_CONFIGS.map((config) => (
-        <Tabs.Screen
-          key={config.name}
-          name={config.name}
-          options={{
-            title: config.title,
-            tabBarIcon: createTabIcon(config),
-          }}
-        />
-      ))}
-    </Tabs>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="(modal)/medication-details"
+        options={{
+          title: "Medication Details",
+          headerTintColor: "#000",
+          headerStyle: {
+            backgroundColor: "#fff",
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.dismiss()}>
+              <Ionicons name="close" size={24} color="#6b7280" />
+            </TouchableOpacity>
+          ),
+          presentation: "formSheet",
+          sheetAllowedDetents: [0.45, 0.95],
+          sheetInitialDetentIndex: 0,
+          sheetGrabberVisible: true,
+          contentStyle: {
+            backgroundColor: "#fff",
+          },
+        }}
+      />
+    </Stack>
   );
 }

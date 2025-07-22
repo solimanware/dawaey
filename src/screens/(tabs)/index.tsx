@@ -90,8 +90,8 @@ export default function MedicationsScreen() {
       ) : (
         <>
           {isNormalSearchLoading || isFuzzySearchLoading ? (
-            <View className="flex-1 items-center justify-center">
-              <ActivityIndicator size="large" color="#2563eb" />
+            <View className="flex-1 items-center justify-center -mt-60">
+              <ActivityIndicator size="large" color="#663399" />
             </View>
           ) : (
             <>
@@ -120,6 +120,7 @@ export default function MedicationsScreen() {
           )}
         </>
       )}
+      <View className="flex-1 items-center justify-center bg-green-200"></View>
     </SafeAreaView>
   );
 }
