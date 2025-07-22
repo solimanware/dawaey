@@ -26,30 +26,17 @@ export const useTypewriter = ({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    console.log("Typewriter effect - State:", {
-      displayText,
-      currentWordIndex,
-      currentCharIndex,
-      isDeleting,
-      cycleCount,
-      isComplete,
-      wordsLength: words.length,
-    });
-
     if (isComplete) {
-      console.log("Typewriter complete, showing default text");
       setDisplayText(defaultText);
       return;
     }
 
     if (words.length === 0) {
-      console.log("No words provided, showing default text");
       setDisplayText(defaultText);
       return;
     }
 
     const currentWord = words[currentWordIndex];
-    console.log("Current word:", currentWord);
 
     const typeNextChar = () => {
       if (isDeleting) {
@@ -59,17 +46,14 @@ export const useTypewriter = ({
           setDisplayText(currentWord.substring(0, currentCharIndex - 1));
         } else {
           // Finished deleting, move to next word
-          console.log("Finished deleting, moving to next word");
           setIsDeleting(false);
           setCurrentWordIndex((prev) => {
             const nextIndex = prev + 1;
             if (nextIndex >= words.length) {
               // Completed one full cycle
-              console.log("Completed one cycle");
               setCycleCount((prevCycle) => {
                 const newCycleCount = prevCycle + 1;
                 if (newCycleCount >= cycles) {
-                  console.log("All cycles complete");
                   setIsComplete(true);
                 }
                 return newCycleCount;
@@ -86,8 +70,18 @@ export const useTypewriter = ({
           setCurrentCharIndex((prev) => prev + 1);
           setDisplayText(currentWord.substring(0, currentCharIndex + 1));
         } else {
-          // Finished typing current word, start deleting after pause
-          console.log("Finished typing word, starting delete after pause");
+          // Finished typing current word
+          // Check if this is the last word of the last cycle
+          const isLastWord = currentWordIndex === words.length - 1;
+          const isLastCycle = cycleCount === cycles - 1;
+
+          if (isLastWord && isLastCycle) {
+            // Don't delete the last word, just complete the animation
+            setIsComplete(true);
+            return;
+          }
+
+          // Start deleting after pause for all other cases
           timeoutRef.current = setTimeout(() => {
             setIsDeleting(true);
           }, pauseDuration);
@@ -102,7 +96,6 @@ export const useTypewriter = ({
 
     // Start the animation
     if (!isComplete && cycleCount < cycles) {
-      console.log("Starting typewriter animation");
       const speed = isDeleting ? deletingSpeed : typingSpeed;
       timeoutRef.current = setTimeout(typeNextChar, speed);
     }
