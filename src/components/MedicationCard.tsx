@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { useMarqueeAnimation } from "../hooks";
 import { Drug } from "../hooks/useDrugsData";
 
 interface MedicationCardProps {
@@ -10,38 +11,34 @@ interface MedicationCardProps {
 
 // Animated Marquee Component
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
-  const translateX = useRef(new Animated.Value(0)).current;
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [textWidth, setTextWidth] = useState(0);
+  const {
+    translateX,
+    setContainerDimensions,
+    setTextDimensions,
+    startMarquee,
+  } = useMarqueeAnimation();
+
+  const totalIngredientsText = ingredients.join(" + ");
 
   useEffect(() => {
-    if (containerWidth > 0 && textWidth > containerWidth) {
-      const startAnimation = () => {
-        translateX.setValue(containerWidth);
-        Animated.timing(translateX, {
-          toValue: -textWidth - 20, // Extra padding for smooth loop
-          duration: (textWidth + containerWidth) * 30, // Slow motion: 30ms per pixel
-          useNativeDriver: true,
-        }).start(() => {
-          // Restart animation for continuous loop
-          startAnimation();
-        });
-      };
-      startAnimation();
+    if (totalIngredientsText.length > 30) {
+      startMarquee();
     }
-  }, [containerWidth, textWidth, translateX]);
+  }, [totalIngredientsText, startMarquee]);
 
   return (
     <View
       className="overflow-hidden"
-      onLayout={(event) => setContainerWidth(event.nativeEvent.layout.width)}
+      onLayout={(event) =>
+        setContainerDimensions(event.nativeEvent.layout.width)
+      }
     >
       <Animated.View
         className="flex-row"
         style={{
           transform: [{ translateX }],
         }}
-        onLayout={(event) => setTextWidth(event.nativeEvent.layout.width)}
+        onLayout={(event) => setTextDimensions(event.nativeEvent.layout.width)}
       >
         {ingredients.map((ingredient, index) => (
           <Text

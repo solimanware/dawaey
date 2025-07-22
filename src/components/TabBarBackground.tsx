@@ -33,18 +33,6 @@ export const TabBarBackground = () => {
           borderTopRightRadius: 25,
         }}
       />
-      {/* Top highlight line */}
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 20,
-          right: 20,
-          height: 2,
-          backgroundColor: "rgba(255, 255, 255, 0.3)",
-          borderRadius: 1,
-        }}
-      />
     </View>
   );
 };
