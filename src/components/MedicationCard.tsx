@@ -8,48 +8,83 @@ interface MedicationCardProps {
   item: Drug;
 }
 
-// Simplified Animated Marquee Component for testing
+// iPhone-style Marquee Animation Component
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const [containerWidth, setContainerWidth] = useState(0);
   const [textWidth, setTextWidth] = useState(0);
+  const animationRef = useRef<Animated.CompositeAnimation | null>(null);
 
   const totalIngredientsText = ingredients.join(" + ");
+  const shouldAnimate = totalIngredientsText.length > 30;
 
   console.log("AnimatedMarquee Debug:", {
-    ingredients,
     totalIngredientsText,
     textLength: totalIngredientsText.length,
     containerWidth,
     textWidth,
-    shouldTrigger: totalIngredientsText.length > 30,
+    shouldAnimate,
+    needsAnimation: textWidth > containerWidth,
   });
 
   useEffect(() => {
-    if (containerWidth > 0 && textWidth > 0 && textWidth > containerWidth) {
-      console.log("Starting animation with:", { containerWidth, textWidth });
+    if (
+      shouldAnimate &&
+      containerWidth > 0 &&
+      textWidth > 0 &&
+      textWidth > containerWidth
+    ) {
+      console.log("Starting iPhone-style marquee animation");
 
-      const animate = () => {
-        // Reset position
-        translateX.setValue(containerWidth);
+      const startMarquee = () => {
+        // Clear any existing animation
+        if (animationRef.current) {
+          animationRef.current.stop();
+        }
 
-        // Animate to the left
-        Animated.timing(translateX, {
-          toValue: -textWidth - 20,
-          duration: 8000, // Fixed 8 seconds for testing
-          useNativeDriver: true,
-        }).start(() => {
-          // Loop the animation
-          animate();
-        });
+        // Reset position to start from the right edge
+        translateX.setValue(0);
+
+        // Create the marquee animation sequence
+        const sequence = Animated.sequence([
+          // Wait 2 seconds before starting
+          Animated.delay(2000),
+
+          // Animate from right to left
+          Animated.timing(translateX, {
+            toValue: -(textWidth - containerWidth) - 20, // Move left until all text is visible
+            duration: Math.max(3000, (textWidth - containerWidth) * 20), // Slower for longer text
+            useNativeDriver: true,
+          }),
+
+          // Wait 2 seconds at the end
+          Animated.delay(2000),
+        ]);
+
+        // Loop the animation
+        animationRef.current = Animated.loop(sequence);
+        animationRef.current.start();
       };
 
-      animate();
-    }
-  }, [containerWidth, textWidth, translateX]);
+      startMarquee();
 
-  // Only show marquee for long text
-  if (totalIngredientsText.length <= 30) {
+      // Cleanup function
+      return () => {
+        if (animationRef.current) {
+          animationRef.current.stop();
+        }
+      };
+    } else {
+      // Stop animation if conditions aren't met
+      if (animationRef.current) {
+        animationRef.current.stop();
+      }
+      translateX.setValue(0);
+    }
+  }, [shouldAnimate, containerWidth, textWidth, translateX]);
+
+  // If text is short enough, don't animate
+  if (!shouldAnimate) {
     return (
       <View className="flex-row flex-wrap gap-2">
         {ingredients.map((ingredient, index) => (
@@ -66,11 +101,11 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
 
   return (
     <View
-      className="overflow-hidden bg-red-100 h-8"
-      style={{ width: "100%" }}
+      className="overflow-hidden"
+      style={{ width: "100%", height: 32 }}
       onLayout={(event) => {
         const width = event.nativeEvent.layout.width;
-        console.log("Container layout:", width);
+        console.log("Container width measured:", width);
         setContainerWidth(width);
       }}
     >
@@ -81,7 +116,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         }}
         onLayout={(event) => {
           const width = event.nativeEvent.layout.width;
-          console.log("Text layout:", width);
+          console.log("Text width measured:", width);
           setTextWidth(width);
         }}
       >
@@ -89,6 +124,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
           <View
             key={`${ingredient}-${index}`}
             className="mr-2 bg-white px-2 py-1 rounded-full border border-primary-300"
+            style={{ flexShrink: 0 }} // Prevent text from shrinking
           >
             <Text className="text-sm text-gray-700">{ingredient}</Text>
           </View>
