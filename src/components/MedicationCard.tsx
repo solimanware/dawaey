@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Drug } from "../hooks/useDrugsData";
 
@@ -26,14 +27,25 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   return (
     <TouchableOpacity className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border border-gray-100">
       <View className="flex-row">
-        {/* Drug Image - placeholder since image field is not available */}
+        {/* Drug Image */}
         <View className="mr-4">
-          <View
-            className="w-20 h-20 rounded-xl items-center justify-center"
-            style={{ backgroundColor: `${primaryColor}20` }}
-          >
-            <Ionicons name="medical" size={32} color={primaryColor} />
-          </View>
+          {item.image ? (
+            <Image
+              source={{ uri: item.image }}
+              style={{ width: 80, height: 80 }}
+              className="rounded-xl bg-gray-100"
+              contentFit="cover"
+              placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
+              transition={200}
+            />
+          ) : (
+            <View
+              className="w-20 h-20 rounded-xl items-center justify-center"
+              style={{ backgroundColor: `${primaryColor}20` }}
+            >
+              <Ionicons name="medical" size={32} color={primaryColor} />
+            </View>
+          )}
         </View>
 
         {/* Drug Info */}
