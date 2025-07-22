@@ -26,7 +26,9 @@ export const SearchBar = ({
   }, []);
 
   const placeholderText = useTypewriter({
-    words: shouldStartTypewriter ? ["Panadol", "Congestal"] : [],
+    words: shouldStartTypewriter
+      ? ["Panadol", "Congestal", "Search any medication..."]
+      : [],
     defaultText: "Search any medication...",
     typingSpeed: 120,
     deletingSpeed: 60,
