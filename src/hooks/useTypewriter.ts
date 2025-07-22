@@ -17,64 +17,94 @@ export const useTypewriter = ({
   pauseDuration = 1500,
   cycles = 1,
 }: UseTypewriterProps) => {
-  const [displayText, setDisplayText] = useState(defaultText);
-  const [isTyping, setIsTyping] = useState(false);
+  const [displayText, setDisplayText] = useState("");
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [wordIndex, setWordIndex] = useState(0);
   const [cycleCount, setCycleCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isComplete || cycleCount >= cycles) {
+    console.log("Typewriter effect - State:", {
+      displayText,
+      currentWordIndex,
+      currentCharIndex,
+      isDeleting,
+      cycleCount,
+      isComplete,
+      wordsLength: words.length,
+    });
+
+    if (isComplete) {
+      console.log("Typewriter complete, showing default text");
       setDisplayText(defaultText);
       return;
     }
 
-    const currentWord = words[wordIndex];
-
-    const typeWriter = () => {
-      if (isDeleting) {
-        // Deleting characters
-        setDisplayText((prev) => {
-          const newText = currentWord.substring(0, prev.length - 1);
-          if (newText === "") {
-            setIsDeleting(false);
-            setWordIndex((prevIndex) => {
-              const nextIndex = prevIndex + 1;
-              if (nextIndex >= words.length) {
-                setCycleCount((count) => count + 1);
-                return 0;
-              }
-              return nextIndex;
-            });
-          }
-          return newText;
-        });
-      } else {
-        // Typing characters
-        setDisplayText((prev) => {
-          const newText = currentWord.substring(0, prev.length + 1);
-          if (newText === currentWord) {
-            setIsTyping(false);
-            // Pause before deleting
-            timeoutRef.current = setTimeout(() => {
-              setIsDeleting(true);
-            }, pauseDuration);
-            return newText;
-          }
-          return newText;
-        });
-      }
-    };
-
-    if (!isTyping && !isDeleting && cycleCount < cycles) {
-      setIsTyping(true);
+    if (words.length === 0) {
+      console.log("No words provided, showing default text");
+      setDisplayText(defaultText);
+      return;
     }
 
-    if (isTyping || isDeleting) {
+    const currentWord = words[currentWordIndex];
+    console.log("Current word:", currentWord);
+
+    const typeNextChar = () => {
+      if (isDeleting) {
+        // Deleting
+        if (currentCharIndex > 0) {
+          setCurrentCharIndex((prev) => prev - 1);
+          setDisplayText(currentWord.substring(0, currentCharIndex - 1));
+        } else {
+          // Finished deleting, move to next word
+          console.log("Finished deleting, moving to next word");
+          setIsDeleting(false);
+          setCurrentWordIndex((prev) => {
+            const nextIndex = prev + 1;
+            if (nextIndex >= words.length) {
+              // Completed one full cycle
+              console.log("Completed one cycle");
+              setCycleCount((prevCycle) => {
+                const newCycleCount = prevCycle + 1;
+                if (newCycleCount >= cycles) {
+                  console.log("All cycles complete");
+                  setIsComplete(true);
+                }
+                return newCycleCount;
+              });
+              return 0;
+            }
+            return nextIndex;
+          });
+          setCurrentCharIndex(0);
+        }
+      } else {
+        // Typing
+        if (currentCharIndex < currentWord.length) {
+          setCurrentCharIndex((prev) => prev + 1);
+          setDisplayText(currentWord.substring(0, currentCharIndex + 1));
+        } else {
+          // Finished typing current word, start deleting after pause
+          console.log("Finished typing word, starting delete after pause");
+          timeoutRef.current = setTimeout(() => {
+            setIsDeleting(true);
+          }, pauseDuration);
+          return;
+        }
+      }
+
+      // Continue the animation
       const speed = isDeleting ? deletingSpeed : typingSpeed;
-      timeoutRef.current = setTimeout(typeWriter, speed);
+      timeoutRef.current = setTimeout(typeNextChar, speed);
+    };
+
+    // Start the animation
+    if (!isComplete && cycleCount < cycles) {
+      console.log("Starting typewriter animation");
+      const speed = isDeleting ? deletingSpeed : typingSpeed;
+      timeoutRef.current = setTimeout(typeNextChar, speed);
     }
 
     return () => {
@@ -83,26 +113,18 @@ export const useTypewriter = ({
       }
     };
   }, [
-    displayText,
-    isTyping,
+    currentWordIndex,
+    currentCharIndex,
     isDeleting,
-    wordIndex,
     cycleCount,
+    isComplete,
     words,
     defaultText,
     typingSpeed,
     deletingSpeed,
     pauseDuration,
     cycles,
-    isComplete,
   ]);
-
-  // Mark as complete when cycles are done
-  useEffect(() => {
-    if (cycleCount >= cycles && !isTyping && !isDeleting) {
-      setIsComplete(true);
-    }
-  }, [cycleCount, cycles, isTyping, isDeleting]);
 
   return displayText;
 };

@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { Animated, TextInput, TouchableOpacity, View } from "react-native";
 import { useTypewriter } from "../hooks";
 
@@ -13,11 +14,22 @@ export const SearchBar = ({
   onChangeText,
   glowAnim,
 }: SearchBarProps) => {
+  const [shouldStartTypewriter, setShouldStartTypewriter] = useState(false);
+
+  // Start typewriter effect after a small delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShouldStartTypewriter(true);
+    }, 1000); // 1 second delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const placeholderText = useTypewriter({
-    words: ["Panadol", "Congestal"],
+    words: shouldStartTypewriter ? ["Panadol", "Congestal"] : [],
     defaultText: "Search any medication...",
-    typingSpeed: 100,
-    deletingSpeed: 50,
+    typingSpeed: 120,
+    deletingSpeed: 60,
     pauseDuration: 2000,
     cycles: 1,
   });
