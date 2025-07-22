@@ -1,12 +1,60 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { Drug } from "../hooks/useDrugsData";
 
 interface MedicationCardProps {
   item: Drug;
 }
+
+// Animated Marquee Component
+const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
+  const translateX = useRef(new Animated.Value(0)).current;
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [textWidth, setTextWidth] = useState(0);
+
+  useEffect(() => {
+    if (containerWidth > 0 && textWidth > containerWidth) {
+      const startAnimation = () => {
+        translateX.setValue(containerWidth);
+        Animated.timing(translateX, {
+          toValue: -textWidth - 20, // Extra padding for smooth loop
+          duration: (textWidth + containerWidth) * 30, // Slow motion: 30ms per pixel
+          useNativeDriver: true,
+        }).start(() => {
+          // Restart animation for continuous loop
+          startAnimation();
+        });
+      };
+      startAnimation();
+    }
+  }, [containerWidth, textWidth, translateX]);
+
+  return (
+    <View
+      className="overflow-hidden"
+      onLayout={(event) => setContainerWidth(event.nativeEvent.layout.width)}
+    >
+      <Animated.View
+        className="flex-row"
+        style={{
+          transform: [{ translateX }],
+        }}
+        onLayout={(event) => setTextWidth(event.nativeEvent.layout.width)}
+      >
+        {ingredients.map((ingredient, index) => (
+          <Text
+            key={`${ingredient}-${index}`}
+            className="text-sm p-1 text-gray-700 border-[1px] border-primary-300 rounded-full mr-2"
+          >
+            {ingredient}
+          </Text>
+        ))}
+      </Animated.View>
+    </View>
+  );
+};
 
 export const MedicationCard = ({ item }: MedicationCardProps) => {
   // Parse palette colors from comma-separated string
@@ -31,8 +79,20 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
     return numPrice.toFixed(2);
   };
 
+  // Process active ingredients
+  const getActiveIngredients = () => {
+    if (!item.activeingredient) return [];
+    return item.activeingredient
+      .split("+")
+      .map((ingredient) => ingredient.trim());
+  };
+
+  const activeIngredients = getActiveIngredients();
+  const totalIngredientsText = activeIngredients.join(" + ");
+  const shouldAnimate = totalIngredientsText.length > 30;
+
   return (
-    <TouchableOpacity className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border border-gray-100">
+    <TouchableOpacity className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border-[1px] border-primary-500">
       <View className="flex-row">
         {/* Drug Image */}
         <View className="mr-4">
@@ -60,7 +120,7 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
         <View className="flex-1">
           <View className="flex-row items-start justify-between mb-2">
             <Text
-              className="text-lg font-bold text-gray-900 flex-1 pr-2"
+              className="text-lg font-bold text-primary-600 flex-1 pr-2"
               numberOfLines={1}
             >
               {item.tradename}
@@ -68,14 +128,25 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
           </View>
 
           {/* Active Ingredient */}
-          {item.activeingredient ? (
+          {activeIngredients.length > 0 ? (
             <View className="mb-3">
               <Text className="text-xs text-gray-500 mb-1">
                 Active Ingredient:
               </Text>
-              <Text className="text-sm text-gray-700" numberOfLines={1}>
-                {item.activeingredient}
-              </Text>
+              {shouldAnimate ? (
+                <AnimatedMarquee ingredients={activeIngredients} />
+              ) : (
+                <View className="flex-row flex-wrap gap-2">
+                  {activeIngredients.map((ingredient, index) => (
+                    <Text
+                      key={`${ingredient}-${index}`}
+                      className="text-sm p-1 text-gray-700 border-[1px] border-primary-300 rounded-full"
+                    >
+                      {ingredient}
+                    </Text>
+                  ))}
+                </View>
+              )}
             </View>
           ) : (
             <View className="mb-3">
@@ -90,7 +161,7 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
 
           {/* Price and Form */}
           <View className="flex-row items-center justify-between">
-            <Text className="text-xl font-bold text-blue-600">
+            <Text className="text-xl font-bold text-danger-500">
               {formatPrice(item.price)} EGP
             </Text>
             <View className="bg-gray-100 px-3 py-1 rounded-full">
