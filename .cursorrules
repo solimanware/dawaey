@@ -4,3 +4,4 @@
 
 - after every major modification create git commit with descriptive short message
 - use nativewind as much as you can
+- use bun and bunx

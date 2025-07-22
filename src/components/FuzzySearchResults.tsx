@@ -81,7 +81,7 @@ export const FuzzySearchResults = ({
             No exact matches for "{searchQuery}"
           </Text>
         </View>
-        <Text className="text-gray-600 text-sm ">Do You Mean...</Text>
+        <Text className="text-gray-600 text-sm mt-1 ">Do You Mean...</Text>
       </View>
     </View>
   );

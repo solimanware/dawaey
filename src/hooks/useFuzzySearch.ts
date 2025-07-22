@@ -174,8 +174,6 @@ export const useFuzzySearch = (drugs: Drug[]): SearchState => {
 
         setFuzzyMatches(results.fuzzyMatches);
         setTopSuggestion(results.topSuggestion);
-
-        console.log(results);
       } catch (error) {
         console.error("Search error:", error);
         setFuzzyMatches([]);

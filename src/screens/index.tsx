@@ -1,6 +1,6 @@
 import { LegendList, LegendListRenderItemProps } from "@legendapp/list";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   FuzzySearchResults,
@@ -27,15 +27,20 @@ export default function MedicationsScreen() {
 
   // Custom hooks
   const { drugs } = useDrugsData();
-  console.log(drugs.length);
 
   // Normal search first
-  const { filteredDrugs, setSearchQuery: setNormalSearchQuery } =
-    useSearch(drugs);
+  const {
+    filteredDrugs,
+    setSearchQuery: setNormalSearchQuery,
+    isLoading: isNormalSearchLoading,
+  } = useSearch(drugs);
 
   // Fuzzy search as fallback
-  const { fuzzyMatches, setSearchQuery: setFuzzySearchQuery } =
-    useFuzzySearch(drugs);
+  const {
+    fuzzyMatches,
+    setSearchQuery: setFuzzySearchQuery,
+    isLoading: isFuzzySearchLoading,
+  } = useFuzzySearch(drugs);
 
   const glowAnim = useGlowAnimation();
 
@@ -78,28 +83,43 @@ export default function MedicationsScreen() {
           glowAnim={glowAnim}
         />
       </View>
+      {inputValue.length === 0 ? (
+        <Text className="text-center text-gray-500 text-sm">
+          You can Search now...
+        </Text>
+      ) : (
+        <>
+          {isNormalSearchLoading || isFuzzySearchLoading ? (
+            <View className="flex-1 items-center justify-center">
+              <ActivityIndicator size="large" color="#2563eb" />
+            </View>
+          ) : (
+            <>
+              {/* Fuzzy Search Results - only show when normal search has no results */}
+              {shouldShowFuzzySearch && (
+                <FuzzySearchResults
+                  results={fuzzyMatches}
+                  searchQuery={debouncedSearchQuery}
+                  onSelectResult={handleAcceptSuggestion}
+                />
+              )}
 
-      {/* Fuzzy Search Results - only show when normal search has no results */}
-      {shouldShowFuzzySearch && (
-        <FuzzySearchResults
-          results={fuzzyMatches}
-          searchQuery={debouncedSearchQuery}
-          onSelectResult={handleAcceptSuggestion}
-        />
+              {/* Medications List */}
+              <View className="flex-1 ">
+                <LegendList
+                  data={displayData}
+                  renderItem={renderMedicationCard}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: 120 }}
+                  keyExtractor={(item: Drug) => item.id}
+                  recycleItems={true}
+                  maintainVisibleContentPosition
+                />
+              </View>
+            </>
+          )}
+        </>
       )}
-
-      {/* Medications List */}
-      <View className="flex-1 ">
-        <LegendList
-          data={displayData}
-          renderItem={renderMedicationCard}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 120 }}
-          keyExtractor={(item: Drug) => item.id}
-          recycleItems={true}
-          maintainVisibleContentPosition
-        />
-      </View>
     </SafeAreaView>
   );
 }

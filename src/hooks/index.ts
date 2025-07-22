@@ -5,3 +5,4 @@ export { useFuzzySearch } from "./useFuzzySearch";
 export type { SearchResult, SearchState } from "./useFuzzySearch";
 export { useGlowAnimation } from "./useGlowAnimation";
 export { useSearch } from "./useSearch";
+export { useTypewriter } from "./useTypewriter";

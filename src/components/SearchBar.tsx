@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Animated, TextInput, TouchableOpacity, View } from "react-native";
+import { useTypewriter } from "../hooks";
 
 interface SearchBarProps {
   searchQuery: string;
@@ -12,6 +13,15 @@ export const SearchBar = ({
   onChangeText,
   glowAnim,
 }: SearchBarProps) => {
+  const placeholderText = useTypewriter({
+    words: ["Panadol", "Congestal"],
+    defaultText: "Search any medication...",
+    typingSpeed: 100,
+    deletingSpeed: 50,
+    pauseDuration: 2000,
+    cycles: 1,
+  });
+
   return (
     <View className="relative">
       {/* Traveling Glow Effect */}
@@ -67,11 +77,14 @@ export const SearchBar = ({
       >
         <Ionicons name="search" size={20} color="#663399" />
         <TextInput
-          placeholder="Search medications..."
+          placeholder={placeholderText}
           className="flex-1 ml-3 text-gray-900"
           placeholderTextColor="#9ca3af"
           value={searchQuery}
           onChangeText={onChangeText}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="off"
         />
         <TouchableOpacity>
           <Ionicons name="options" size={20} color="#663399" />

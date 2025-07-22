@@ -65,9 +65,6 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
             >
               {item.tradename}
             </Text>
-            <TouchableOpacity className="p-2 bg-blue-50 rounded-full">
-              <Ionicons name="add" size={20} color="#2563eb" />
-            </TouchableOpacity>
           </View>
 
           {/* Active Ingredient */}
@@ -94,7 +91,7 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
           {/* Price and Form */}
           <View className="flex-row items-center justify-between">
             <Text className="text-xl font-bold text-blue-600">
-              EGP {formatPrice(item.price)}
+              {formatPrice(item.price)} EGP
             </Text>
             <View className="bg-gray-100 px-3 py-1 rounded-full">
               <Text className="text-xs text-gray-600 font-medium">
