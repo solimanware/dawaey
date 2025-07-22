@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Drug } from "../hooks/useDrugsData";
 
@@ -11,6 +12,12 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   // Parse palette colors from comma-separated string
   const paletteColors = item.palette ? item.palette.split(",") : [];
   const primaryColor = paletteColors[0] || "#2563eb";
+
+  // Generate drug image URL based on ID
+  const drugImageUrl = `https://soliman.ai/z-drug-index/assets/drug-pics/${item.id}.jpg`;
+
+  // Track image loading state
+  const [imageError, setImageError] = useState(false);
 
   // Safely format price
   const formatPrice = (price: number | string | undefined): string => {
@@ -29,14 +36,15 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
       <View className="flex-row">
         {/* Drug Image */}
         <View className="mr-4">
-          {item.image ? (
+          {!imageError ? (
             <Image
-              source={{ uri: item.image }}
+              source={{ uri: drugImageUrl }}
               style={{ width: 80, height: 80 }}
               className="rounded-xl bg-gray-100"
               contentFit="cover"
               placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
               transition={200}
+              onError={() => setImageError(true)}
             />
           ) : (
             <View

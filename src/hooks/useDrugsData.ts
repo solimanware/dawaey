@@ -12,7 +12,6 @@ export type Drug = {
   price: number | string | undefined;
   tradenamearabic: string;
   palette: string;
-  image?: string;
 };
 
 export const useDrugsData = () => {
