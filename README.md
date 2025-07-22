@@ -1,121 +1,50 @@
-<p align="center">
-  <a href="https://dawaey.com/">
-    <img
-      alt="Dawaey App"
-      src="https://i.imgur.com/wWCc67N.png"
-      width="400"
-    />
-  </a>
-</p>
+# Welcome to your Expo app 👋
 
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-# Dawaey - دوائي
-Dawaey is a smart medical refrence for healthcare providers that working out of the box
+## Get started
 
+1. Install dependencies
 
-It uses Google's [Angular](https://angular.io/)@latest and [IONIC](https://ionicframework.com/)@latest plus some other [cool and bleeding edge technologies](https://github.com/Microsmsm/Dawaey/network/dependencies) to achieve its [smartness](https://github.com/Microsmsm/Dawaey#demo)
+   ```bash
+   npm install
+   ```
 
-## <a href="https://microsmsm.github.io/dawaey">Try online -> PWA</a>
+2. Start the app
 
-## Install dependencies
-```sh
-npm i
+   ```bash
+   npx expo start
+   ```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
+```bash
+npm run reset-project
 ```
 
-## Install global dependencies
-```sh
-npm i -g ionic cordova
-```
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
+## Learn more
 
-## Browser serve
-```sh
-ionic serve
-```
+To learn more about developing your project with Expo, look at the following resources:
 
-## Build debug
-```sh
-ionic build
-ionic cordova build android
-ionic cordova build ios
-```
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Build prod release
-```sh
-ionic cordova build android --prod --release
-ionic cordova build ios --prod
-```
-### Demo:
+## Join the community
 
-<img src="https://j.gifs.com/VPn0AX.gif" width="250px">
+Join our community of developers creating universal apps.
 
-### Development FAQ:
-
-Q: Decryption password is missing?
-
-A: Run this command in the root folder and reload the browser
-```sh
-echo "export const KEYS = { password: 123456 }" > src/app/keys.ts
-```
-
-
-
-## App Screenshots
-
-<table>
-  <tr>
-    <th><img src="https://i.imgur.com/GwfGoPN.png" ></th>
-    <th><img src="https://i.imgur.com/tj014Dj.png" ></th>
-  </tr>
-</table>
-
-
-
-
-<table>
-  <tr>
-    <th>
-    <a href="https://itunes.apple.com/us/app/dawaey-pro-%D8%AF%D9%88%D8%A7%D8%A6%D9%8A-%D8%A8%D8%B1%D9%88/id1251431168?ls=1&mt=8">iOS</a>
-    </th>
-<th>
-<a href="https://play.google.com/store/apps/details?id=com.brilliantapp.dawaey">Android</a>
-</th>
-    <th>Windows Phone!</th>
-  </tr>
-  <tr>
-    <td><img src="https://i.imgur.com/muBKYmo.png" ></td>
-    <td><img src="https://i.imgur.com/IvStxqs.png" ></td>
-    <td><img src="https://i.imgur.com/weON3AH.png"></td> 
-</td>
-  </tr>
-</table>
-
-
-And <a href="https://microsmsm.com/dawaey">Progressive Web App</a>
-
-
-<img src="https://i.imgur.com/MMu92rr.png" width="50%">
-
-
-Statistics for the past few days:
-[![Statistics](https://i.imgur.com/LcyEatT.png)](https://www.f6s.com/dawaey)
-
-
-# Download Links
-[App Store](https://itunes.apple.com/us/app/dawaey-pro-%D8%AF%D9%88%D8%A7%D8%A6%D9%8A-%D8%A8%D8%B1%D9%88/id1251431168?ls=1&mt=8)
-
-
-[Google Play](https://play.google.com/store/apps/details?id=com.brilliantapp.dawaey)
-
-
-## Contributions and forks are most welcome
-
-Jump in now 
-
-```sh
-git clone https://github.com/microsmsm/dawaey
-```
-
-
-
-
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

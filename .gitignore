@@ -1,47 +1,39 @@
-# Specifies intentionally untracked files to ignore when using Git
-# http://git-scm.com/docs/gitignore
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-*~
-*.sw[mnpcod]
-*.log
-*.tmp
-*.tmp.*
-log.txt
-*.sublime-project
-*.sublime-workspace
-.vscode/
-npm-debug.log*
-
-.idea/
-.sass-cache/
-.tmp/
-.versions/
-coverage/
-dist/
+# dependencies
 node_modules/
-tmp/
-temp/
-hooks/
-platforms/
-www/
-plugins/
-plugins/android.json
-plugins/ios.json
-$RECYCLE.BIN/
 
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
 .DS_Store
-Thumbs.db
-UserInterfaceState.xcuserstate
-src/app/config.ts
+*.pem
 
-package-lock.json
-*.sourcemaps/
-package-lock.json
-.sourcemaps/main.js.map
-package-lock.json
-app/assets/dbs/pharmacies.json
-src/assets/dbs/pharmacies.json
-app/assets/dbs/pharmacies.json
-src/assets/dbs/pharmacies.json
-GoogleService-Info.plist
-google-services.json
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+app-example
