@@ -1,52 +1,97 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
-import { useMarqueeAnimation } from "../hooks";
 import { Drug } from "../hooks/useDrugsData";
 
 interface MedicationCardProps {
   item: Drug;
 }
 
-// Animated Marquee Component
+// Simplified Animated Marquee Component for testing
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
-  const {
-    translateX,
-    setContainerDimensions,
-    setTextDimensions,
-    startMarquee,
-  } = useMarqueeAnimation();
+  const translateX = useRef(new Animated.Value(0)).current;
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [textWidth, setTextWidth] = useState(0);
 
   const totalIngredientsText = ingredients.join(" + ");
 
-  useEffect(() => {
-    if (totalIngredientsText.length > 30) {
-      startMarquee();
-    }
-  }, [totalIngredientsText, startMarquee]);
+  console.log("AnimatedMarquee Debug:", {
+    ingredients,
+    totalIngredientsText,
+    textLength: totalIngredientsText.length,
+    containerWidth,
+    textWidth,
+    shouldTrigger: totalIngredientsText.length > 30,
+  });
 
-  return (
-    <View
-      className="overflow-hidden"
-      onLayout={(event) =>
-        setContainerDimensions(event.nativeEvent.layout.width)
-      }
-    >
-      <Animated.View
-        className="flex-row"
-        style={{
-          transform: [{ translateX }],
-        }}
-        onLayout={(event) => setTextDimensions(event.nativeEvent.layout.width)}
-      >
+  useEffect(() => {
+    if (containerWidth > 0 && textWidth > 0 && textWidth > containerWidth) {
+      console.log("Starting animation with:", { containerWidth, textWidth });
+
+      const animate = () => {
+        // Reset position
+        translateX.setValue(containerWidth);
+
+        // Animate to the left
+        Animated.timing(translateX, {
+          toValue: -textWidth - 20,
+          duration: 8000, // Fixed 8 seconds for testing
+          useNativeDriver: true,
+        }).start(() => {
+          // Loop the animation
+          animate();
+        });
+      };
+
+      animate();
+    }
+  }, [containerWidth, textWidth, translateX]);
+
+  // Only show marquee for long text
+  if (totalIngredientsText.length <= 30) {
+    return (
+      <View className="flex-row flex-wrap gap-2">
         {ingredients.map((ingredient, index) => (
           <Text
             key={`${ingredient}-${index}`}
-            className="text-sm p-1 text-gray-700 border-[1px] border-primary-300 rounded-full mr-2"
+            className="text-sm p-1 text-gray-700 border-[1px] border-primary-300 rounded-full"
           >
             {ingredient}
           </Text>
+        ))}
+      </View>
+    );
+  }
+
+  return (
+    <View
+      className="overflow-hidden bg-red-100 h-8"
+      style={{ width: "100%" }}
+      onLayout={(event) => {
+        const width = event.nativeEvent.layout.width;
+        console.log("Container layout:", width);
+        setContainerWidth(width);
+      }}
+    >
+      <Animated.View
+        className="flex-row items-center h-full"
+        style={{
+          transform: [{ translateX }],
+        }}
+        onLayout={(event) => {
+          const width = event.nativeEvent.layout.width;
+          console.log("Text layout:", width);
+          setTextWidth(width);
+        }}
+      >
+        {ingredients.map((ingredient, index) => (
+          <View
+            key={`${ingredient}-${index}`}
+            className="mr-2 bg-white px-2 py-1 rounded-full border border-primary-300"
+          >
+            <Text className="text-sm text-gray-700">{ingredient}</Text>
+          </View>
         ))}
       </Animated.View>
     </View>
@@ -86,7 +131,14 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
 
   const activeIngredients = getActiveIngredients();
   const totalIngredientsText = activeIngredients.join(" + ");
-  const shouldAnimate = totalIngredientsText.length > 30;
+
+  console.log("MedicationCard Debug:", {
+    tradename: item.tradename,
+    rawActiveIngredient: item.activeingredient,
+    activeIngredients,
+    totalIngredientsText,
+    textLength: totalIngredientsText.length,
+  });
 
   return (
     <TouchableOpacity className="bg-white rounded-2xl p-4 mb-4 mx-6 shadow-sm border-[1px] border-primary-500">
@@ -130,20 +182,7 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
               <Text className="text-xs text-gray-500 mb-1">
                 Active Ingredient:
               </Text>
-              {shouldAnimate ? (
-                <AnimatedMarquee ingredients={activeIngredients} />
-              ) : (
-                <View className="flex-row flex-wrap gap-2">
-                  {activeIngredients.map((ingredient, index) => (
-                    <Text
-                      key={`${ingredient}-${index}`}
-                      className="text-sm p-1 text-gray-700 border-[1px] border-primary-300 rounded-full"
-                    >
-                      {ingredient}
-                    </Text>
-                  ))}
-                </View>
-              )}
+              <AnimatedMarquee ingredients={activeIngredients} />
             </View>
           ) : (
             <View className="mb-3">
