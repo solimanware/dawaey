@@ -8,7 +8,7 @@ interface MedicationCardProps {
   item: Drug;
 }
 
-// Debug Marquee Animation Component
+// Proper Marquee Animation Component
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const [containerWidth, setContainerWidth] = useState(0);
@@ -24,22 +24,11 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
     containerWidth,
     textWidth,
     shouldAnimate,
-    needsAnimation: textWidth > containerWidth,
-    canAnimate: containerWidth > 0 && textWidth > 0,
   });
 
   useEffect(() => {
-    // Force animation for debugging - let's test with any text longer than 30 chars
-    if (shouldAnimate && containerWidth > 50) {
-      // Reduced threshold for testing
-      console.log("🚀 Starting marquee animation with:", {
-        containerWidth,
-        textWidth,
-        translateDistance:
-          textWidth > containerWidth
-            ? -(textWidth - containerWidth) - 20
-            : -100,
-      });
+    if (shouldAnimate && containerWidth > 50 && textWidth > 0) {
+      console.log("🚀 Starting proper marquee animation");
 
       const startMarquee = () => {
         // Clear any existing animation
@@ -47,37 +36,32 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
           animationRef.current.stop();
         }
 
-        // Reset position
-        translateX.setValue(0);
+        // Start from the right edge of container
+        translateX.setValue(containerWidth);
 
-        // Create a simple left-moving animation for testing
-        const sequence = Animated.sequence([
-          Animated.delay(1000), // Shorter delay for testing
-
-          Animated.timing(translateX, {
-            toValue: -200, // Fixed distance for testing
-            duration: 4000, // 4 seconds
-            useNativeDriver: true,
-          }),
-
-          Animated.delay(1000),
-        ]);
-
-        animationRef.current = Animated.loop(sequence);
-        animationRef.current.start(() => {
-          console.log("✅ Animation cycle completed");
+        // Create continuous marquee animation
+        const timing = Animated.timing(translateX, {
+          toValue: -textWidth - 20, // Move completely off-screen to the left
+          duration: Math.max(4000, (containerWidth + textWidth) * 15), // Adjust speed based on total distance
+          useNativeDriver: true,
         });
+
+        // Loop the animation continuously
+        animationRef.current = Animated.loop(timing);
+        animationRef.current.start();
       };
 
-      startMarquee();
+      // Start animation after a short delay
+      const timeoutId = setTimeout(startMarquee, 1000);
 
       return () => {
+        clearTimeout(timeoutId);
         if (animationRef.current) {
           animationRef.current.stop();
         }
       };
     }
-  }, [shouldAnimate, containerWidth, translateX]);
+  }, [shouldAnimate, containerWidth, textWidth, translateX]);
 
   // If text is short, show normally
   if (!shouldAnimate) {
@@ -96,19 +80,12 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   }
 
   return (
-    <View className="bg-yellow-100 border-2 border-red-500">
-      {" "}
-      {/* Visual debug container */}
-      <Text className="text-xs text-red-600 mb-1">
-        🐛 Container: {containerWidth}px | Text: {textWidth}px
-      </Text>
+    <View className="overflow-hidden" style={{ width: "100%", height: 32 }}>
       <View
-        className="overflow-hidden bg-blue-100"
+        className="overflow-hidden"
         style={{
           width: "100%",
-          height: 40,
-          borderWidth: 1,
-          borderColor: "green",
+          height: "100%",
         }}
         onLayout={(event) => {
           const width = event.nativeEvent.layout.width;
@@ -117,7 +94,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         }}
       >
         <Animated.View
-          className="flex-row items-center h-full bg-orange-200"
+          className="flex-row items-center h-full"
           style={{
             transform: [{ translateX }],
           }}
@@ -178,8 +155,6 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
 
   console.log("💊 MedicationCard Debug:", {
     tradename: item.tradename,
-    rawActiveIngredient: item.activeingredient,
-    activeIngredients,
     totalIngredientsText,
     textLength: totalIngredientsText.length,
   });
