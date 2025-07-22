@@ -8,7 +8,7 @@ interface MedicationCardProps {
   item: Drug;
 }
 
-// Proper Marquee Animation Component
+// Smooth Continuous Marquee Animation Component
 const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const translateX = useRef(new Animated.Value(0)).current;
   const [containerWidth, setContainerWidth] = useState(0);
@@ -18,7 +18,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const totalIngredientsText = ingredients.join(" + ");
   const shouldAnimate = totalIngredientsText.length > 30;
 
-  console.log("🔍 AnimatedMarquee Debug:", {
+  console.log("🔍 Smooth Marquee Debug:", {
     totalIngredientsText,
     textLength: totalIngredientsText.length,
     containerWidth,
@@ -28,31 +28,32 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
 
   useEffect(() => {
     if (shouldAnimate && containerWidth > 50 && textWidth > 0) {
-      console.log("🚀 Starting proper marquee animation");
+      console.log("🚀 Starting smooth continuous marquee");
 
-      const startMarquee = () => {
+      const startSmoothMarquee = () => {
         // Clear any existing animation
         if (animationRef.current) {
           animationRef.current.stop();
         }
 
-        // Start from the right edge of container
-        translateX.setValue(containerWidth);
+        // Reset to starting position
+        translateX.setValue(0);
 
-        // Create continuous marquee animation
+        // Create smooth continuous animation
+        // Move exactly one text width to the left, then reset seamlessly
         const timing = Animated.timing(translateX, {
-          toValue: -textWidth - 20, // Move completely off-screen to the left
-          duration: Math.max(4000, (containerWidth + textWidth) * 15), // Adjust speed based on total distance
+          toValue: -textWidth - 40, // Move one full text width + spacing
+          duration: Math.max(6000, textWidth * 20), // Slower, smoother animation
           useNativeDriver: true,
         });
 
-        // Loop the animation continuously
+        // Loop the animation continuously for seamless effect
         animationRef.current = Animated.loop(timing);
         animationRef.current.start();
       };
 
       // Start animation after a short delay
-      const timeoutId = setTimeout(startMarquee, 1000);
+      const timeoutId = setTimeout(startSmoothMarquee, 1500);
 
       return () => {
         clearTimeout(timeoutId);
@@ -79,6 +80,18 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
     );
   }
 
+  // Render ingredients as a reusable component
+  const renderIngredients = (keyPrefix: string) =>
+    ingredients.map((ingredient, index) => (
+      <View
+        key={`${keyPrefix}-${ingredient}-${index}`}
+        className="mr-2 bg-white px-2 py-1 rounded-full border-[1px] border-primary-300"
+        style={{ flexShrink: 0 }}
+      >
+        <Text className="text-sm text-gray-700">{ingredient}</Text>
+      </View>
+    ));
+
   return (
     <View className="overflow-hidden" style={{ width: "100%", height: 32 }}>
       <View
@@ -104,15 +117,20 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
             setTextWidth(width);
           }}
         >
-          {ingredients.map((ingredient, index) => (
-            <View
-              key={`${ingredient}-${index}`}
-              className="mr-2 bg-white px-2 py-1 rounded-full border border-primary-300"
-              style={{ flexShrink: 0 }}
-            >
-              <Text className="text-sm text-gray-700">{ingredient}</Text>
-            </View>
-          ))}
+          {/* First instance of ingredients */}
+          {renderIngredients("first")}
+
+          {/* Spacing between instances */}
+          <View style={{ width: 40 }} />
+
+          {/* Second instance for seamless loop */}
+          {renderIngredients("second")}
+
+          {/* Spacing between instances */}
+          <View style={{ width: 40 }} />
+
+          {/* Third instance to ensure smooth continuous flow */}
+          {renderIngredients("third")}
         </Animated.View>
       </View>
     </View>
