@@ -13,16 +13,13 @@ export default function MedicationDetailsModal() {
   // Parse the drug data from params
   const drug: Drug = {
     id: parseInt(params.id as string),
-    type: params.type as string || params.form as string,
+    type: params.type as string,
     tradename: params.tradename as string,
     activeingredient: params.activeingredient as string,
     company: params.company as string,
     group: params.group as string,
     price: params.price as string,
-    info: params.info as string,
     form: params.form as string,
-    tradenamearabic: params.tradenamearabic as string,
-    palette: params.palette as string,
   };
 
   // Parse palette colors from comma-separated string
@@ -58,55 +55,154 @@ export default function MedicationDetailsModal() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
-        <View className="bg-gradient-to-b from-gray-50 to-white px-6 pt-6 pb-8">
-          <View className="flex-row items-start space-x-4">
+        <View 
+          className="relative px-6 pt-8 pb-10"
+          style={{
+            backgroundColor: '#ffffff',
+          }}
+        >
+          {/* Gradient Overlay */}
+          <View 
+            className="absolute inset-0"
+            style={{
+              backgroundColor: `${primaryColor}05`,
+            }}
+          />
+          {/* Decorative Background Elements */}
+          <View 
+            className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-30"
+            style={{ backgroundColor: `${primaryColor}15` }}
+          />
+          <View 
+            className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-20"
+            style={{ backgroundColor: `${primaryColor}10` }}
+          />
+          
+          <View className="flex-row items-start space-x-5">
             {/* Drug Image */}
-            <View className="flex-shrink-0">
+            <View className="flex-shrink-0 relative">
               {!imageError ? (
-                <Image
-                  source={{ uri: drugImageUrl }}
-                  style={{ width: 120, height: 120 }}
-                  className="rounded-2xl bg-gray-100"
-                  contentFit="cover"
-                  placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
-                  transition={200}
-                  onError={() => setImageError(true)}
-                />
+                <View 
+                  className="rounded-3xl p-1 shadow-lg"
+                  style={{ 
+                    backgroundColor: 'white',
+                    shadowColor: primaryColor,
+                    shadowOffset: { width: 0, height: 8 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 16,
+                    elevation: 12,
+                  }}
+                >
+                  <Image
+                    source={{ uri: drugImageUrl }}
+                    style={{ width: 130, height: 130 }}
+                    className="rounded-3xl bg-gray-50"
+                    contentFit="cover"
+                    placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
+                    transition={300}
+                    onError={() => setImageError(true)}
+                  />
+                </View>
               ) : (
                 <View
-                  className="w-30 h-30 rounded-2xl items-center justify-center"
-                  style={{ backgroundColor: `${primaryColor}20` }}
+                  className="w-32 h-32 rounded-3xl items-center justify-center shadow-lg"
+                  style={{ 
+                    backgroundColor: `${primaryColor}15`,
+                    shadowColor: primaryColor,
+                    shadowOffset: { width: 0, height: 8 },
+                    shadowOpacity: 0.15,
+                    shadowRadius: 16,
+                    elevation: 12,
+                  }}
                 >
-                  <Ionicons name="medical" size={48} color={primaryColor} />
+                  <View 
+                    className="w-16 h-16 rounded-2xl items-center justify-center"
+                    style={{ backgroundColor: `${primaryColor}25` }}
+                  >
+                    <Ionicons name="medical" size={32} color={primaryColor} />
+                  </View>
                 </View>
               )}
+              
+              {/* Quality Badge */}
+              <View 
+                className="absolute -top-2 -right-2 w-8 h-8 rounded-full items-center justify-center shadow-sm"
+                style={{ backgroundColor: primaryColor }}
+              >
+                <Ionicons name="checkmark" size={16} color="white" />
+              </View>
             </View>
 
-            {/* Basic Info */}
-            <View className="flex-1">
-              <Text className="text-2xl font-bold text-gray-900 mb-2">
+            {/* Drug Information */}
+            <View className="flex-1 pt-2">
+              {/* Drug Name */}
+              <Text className="text-2xl font-black text-gray-900 mb-1 leading-tight">
                 {drug.tradename}
               </Text>
-              {/* {drug.tradenamearabic && (
-                <Text
-                  className="text-lg text-gray-600 mb-3"
-                  style={{ direction: "rtl" }}
+              
+              {/* Active Ingredient Preview */}
+              {drug.activeingredient && (
+                <Text className="text-sm text-gray-500 mb-4 font-medium">
+                  {drug.activeingredient.split('+')[0].trim()}
+                  {drug.activeingredient.includes('+') ? ' + more' : ''}
+                </Text>
+              )}
+
+              {/* Price Section */}
+              <View className="mb-4">
+                <Text className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">
+                  Price
+                </Text>
+                <View className="flex-row items-baseline">
+                  <Text 
+                    className="text-4xl font-black tracking-tight"
+                    style={{ color: primaryColor }}
+                  >
+                    {formatPrice(drug.price)}
+                  </Text>
+                  <Text className="text-lg text-gray-600 font-semibold ml-2">
+                    EGP
+                  </Text>
+                </View>
+              </View>
+
+              {/* Form Badge */}
+              <View className="flex-row">
+                <View 
+                  className="px-4 py-2.5 rounded-2xl flex-row items-center shadow-sm"
+                  style={{ 
+                    backgroundColor: `${primaryColor}12`,
+                    borderWidth: 1,
+                    borderColor: `${primaryColor}25`,
+                  }}
                 >
-                  {drug.tradenamearabic}
-                </Text>
-              )} */}
-              <View className="flex-row items-center justify-between">
-                <Text className="text-3xl font-bold text-red-600">
-                  {formatPrice(drug.price)} EGP
-                </Text>
-                <View className="bg-blue-100 px-3 py-2 rounded-full">
-                  <Text className="text-blue-800 font-semibold text-sm">
+                  <View 
+                    className="w-2 h-2 rounded-full mr-2"
+                    style={{ backgroundColor: primaryColor }}
+                  />
+                  <Text 
+                    className="font-bold text-sm tracking-wide"
+                    style={{ color: primaryColor }}
+                  >
                     {drug.form || drug.type || "Unknown"}
                   </Text>
                 </View>
               </View>
             </View>
           </View>
+
+          {/* Company Badge */}
+          {drug.company && (
+            <View className="mt-6 flex-row items-center">
+              <View className="flex-1 h-px bg-gray-200" />
+              <View className="mx-4 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100">
+                <Text className="text-xs text-gray-600 font-semibold uppercase tracking-wider">
+                  {drug.company}
+                </Text>
+              </View>
+              <View className="flex-1 h-px bg-gray-200" />
+            </View>
+          )}
         </View>
 
         {/* Details Section */}
@@ -160,42 +256,18 @@ export default function MedicationDetailsModal() {
               <Text className="text-gray-700 text-base">{drug.group}</Text>
             </View>
           )}
-
-          {/* Additional Information */}
-          {drug.info && drug.info.trim() !== "" && (
+          {/* Drug Type */}
+          {drug.type && (
             <View className="bg-gray-50 rounded-xl p-4">
               <View className="flex-row items-center mb-2">
-                <Ionicons name="information-circle" size={20} color="#7c3aed" />
+                <Ionicons name="medical" size={20} color="#dc2626" />
                 <Text className="text-lg font-semibold text-gray-900 ml-2">
-                  Additional Information
+                  Drug Type
                 </Text>
               </View>
-              <Text className="text-gray-700 text-base leading-6">
-                {drug.info}
-              </Text>
+              <Text className="text-gray-700 text-base">{drug.type}</Text>
             </View>
           )}
-
-          {/* Color Palette */}
-          {/* {paletteColors.length > 0 && (
-            <View className="bg-gray-50 rounded-xl p-4">
-              <View className="flex-row items-center mb-3">
-                <Ionicons name="color-palette" size={20} color="#ea580c" />
-                <Text className="text-lg font-semibold text-gray-900 ml-2">
-                  Color Palette
-                </Text>
-              </View>
-              <View className="flex-row space-x-2">
-                {paletteColors.slice(0, 5).map((color, index) => (
-                  <View
-                    key={index}
-                    className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </View>
-            </View>
-          )} */}
         </View>
 
         {/* Bottom Spacing */}
