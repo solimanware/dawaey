@@ -1,13 +1,9 @@
-import { LegendList, LegendListRenderItemProps } from "@legendapp/list";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   FuzzySearchResults,
   Header,
   MedicationCard,
   SearchBar,
-} from "../components";
+} from "@/components";
 import {
   Drug,
   useDebounce,
@@ -15,8 +11,12 @@ import {
   useFuzzySearch,
   useGlowAnimation,
   useSearch,
-} from "../hooks";
-import "../theme/global.css";
+} from "@/hooks";
+import "@/theme/global.css";
+import { LegendList, LegendListRenderItemProps } from "@legendapp/list";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MedicationsScreen() {
   // Input state for immediate UI updates
@@ -111,7 +111,7 @@ export default function MedicationsScreen() {
                   renderItem={renderMedicationCard}
                   showsVerticalScrollIndicator={false}
                   contentContainerStyle={{ paddingBottom: 120 }}
-                  keyExtractor={(item: Drug) => item.id}
+                  keyExtractor={(item: Drug) => item.id.toString()}
                   recycleItems={true}
                   maintainVisibleContentPosition
                 />
@@ -120,7 +120,6 @@ export default function MedicationsScreen() {
           )}
         </>
       )}
-      <View className="flex-1 items-center justify-center bg-green-200"></View>
     </SafeAreaView>
   );
 }

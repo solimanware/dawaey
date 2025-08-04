@@ -146,17 +146,17 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   const primaryColor = paletteColors[0] || "#2563eb";
 
   // Generate drug image URL based on ID
-  const drugImageUrl = `https://soliman.ai/z-drug-index/assets/drug-pics/${item.id}.jpg`;
+  const drugImageUrl = `https://soliman.ai/dawaey-app-pics/${item.id}.jpg`;
 
   // Track image loading state
   const [imageError, setImageError] = useState(false);
 
   // Safely format price
-  const formatPrice = (price: number | string | undefined): string => {
-    if (price === undefined || price === null || price === "") {
+  const formatPrice = (price: string): string => {
+    if (!price || price === "") {
       return "N/A";
     }
-    const numPrice = typeof price === "string" ? parseFloat(price) : price;
+    const numPrice = parseFloat(price);
     if (isNaN(numPrice)) {
       return "N/A";
     }
@@ -184,16 +184,17 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
     router.push({
       pathname: "/(modal)/medication-details" as any,
       params: {
-        id: item.id,
+        id: item.id.toString(),
         tradename: item.tradename,
         activeingredient: item.activeingredient,
         company: item.company,
         group: item.group,
-        info: item.info,
-        form: item.form,
-        price: item.price?.toString() || "",
-        tradenamearabic: item.tradenamearabic,
-        palette: item.palette,
+        info: item.info || '',
+        form: item.form || item.type,
+        price: item.price || "",
+        tradenamearabic: item.tradenamearabic || item.tradename,
+        palette: item.palette || '#2563eb,#3b82f6,#60a5fa',
+        type: item.type,
       },
     });
   };
@@ -263,7 +264,7 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
             </Text>
             <View className="bg-gray-100 px-3 py-1 rounded-full">
               <Text className="text-xs text-gray-600 font-medium">
-                {item.form || "Unknown"}
+                {item.form || item.type || "Unknown"}
               </Text>
             </View>
           </View>

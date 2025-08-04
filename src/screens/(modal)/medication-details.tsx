@@ -12,14 +12,15 @@ export default function MedicationDetailsModal() {
 
   // Parse the drug data from params
   const drug: Drug = {
-    id: params.id as string,
+    id: parseInt(params.id as string),
+    type: params.type as string || params.form as string,
     tradename: params.tradename as string,
     activeingredient: params.activeingredient as string,
     company: params.company as string,
     group: params.group as string,
+    price: params.price as string,
     info: params.info as string,
     form: params.form as string,
-    price: params.price as string,
     tradenamearabic: params.tradenamearabic as string,
     palette: params.palette as string,
   };
@@ -32,11 +33,11 @@ export default function MedicationDetailsModal() {
   const drugImageUrl = `https://soliman.ai/z-drug-index/assets/drug-pics/${drug.id}.jpg`;
 
   // Safely format price
-  const formatPrice = (price: number | string | undefined): string => {
-    if (price === undefined || price === null || price === "") {
+  const formatPrice = (price: string): string => {
+    if (!price || price === "") {
       return "N/A";
     }
-    const numPrice = typeof price === "string" ? parseFloat(price) : price;
+    const numPrice = parseFloat(price);
     if (isNaN(numPrice)) {
       return "N/A";
     }
@@ -86,21 +87,21 @@ export default function MedicationDetailsModal() {
               <Text className="text-2xl font-bold text-gray-900 mb-2">
                 {drug.tradename}
               </Text>
-              {drug.tradenamearabic && (
+              {/* {drug.tradenamearabic && (
                 <Text
                   className="text-lg text-gray-600 mb-3"
                   style={{ direction: "rtl" }}
                 >
                   {drug.tradenamearabic}
                 </Text>
-              )}
+              )} */}
               <View className="flex-row items-center justify-between">
                 <Text className="text-3xl font-bold text-red-600">
                   {formatPrice(drug.price)} EGP
                 </Text>
                 <View className="bg-blue-100 px-3 py-2 rounded-full">
                   <Text className="text-blue-800 font-semibold text-sm">
-                    {drug.form || "Unknown"}
+                    {drug.form || drug.type || "Unknown"}
                   </Text>
                 </View>
               </View>
@@ -123,7 +124,7 @@ export default function MedicationDetailsModal() {
                 {activeIngredients.map((ingredient, index) => (
                   <View
                     key={`${ingredient}-${index}`}
-                    className="bg-white px-3 py-2 rounded-lg border border-blue-200"
+                    className="bg-white px-3 py-2 rounded-lg border-[1px] border-blue-200"
                   >
                     <Text className="text-blue-800 font-medium">
                       {ingredient}
@@ -176,7 +177,7 @@ export default function MedicationDetailsModal() {
           )}
 
           {/* Color Palette */}
-          {paletteColors.length > 0 && (
+          {/* {paletteColors.length > 0 && (
             <View className="bg-gray-50 rounded-xl p-4">
               <View className="flex-row items-center mb-3">
                 <Ionicons name="color-palette" size={20} color="#ea580c" />
@@ -194,11 +195,11 @@ export default function MedicationDetailsModal() {
                 ))}
               </View>
             </View>
-          )}
+          )} */}
         </View>
 
         {/* Bottom Spacing */}
-        <View className="h-8" />
+        <View className="p-safe" />
       </ScrollView>
     </SafeAreaView>
   );
