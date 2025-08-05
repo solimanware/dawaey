@@ -159,7 +159,7 @@ export const useFuzzySearch = (drugs: Drug[]): SearchState => {
 
   useEffect(() => {
     const searchAsync = async () => {
-      if (!searchQuery.trim()) {
+      if (!searchQuery.trim() || searchQuery.trim().length < 3) {
         setFuzzyMatches([]);
         setTopSuggestion(null);
         setIsLoading(false);

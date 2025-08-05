@@ -15,7 +15,7 @@ export const useSearch = (drugs: Drug[]) => {
 
   // Preprocess drugs data once to add lowercase fields for faster search
   const preprocessedDrugs = useMemo<PreprocessedDrug[]>(() => {
-    return drugs.map(drug => ({
+    return drugs.map((drug) => ({
       ...drug,
       _tradename: drug.tradename?.toLowerCase() ?? "",
       _activeingredient: drug.activeingredient?.toLowerCase() ?? "",
@@ -24,7 +24,7 @@ export const useSearch = (drugs: Drug[]) => {
 
   // Use useMemo for pure filtering - avoids unnecessary recomputation
   const filteredDrugs = useMemo(() => {
-    if (!debouncedSearchQuery.trim()) {
+    if (!debouncedSearchQuery.trim() || debouncedSearchQuery.trim().length < 3) {
       return preprocessedDrugs;
     }
 
