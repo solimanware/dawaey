@@ -26,6 +26,13 @@ const dmp = new DiffMatchPatch();
 dmp.Match_Threshold = 0.4;
 dmp.Match_Distance = 100;
 
+// Helper function to get first two words from a string
+const getFirstTwoWords = (text: string): string => {
+  if (!text) return "";
+  const words = text.trim().split(/\s+/);
+  return words.slice(0, 2).join(" ");
+};
+
 // Wildcard search utilities
 const isWildcardPattern = (query: string): boolean => {
   return query.includes("*") && query.replace(/\*/g, "").length >= 2;
@@ -219,10 +226,11 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
           const item = searchIndex[i];
 
-          // Test wildcard pattern against first two letters of tradename
-          if (wildcardRegex.test(item.tradename.substring(0, 2))) {
+          // Test wildcard pattern against first two words of tradename
+          const tradenameFirstTwoWords = getFirstTwoWords(item.tradename);
+          if (wildcardRegex.test(tradenameFirstTwoWords)) {
             const score = calculateWildcardScore(
-              item.tradename,
+              tradenameFirstTwoWords,
               searchTerm,
               true
             );
@@ -234,20 +242,23 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
               matchedValue: item.drug.tradename,
             });
           }
-          // Test wildcard pattern against first two letters of active ingredient
-          else if (wildcardRegex.test(item.activeingredient.substring(0, 2))) {
-            const score = calculateWildcardScore(
-              item.activeingredient,
-              searchTerm,
-              false
-            );
-            wildcardMatches.push({
-              drug: item.drug,
-              score,
-              matchType: "fuzzy",
-              matchedField: "activeingredient",
-              matchedValue: item.drug.activeingredient,
-            });
+          // Test wildcard pattern against first two words of active ingredient
+          else if (item.activeingredient) {
+            const ingredientFirstTwoWords = getFirstTwoWords(item.activeingredient);
+            if (wildcardRegex.test(ingredientFirstTwoWords)) {
+              const score = calculateWildcardScore(
+                ingredientFirstTwoWords,
+                searchTerm,
+                false
+              );
+              wildcardMatches.push({
+                drug: item.drug,
+                score,
+                matchType: "fuzzy",
+                matchedField: "activeingredient",
+                matchedValue: item.drug.activeingredient,
+              });
+            }
           }
         }
 
@@ -290,15 +301,16 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           let bestScore = 0;
           let bestResult: SearchResult | null = null;
 
-          // Check first two letters of tradename with DiffMatchPatch
+          // Check first two words of tradename with DiffMatchPatch
+          const tradenameFirstTwoWords = getFirstTwoWords(drug.tradename).toLowerCase();
           const tradenameMatch = dmp.match_main(
-            drug.tradename.toLowerCase().substring(0, 2),
+            tradenameFirstTwoWords,
             searchTerm,
             0
           );
           if (tradenameMatch !== -1) {
             const score = calculateFuzzyScore(
-              drug.tradename,
+              tradenameFirstTwoWords,
               searchTerm,
               tradenameMatch,
               true
@@ -315,16 +327,17 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
             }
           }
 
-          // Check first two letters of active ingredient with DiffMatchPatch
+          // Check first two words of active ingredient with DiffMatchPatch
           if (drug.activeingredient) {
+            const ingredientFirstTwoWords = getFirstTwoWords(drug.activeingredient).toLowerCase();
             const ingredientMatch = dmp.match_main(
-              drug.activeingredient.toLowerCase().substring(0, 2),
+              ingredientFirstTwoWords,
               searchTerm,
               0
             );
             if (ingredientMatch !== -1) {
               const score = calculateFuzzyScore(
-                drug.activeingredient,
+                ingredientFirstTwoWords,
                 searchTerm,
                 ingredientMatch,
                 false
