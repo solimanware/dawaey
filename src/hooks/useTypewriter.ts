@@ -25,6 +25,7 @@ export const useTypewriter = ({
   const [isComplete, setIsComplete] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (isComplete) {
@@ -48,7 +49,9 @@ export const useTypewriter = ({
     const typeNextChar = () => {
       if (isDeleting) {
         // Deleting
-        console.log(`Deleting character from "${currentWord}", charIndex: ${currentCharIndex}`);
+        console.log(
+          `Deleting character from "${currentWord}", charIndex: ${currentCharIndex}`
+        );
         if (currentCharIndex > 0) {
           setCurrentCharIndex((prev) => prev - 1);
           setDisplayText(currentWord.substring(0, currentCharIndex - 1));
@@ -102,10 +105,16 @@ export const useTypewriter = ({
           }
 
           // Start deleting after pause for all other cases
-          console.log(`Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`);
+          console.log(
+            `Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`
+          );
+          setIsPaused(true);
           timeoutRef.current = setTimeout(() => {
-            console.log(`Deletion timer fired! Setting isDeleting=true for "${currentWord}"`);
+            console.log(
+              `Deletion timer fired! Setting isDeleting=true for "${currentWord}"`
+            );
             setIsDeleting(true);
+            setIsPaused(false);
           }, pauseDuration);
           return;
         }
@@ -117,12 +126,16 @@ export const useTypewriter = ({
     };
 
     // Start the animation
-    if (!isComplete && cycleCount < cycles) {
+    if (!isComplete && cycleCount < cycles && !isPaused) {
       const speed = isDeleting ? deletingSpeed : typingSpeed;
-      console.log(`Setting timeout for next char: speed=${speed}ms, isDeleting=${isDeleting}, currentChar=${currentCharIndex}`);
+      console.log(
+        `Setting timeout for next char: speed=${speed}ms, isDeleting=${isDeleting}, currentChar=${currentCharIndex}`
+      );
       timeoutRef.current = setTimeout(typeNextChar, speed);
     } else {
-      console.log(`Animation stopped: isComplete=${isComplete}, cycleCount=${cycleCount}, cycles=${cycles}`);
+      console.log(
+        `Animation stopped: isComplete=${isComplete}, cycleCount=${cycleCount}, cycles=${cycles}, isPaused=${isPaused}`
+      );
     }
 
     return () => {
@@ -143,6 +156,7 @@ export const useTypewriter = ({
     pauseDuration,
     cycles,
     hasStarted,
+    isPaused,
   ]);
 
   return {
