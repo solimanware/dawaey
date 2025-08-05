@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useDebounce } from "./useDebounce";
 import { Drug } from "./useDrugsData";
 
 // Enhanced Drug type with preprocessed lowercase fields for faster search
@@ -10,8 +9,6 @@ type PreprocessedDrug = Drug & {
 
 export const useSearch = (drugs: Drug[]) => {
   const [searchQuery, setSearchQuery] = useState("");
-
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   // Preprocess drugs data once to add lowercase fields for faster search
   const preprocessedDrugs = useMemo<PreprocessedDrug[]>(() => {
@@ -25,29 +22,24 @@ export const useSearch = (drugs: Drug[]) => {
   // Use useMemo for pure filtering - avoids unnecessary recomputation
   const filteredDrugs = useMemo(() => {
     if (
-      !debouncedSearchQuery.trim() ||
-      debouncedSearchQuery.trim().length < 3
+      !searchQuery.trim() ||
+      searchQuery.trim().length < 3
     ) {
       return [];
     }
 
-    const query = debouncedSearchQuery.toLowerCase();
+    const query = searchQuery.toLowerCase();
     return preprocessedDrugs.filter(
       (drug) =>
         drug._tradename.includes(query) ||
         drug._activeingredient.includes(query)
     );
-  }, [preprocessedDrugs, debouncedSearchQuery]);
-
-  // Calculate loading state based on whether search is being debounced
-  const isLoading = useMemo(() => {
-    return searchQuery !== debouncedSearchQuery && searchQuery.length > 0;
-  }, [searchQuery, debouncedSearchQuery]);
+  }, [preprocessedDrugs, searchQuery]);
 
   return {
     searchQuery,
     setSearchQuery,
     filteredDrugs,
-    isLoading,
+    isLoading: false, // No internal debouncing, so no loading state needed
   };
 };
