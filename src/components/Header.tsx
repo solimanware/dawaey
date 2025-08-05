@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export const Header = () => {
@@ -8,7 +9,10 @@ export const Header = () => {
         <Text className="text-2xl font-bold text-violet-900">Medications</Text>
         <Text className="text-violet-700 mt-1">Find your medicines</Text>
       </View>
-      <TouchableOpacity className="p-3 bg-violet-500 rounded-full">
+      <TouchableOpacity 
+        className="p-3 bg-violet-500 rounded-full"
+        onPress={() => router.push("/(modal)/references")}
+      >
         <Ionicons name="help-outline" size={24} color="white" />
       </TouchableOpacity>
     </View>

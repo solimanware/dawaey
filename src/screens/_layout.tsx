@@ -29,6 +29,17 @@ export default function RootLayout() {
           },
         }}
       />
+      <Stack.Screen
+        name="(modal)/references"
+        options={{
+          title: "References",
+          headerShown: false,
+          presentation: "modal",
+          contentStyle: {
+            backgroundColor: "#fff",
+          },
+        }}
+      />
     </Stack>
   );
 }
