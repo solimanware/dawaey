@@ -19,9 +19,11 @@ export const SearchBar = ({
   onReset,
   glowAnim,
 }: SearchBarProps) => {
-  const [shouldRunTypewriter, setShouldRunTypewriter] = useState(!hasTypewriterCompleted);
+  const [shouldRunTypewriter, setShouldRunTypewriter] = useState(
+    !hasTypewriterCompleted
+  );
 
-  const placeholderText = useTypewriter({
+  const typewriterResult = useTypewriter({
     words: shouldRunTypewriter
       ? ["Panadol", "Confestal", "A*G*M*N", "Search any medication..."]
       : [],
@@ -34,15 +36,13 @@ export const SearchBar = ({
 
   // Mark typewriter as completed when it finishes
   useEffect(() => {
-    if (placeholderText === "Search any medication..." && shouldRunTypewriter) {
+    if (typewriterResult.isComplete && shouldRunTypewriter) {
       hasTypewriterCompleted = true;
       setShouldRunTypewriter(false);
     }
-  }, [placeholderText, shouldRunTypewriter]);
+  }, [typewriterResult.isComplete, shouldRunTypewriter]);
 
-  // Check if current search query is a wildcard pattern
-  const isWildcardPattern =
-    searchQuery.includes("*") && searchQuery.replace(/\*/g, "").length >= 2;
+
 
   return (
     <View className="relative">
@@ -99,7 +99,7 @@ export const SearchBar = ({
       >
         <Ionicons name="search" size={20} color="#663399" />
         <TextInput
-          placeholder={placeholderText}
+          placeholder={typewriterResult.displayText}
           className="flex-1 ml-3 text-gray-900"
           placeholderTextColor="#9ca3af"
           value={searchQuery}
