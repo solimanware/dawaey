@@ -2,7 +2,7 @@ import { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "dawaey",
+  name: "Dawaey - دوائي",
   slug: "dawaey",
   version: "1.0.0",
   orientation: "portrait",
@@ -38,7 +38,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         image: "./assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "cover",
-        backgroundColor: "#FFBDFF",
+        backgroundColor: "#FEE1FD",
       },
     ],
     "@react-native-firebase/app",

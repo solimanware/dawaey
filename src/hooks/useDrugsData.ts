@@ -17,29 +17,76 @@ export const useDrugsData = () => {
   const [rawDrugsData, setRawDrugsData] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadDrugsData = async () => {
+  
+  const loadDrugsData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      console.log("🔄 Starting to load drugs data...");
+      
+      // Try dynamic loading first
       try {
-        setIsLoading(true);
-        setError(null);
-        
-        // Load the JSON file dynamically using expo-asset and expo-file-system
         const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
-        await asset.downloadAsync();
+        console.log("📦 Asset created:", asset.uri);
         
-        const jsonString = await FileSystem.readAsStringAsync(asset.localUri!);
+        await asset.downloadAsync();
+        console.log("⬇️ Asset downloaded:", asset.localUri);
+        
+        if (!asset.localUri) {
+          throw new Error("Asset local URI is null after download");
+        }
+        
+        const jsonString = await FileSystem.readAsStringAsync(asset.localUri);
+        console.log("📖 File read successfully, length:", jsonString.length);
+        
         const jsonData = JSON.parse(jsonString);
+        console.log("✅ JSON parsed successfully, items count:", jsonData.length);
         
         setRawDrugsData(jsonData);
-      } catch (err) {
-        console.error("Failed to load drugs data:", err);
-        setError(err instanceof Error ? err.message : "Failed to load data");
-      } finally {
-        setIsLoading(false);
+        return;
+      } catch (dynamicLoadError) {
+        console.warn("⚠️ Dynamic loading failed, trying fallback:", dynamicLoadError);
+        
+        // Fallback to direct import (this will increase bundle size but ensures it works)
+        const fallbackData = require("../../assets/data/drugs.json");
+        console.log("✅ Fallback loading successful, items count:", fallbackData.length);
+        
+        setRawDrugsData(fallbackData);
       }
-    };
+    } catch (err) {
+      console.error("❌ Failed to load drugs data:", err);
+      
+      // Improved error handling to avoid "[object Object]" display
+      let errorMessage = "Failed to load medications database";
+      
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else if (err && typeof err === "object") {
+        // Try to extract meaningful error information
+        errorMessage = err.toString?.() || JSON.stringify(err, null, 2) || "Unknown error occurred";
+      }
+      
+      // Fallback to a user-friendly message if error is too technical
+      if (errorMessage.includes("[object Object]") || errorMessage.length > 200) {
+        errorMessage = "Unable to load medications database. Please check your internet connection and try restarting the app.";
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  const retryLoad = () => {
+    setError(null);
+    setIsLoading(true);
+    loadDrugsData();
+  };
+
+  useEffect(() => {
     loadDrugsData();
   }, []);
 
@@ -54,5 +101,5 @@ export const useDrugsData = () => {
     );
   }, [rawDrugsData]);
 
-  return { drugs, isLoading, error };
+  return { drugs, isLoading, error, retryLoad };
 };

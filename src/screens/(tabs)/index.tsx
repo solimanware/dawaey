@@ -9,7 +9,7 @@ import {
 import "@/theme/global.css";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { Text, View, ActivityIndicator } from "react-native";
+import { ActivityIndicator, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MedicationsScreen() {
@@ -22,7 +22,12 @@ export default function MedicationsScreen() {
   const [searchType, setSearchType] = useState<string | null>(null);
 
   // Custom hooks
-  const { drugs, isLoading: isDrugsLoading, error: drugsError } = useDrugsData();
+  const {
+    drugs,
+    isLoading: isDrugsLoading,
+    error: drugsError,
+    retryLoad,
+  } = useDrugsData();
   const glowAnim = useGlowAnimation();
   const analytics = useAnalytics();
 
@@ -153,15 +158,26 @@ export default function MedicationsScreen() {
           />
         </View>
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-center text-red-500 text-lg font-semibold mb-2">
-            Failed to load medications
-          </Text>
-          <Text className="text-center text-gray-500 text-sm mb-4">
-            {drugsError}
-          </Text>
-          <Text className="text-center text-gray-400 text-xs">
-            Please check your connection and restart the app
-          </Text>
+          <View className="bg-red-50 rounded-xl p-6 border border-red-200 w-full max-w-sm">
+            <Text className="text-center text-red-600 text-lg font-semibold mb-3">
+              ⚠️ Unable to Load Database
+            </Text>
+            <Text className="text-center text-gray-600 text-sm mb-4 leading-5">
+              {drugsError}
+            </Text>
+            <TouchableOpacity
+              onPress={retryLoad}
+              className="bg-purple-600 py-3 px-6 rounded-lg mt-2"
+              activeOpacity={0.8}
+            >
+              <Text className="text-white text-center font-semibold">
+                Try Again
+              </Text>
+            </TouchableOpacity>
+            <Text className="text-center text-gray-400 text-xs mt-3">
+              Make sure you have a stable internet connection
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     );
