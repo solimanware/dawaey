@@ -69,12 +69,17 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
     return (
       <View className="flex-row flex-wrap gap-2">
         {ingredients.map((ingredient, index) => (
-          <Text
+          <View
             key={`${ingredient}-${index}`}
-            className="text-sm p-1 text-gray-700 border-[1px] border-primary-300 rounded-full"
+            className="bg-white px-2 py-1 rounded-full border-[1px] border-primary-300"
           >
-            {ingredient}
-          </Text>
+            <Text
+              className="text-sm text-gray-700"
+              numberOfLines={1}
+            >
+              {ingredient}
+            </Text>
+          </View>
         ))}
       </View>
     );
@@ -88,14 +93,18 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         className="mr-2 bg-white px-2 py-1 rounded-full border-[1px] border-primary-300"
         style={{ flexShrink: 0 }}
       >
-        <Text className="text-sm text-gray-700">
+        <Text 
+          className="text-sm text-gray-700"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
           {index + 1}- {ingredient}
         </Text>
       </View>
     ));
 
   return (
-    <View className="overflow-hidden" style={{ width: "100%", height: 32 }}>
+    <View className="overflow-hidden" style={{ width: "100%", height: 40 }}>
       <View
         className="overflow-hidden"
         style={{
@@ -168,7 +177,8 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
     if (!item.activeingredient) return [];
     return item.activeingredient
       .split("+")
-      .map((ingredient) => ingredient.trim());
+      .map((ingredient) => ingredient.trim())
+      .filter((ingredient) => ingredient.length > 0);
   };
 
   const activeIngredients = getActiveIngredients();
@@ -189,12 +199,10 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
         activeingredient: item.activeingredient,
         company: item.company,
         group: item.group,
-        info: item.info || '',
+        info: item.info || "",
         form: item.form || item.type,
-        price: item.price || "",
-        tradenamearabic: item.tradenamearabic || item.tradename,
-        palette: item.palette || '#2563eb,#3b82f6,#60a5fa',
         type: item.type,
+        price: item.price || "",
       },
     });
   };
