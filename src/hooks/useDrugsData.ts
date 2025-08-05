@@ -15,7 +15,7 @@ export type Drug = {
 
 export const loadDrugsData = async (): Promise<any> => {
   try {
-    const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
+    const asset = Asset.fromModule(require("../../assets/data/drugs.txt"));
     await asset.downloadAsync();
 
     const fileUri = asset.localUri || asset.uri;
@@ -23,7 +23,7 @@ export const loadDrugsData = async (): Promise<any> => {
     if (!fileUri) throw new Error("Invalid localUri");
 
     const content = await FileSystem.readAsStringAsync(fileUri);
-    const data = JSON.parse(content);
+    const data = JSON.parse(content); // This still gives you the JSON
 
     return data;
   } catch (error) {
@@ -43,7 +43,7 @@ export const useDrugsData = () => {
         setIsLoading(true);
         setError(null);
         const drugsData = await loadDrugsData();
-        
+
         if (drugsData === null) {
           setError("Failed to load drugs data");
           setDrugs([]);
