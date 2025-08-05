@@ -86,9 +86,12 @@ export default function MedicationsScreen() {
   };
 
   const handleSearchReset = () => {
+    // Reset all search-related state in the correct order
     setInputValue("");
     setSearchType(null);
     setIsFuzzySearch(false);
+    
+    // Immediately clear search query to prevent any debounced effects
     setSearchQuery("");
   };
 
