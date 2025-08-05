@@ -60,14 +60,7 @@ export const useTypewriter = ({
             if (nextIndex >= words.length) {
               // Completed one full cycle
               console.log(`Completed cycle ${cycleCount + 1} of ${cycles}`);
-              setCycleCount((prevCycle) => {
-                const newCycleCount = prevCycle + 1;
-                if (newCycleCount >= cycles) {
-                  console.log("All cycles completed!");
-                  setIsComplete(true);
-                }
-                return newCycleCount;
-              });
+              setCycleCount((prevCycle) => prevCycle + 1);
               return 0;
             }
             console.log(`Moving to next word at index: ${nextIndex}`);
@@ -82,17 +75,22 @@ export const useTypewriter = ({
           setDisplayText(currentWord.substring(0, currentCharIndex + 1));
         } else {
           // Finished typing current word
-          console.log(`Finished typing word: "${currentWord}" (index: ${currentWordIndex})`);
-          
-          // Check if this is the last word of the last cycle
+          console.log(
+            `Finished typing word: "${currentWord}" (index: ${currentWordIndex})`
+          );
+
+          // Check if this is the very last word of the very last cycle
           const isLastWord = currentWordIndex === words.length - 1;
-          const isLastCycle = cycleCount === cycles - 1;
+          const isLastCycle = cycleCount >= cycles - 1;
+          
+          console.log(
+            `isLastWord: ${isLastWord}, isLastCycle: ${isLastCycle}, cycleCount: ${cycleCount}, cycles: ${cycles}`
+          );
 
-          console.log(`isLastWord: ${isLastWord}, isLastCycle: ${isLastCycle}, cycleCount: ${cycleCount}, cycles: ${cycles}`);
-
+          // Only complete when we're truly at the last word of the last cycle
           if (isLastWord && isLastCycle) {
-            // Don't delete the last word, just complete the animation
-            console.log("Completing typewriter animation");
+            // We've reached the final word, don't delete it
+            console.log("Completing typewriter animation - reached final word");
             setIsComplete(true);
             return;
           }
