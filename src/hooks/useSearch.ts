@@ -1,42 +1,45 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDebounce } from "./useDebounce";
 import { Drug } from "./useDrugsData";
 
+// Enhanced Drug type with preprocessed lowercase fields for faster search
+type PreprocessedDrug = Drug & {
+  _tradename: string;
+  _activeingredient: string;
+};
+
 export const useSearch = (drugs: Drug[]) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredDrugs, setFilteredDrugs] = useState<Drug[]>(drugs);
-  const [isLoading, setIsLoading] = useState(false);
 
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  useEffect(() => {
-    const performSearch = async () => {
-      setIsLoading(true);
+  // Preprocess drugs data once to add lowercase fields for faster search
+  const preprocessedDrugs = useMemo<PreprocessedDrug[]>(() => {
+    return drugs.map(drug => ({
+      ...drug,
+      _tradename: drug.tradename?.toLowerCase() ?? "",
+      _activeingredient: drug.activeingredient?.toLowerCase() ?? "",
+    }));
+  }, [drugs]);
 
-      // Simulate async operation
-      await new Promise((resolve) => setTimeout(resolve, 100));
+  // Use useMemo for pure filtering - avoids unnecessary recomputation
+  const filteredDrugs = useMemo(() => {
+    if (!debouncedSearchQuery.trim()) {
+      return preprocessedDrugs;
+    }
 
-      if (!debouncedSearchQuery.trim()) {
-        setFilteredDrugs(drugs);
-      } else {
-        const filtered = drugs.filter(
-          (drug: Drug) =>
-            drug.tradename
-              .toLowerCase()
-              .includes(debouncedSearchQuery.toLowerCase()) ||
-            (drug.activeingredient &&
-              drug.activeingredient
-                .toLowerCase()
-                .includes(debouncedSearchQuery.toLowerCase()))
-        );
-        setFilteredDrugs(filtered);
-      }
+    const query = debouncedSearchQuery.toLowerCase();
+    return preprocessedDrugs.filter(
+      (drug) =>
+        drug._tradename.includes(query) ||
+        drug._activeingredient.includes(query)
+    );
+  }, [preprocessedDrugs, debouncedSearchQuery]);
 
-      setIsLoading(false);
-    };
-
-    performSearch();
-  }, [drugs, debouncedSearchQuery]);
+  // Calculate loading state based on whether search is being debounced
+  const isLoading = useMemo(() => {
+    return searchQuery !== debouncedSearchQuery && searchQuery.length > 0;
+  }, [searchQuery, debouncedSearchQuery]);
 
   return {
     searchQuery,
