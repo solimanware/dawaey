@@ -1,191 +1,70 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from 'react';
 
-interface UseTypewriterProps {
+interface UseTypewriterOptions {
   words: string[];
-  defaultText: string;
-  typingSpeed?: number;
-  deletingSpeed?: number;
-  pauseDuration?: number;
-  cycles?: number;
+  loop?: boolean;
+  typeSpeed?: number;
+  deleteSpeed?: number;
+  delayBetweenWords?: number;
 }
 
 export const useTypewriter = ({
   words,
-  defaultText,
-  typingSpeed = 100,
-  deletingSpeed = 50,
-  pauseDuration = 1500,
-  cycles = 1,
-}: UseTypewriterProps) => {
-  const [displayText, setDisplayText] = useState("");
+  loop = false,
+  typeSpeed = 100,
+  deleteSpeed = 50,
+  delayBetweenWords = 1000,
+}: UseTypewriterOptions) => {
+  const [displayText, setDisplayText] = useState('');
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [cycleCount, setCycleCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const timeoutRef = useRef<number | null>(null);
-  const deletionTimerRef = useRef<number | null>(null);
-  const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
-    if (isComplete) {
-      setDisplayText(defaultText);
-      return;
-    }
-
-    if (words.length === 0) {
-      // Don't set default text immediately when words array is empty
-      // This prevents the default text from showing before typewriter starts
-      return;
-    }
-
-    // Mark as started when we have words to type
-    if (!hasStarted) {
-      setHasStarted(true);
-    }
+    if (isComplete && !loop) return;
 
     const currentWord = words[currentWordIndex];
-
-    const typeNextChar = () => {
+    
+    const timeout = setTimeout(() => {
       if (isDeleting) {
-        // Deleting
-        console.log(
-          `Deleting character from "${currentWord}", charIndex: ${currentCharIndex}`
-        );
-        if (currentCharIndex > 0) {
-          setCurrentCharIndex((prev) => prev - 1);
-          setDisplayText(currentWord.substring(0, currentCharIndex - 1));
-        } else {
-          // Finished deleting, move to next word
-          console.log(`Finished deleting word at index: ${currentWordIndex}`);
+        // Delete characters
+        setDisplayText(currentWord.substring(0, displayText.length - 1));
+        
+        if (displayText.length === 1) {
           setIsDeleting(false);
-          setCurrentWordIndex((prev) => {
-            const nextIndex = prev + 1;
-            if (nextIndex >= words.length) {
-              // Completed one full cycle
-              console.log(`Completed cycle ${cycleCount + 1} of ${cycles}`);
-              setCycleCount((prevCycle) => prevCycle + 1);
-              return 0;
+          // Move to next word, or complete if we're at the last word and not looping
+          const nextIndex = currentWordIndex + 1;
+          if (nextIndex >= words.length) {
+            if (loop) {
+              setCurrentWordIndex(0);
+            } else {
+              setIsComplete(true);
+              return;
             }
-            console.log(`Moving to next word at index: ${nextIndex}`);
-            return nextIndex;
-          });
-          setCurrentCharIndex(0);
+          } else {
+            setCurrentWordIndex(nextIndex);
+          }
         }
       } else {
-        // Typing
-        if (currentCharIndex < currentWord.length) {
-          setCurrentCharIndex((prev) => prev + 1);
-          setDisplayText(currentWord.substring(0, currentCharIndex + 1));
-        } else {
-          // Finished typing current word
-          console.log(
-            `Finished typing word: "${currentWord}" (index: ${currentWordIndex})`
-          );
-
-          // Check if this is the final word in the array
-          const isLastWordInArray = currentWordIndex === words.length - 1;
-
-          console.log(
-            `isLastWordInArray: ${isLastWordInArray}, currentWordIndex: ${currentWordIndex}, totalWords: ${words.length}`
-          );
-
-          // Only complete when we reach the very last word ("Search any medication...")
-          if (isLastWordInArray) {
-            // We've reached the final word, don't delete it
-            console.log("Completing typewriter animation - reached final word");
+        // Type characters
+        setDisplayText(currentWord.substring(0, displayText.length + 1));
+        
+        if (displayText.length === currentWord.length - 1) {
+          // Word is complete, wait then start deleting (unless it's the last word and not looping)
+          const isLastWord = currentWordIndex === words.length - 1;
+          if (isLastWord && !loop) {
             setIsComplete(true);
             return;
           }
-
-          // For all other words, start deleting after pause
-          // Don't set deletion timer if already deleting
-          if (isDeleting) {
-            console.log(`Already deleting, skipping deletion timer`);
-            return;
-          }
           
-          // Clear any existing deletion timer first
-          if (deletionTimerRef.current) {
-            console.log(`Clearing existing deletion timer: ${deletionTimerRef.current}`);
-            clearTimeout(deletionTimerRef.current);
-            deletionTimerRef.current = null;
-          }
-          
-          console.log(
-            `Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`
-          );
-          const deletionTimerId = setTimeout(() => {
-            console.log(
-              `Deletion timer fired! Setting isDeleting=true for "${currentWord}"`
-            );
-            setIsDeleting(true);
-            deletionTimerRef.current = null;
-          }, pauseDuration);
-          deletionTimerRef.current = deletionTimerId;
-          console.log(`Deletion timer set with ID: ${deletionTimerId}`);
+          setTimeout(() => setIsDeleting(true), delayBetweenWords);
           return;
         }
       }
+    }, isDeleting ? deleteSpeed : typeSpeed);
 
-      // Continue the animation
-      const speed = isDeleting ? deletingSpeed : typingSpeed;
-      timeoutRef.current = setTimeout(typeNextChar, speed);
-    };
+    return () => clearTimeout(timeout);
+  }, [displayText, currentWordIndex, isDeleting, words, loop, typeSpeed, deleteSpeed, delayBetweenWords, isComplete]);
 
-    // Start the animation
-    if (!isComplete && cycleCount < cycles) {
-      const speed = isDeleting ? deletingSpeed : typingSpeed;
-      console.log(
-        `Setting timeout for next char: speed=${speed}ms, isDeleting=${isDeleting}, currentChar=${currentCharIndex}`
-      );
-      timeoutRef.current = setTimeout(typeNextChar, speed);
-    } else {
-      console.log(
-        `Animation stopped: isComplete=${isComplete}, cycleCount=${cycleCount}, cycles=${cycles}`
-      );
-    }
-
-    return () => {
-      // Only clear the animation timer, not the deletion timer
-      if (timeoutRef.current) {
-        console.log(`Clearing animation timeout ID: ${timeoutRef.current}`);
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = null;
-      }
-      // Note: deletionTimerRef is intentionally NOT cleared here
-      // because we don't want useEffect re-runs to cancel deletion timers
-    };
-  }, [
-    currentWordIndex,
-    currentCharIndex,
-    isDeleting,
-    cycleCount,
-    isComplete,
-    words,
-    defaultText,
-    typingSpeed,
-    deletingSpeed,
-    pauseDuration,
-    cycles,
-    hasStarted,
-  ]);
-
-  // Separate cleanup for deletion timer on unmount only
-  useEffect(() => {
-    return () => {
-      if (deletionTimerRef.current) {
-        console.log(
-          `Clearing deletion timer on unmount: ${deletionTimerRef.current}`
-        );
-        clearTimeout(deletionTimerRef.current);
-        deletionTimerRef.current = null;
-      }
-    };
-  }, []);
-
-  return {
-    displayText,
-    isComplete: isComplete && hasStarted,
-  };
+  return { text: displayText, isComplete };
 };

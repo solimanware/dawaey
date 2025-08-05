@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
 import { Animated, TextInput, TouchableOpacity, View } from "react-native";
-import { useTypewriter } from "../hooks";
+import { useTypewriter } from "../hooks/useTypewriter";
 
 interface SearchBarProps {
   searchQuery: string;
@@ -10,37 +9,20 @@ interface SearchBarProps {
   glowAnim: Animated.Value;
 }
 
-// Global flag to track if typewriter has completed in this app session
-let hasTypewriterCompleted = false;
-
 export const SearchBar = ({
   searchQuery,
   onChangeText,
   onReset,
   glowAnim,
 }: SearchBarProps) => {
-  const [shouldRunTypewriter, setShouldRunTypewriter] = useState(
-    !hasTypewriterCompleted
-  );
-
-  const typewriterResult = useTypewriter({
-    words: shouldRunTypewriter
-      ? ["Panadol", "Confestal", "A*G*M*N", "Search any medication..."]
-      : [],
-    defaultText: "Search any medication...",
-    typingSpeed: 120,
-    deletingSpeed: 60,
-    pauseDuration: 2000,
-    cycles: 1,
+  const typewriterWords = ["Panadol", "Confestal", "A*G*M*N", "Search any medication..."];
+  const { text: typewriterText, isComplete } = useTypewriter({
+    words: typewriterWords,
+    loop: false,
+    typeSpeed: 120,
+    deleteSpeed: 80,
+    delayBetweenWords: 1500,
   });
-
-  // Mark typewriter as completed when it finishes
-  useEffect(() => {
-    if (typewriterResult.isComplete && shouldRunTypewriter) {
-      hasTypewriterCompleted = true;
-      setShouldRunTypewriter(false);
-    }
-  }, [typewriterResult.isComplete, shouldRunTypewriter]);
 
   return (
     <View className="relative">
@@ -97,7 +79,7 @@ export const SearchBar = ({
       >
         <Ionicons name="search" size={20} color="#663399" />
         <TextInput
-          placeholder={typewriterResult.displayText}
+          placeholder={isComplete ? "Search any medication..." : typewriterText}
           className="flex-1 ml-3 text-gray-900"
           placeholderTextColor="#9ca3af"
           value={searchQuery}
