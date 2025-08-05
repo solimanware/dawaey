@@ -1,5 +1,5 @@
-import { Header, OptimizedSearchResults, SearchBar } from "@/components";
-import { useDrugsData, useGlowAnimation, useOptimizedSearch } from "@/hooks";
+import { Header, EnhancedSearchResults, SearchBar } from "@/components";
+import { useDrugsData, useGlowAnimation, useEnhancedSearch } from "@/hooks";
 import "@/theme/global.css";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -8,14 +8,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function MedicationsScreen() {
   // Input state for immediate UI updates
   const [inputValue, setInputValue] = useState("");
-  const [isFuzzySearch, setIsFuzzySearch] = useState(false);
 
   // Custom hooks
   const { drugs } = useDrugsData();
   const glowAnim = useGlowAnimation();
 
-  // Single optimized search hook
-  const { results, setSearchQuery, isLoading } = useOptimizedSearch(drugs);
+  // Enhanced search hook with wildcard support
+  const { results, setSearchQuery, isLoading, searchMode: currentSearchMode, isWildcardQuery } = useEnhancedSearch(drugs);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
@@ -43,24 +42,19 @@ export default function MedicationsScreen() {
           <Text className="text-center text-gray-400 text-xs mt-2">
             Start typing to find medications instantly
           </Text>
+          <Text className="text-center text-gray-400 text-xs mt-2">
+            💡 Use wildcards: A*G*M*N to find Augmentin
+          </Text>
         </View>
       ) : (
         <View className="flex-1 relative">
-          <OptimizedSearchResults
+          <EnhancedSearchResults
             results={results}
             searchQuery={inputValue}
             isLoading={isLoading}
-            onFuzzySearchDetected={setIsFuzzySearch}
+            searchMode={currentSearchMode}
+            isWildcardQuery={isWildcardQuery}
           />
-          
-          {/* Fuzzy Search Indicator */}
-          {isFuzzySearch && (
-            <View className="absolute top-4 right-4 bg-purple-100 px-3 py-1 rounded-full border border-purple-200 shadow-sm z-10">
-              <Text className="text-xs text-purple-700 font-medium">
-                🔮 Smart Search
-              </Text>
-            </View>
-          )}
         </View>
       )}
     </SafeAreaView>

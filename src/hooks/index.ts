@@ -9,3 +9,6 @@ export { usePerformanceMonitor } from "./usePerformanceMonitor";
 export { useSearch } from "./useSearch";
 export { useSearchCache } from "./useSearchCache";
 export { useTypewriter } from "./useTypewriter";
+export { useWildcardSearch, isWildcardQuery } from "./useWildcardSearch";
+export { useEnhancedSearch } from "./useEnhancedSearch";
+export type { EnhancedSearchResult, EnhancedSearchState } from "./useEnhancedSearch";
