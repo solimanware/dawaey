@@ -1,5 +1,6 @@
 import analytics from "@react-native-firebase/analytics";
 import { useCallback, useEffect, useRef } from "react";
+import { enableFirebaseDebugMode, logAnalyticsConfig } from "../utils/debugConfig";
 
 // Custom event names for the Dawaey app
 export const ANALYTICS_EVENTS = {
@@ -51,6 +52,10 @@ export const useAnalytics = () => {
 
   // Initialize analytics on app start
   useEffect(() => {
+    // Enable debug mode before any analytics calls
+    enableFirebaseDebugMode();
+    logAnalyticsConfig();
+    
     logEvent(ANALYTICS_EVENTS.APP_LAUNCH, {
       session_start: sessionStartRef.current,
       timestamp: Date.now(),

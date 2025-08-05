@@ -13,6 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: "app.dawaey",
     supportsTablet: true,
+    googleServicesFile: "./GoogleService-Info.plist", // <-- REQUIRED for analytics/app module
   },
   android: {
     package: "app.dawaey",
@@ -21,6 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     edgeToEdgeEnabled: true,
+    googleServicesFile: "./google-services.json", // <-- REQUIRED for analytics/app module
   },
   web: {
     bundler: "metro",
@@ -29,6 +31,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
+    "@react-native-firebase/app",
+    "@react-native-firebase/analytics",
     [
       "expo-splash-screen",
       {
@@ -36,6 +40,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         imageWidth: 200,
         resizeMode: "contain",
         backgroundColor: "#ffffff",
+      },
+    ],
+    // Add expo-build-properties to set frameworks for iOS (required for firebase-ios-sdk 9+)
+    [
+      "expo-build-properties",
+      {
+        ios: {
+          useFrameworks: "static",
+        },
       },
     ],
   ],

@@ -49,7 +49,10 @@ export default function MedicationsScreen() {
       analytics.logSearchAnalytics(debouncedSearchQuery);
 
       // Track wildcard patterns
-      if (debouncedSearchQuery.includes("*") && debouncedSearchQuery.replace(/\*/g, "").length >= 2) {
+      if (
+        debouncedSearchQuery.includes("*") &&
+        debouncedSearchQuery.replace(/\*/g, "").length >= 2
+      ) {
         analytics.logWildcardSearch(debouncedSearchQuery, results.length);
       }
     }
@@ -92,7 +95,13 @@ export default function MedicationsScreen() {
         has_fuzzy_match: isFuzzySearch,
       });
     }
-  }, [results.length, debouncedSearchQuery, searchType, isFuzzySearch, analytics]);
+  }, [
+    results.length,
+    debouncedSearchQuery,
+    searchType,
+    isFuzzySearch,
+    analytics,
+  ]);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">

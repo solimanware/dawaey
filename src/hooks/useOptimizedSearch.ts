@@ -19,8 +19,8 @@ interface SearchIndex {
 
 // Memoize DiffMatchPatch instance for fuzzy search performance
 const dmp = new DiffMatchPatch();
-dmp.Match_Threshold = 0.4;
-dmp.Match_Distance = 100;
+dmp.Match_Threshold = 0.3;
+dmp.Match_Distance = 14;
 
 // Helper function to get first two words from a string
 const getFirstTwoWords = (text: string): string => {
