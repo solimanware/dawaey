@@ -27,7 +27,7 @@ const loadDrugsJson = async (): Promise<Drug[]> => {
 
       // Copy from asset to documentDirectory for faster access
       console.log("🔍 Loading asset from bundle...");
-      
+
       // First try to get the asset using bundleDirectory
       let sourceUri: string;
       try {
@@ -41,7 +41,9 @@ const loadDrugsJson = async (): Promise<Drug[]> => {
         console.warn("⚠️ Bundle method failed, trying alternative...");
         // Fallback: try with module require
         try {
-          const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
+          const asset = Asset.fromModule(
+            require("../../assets/data/drugs.json")
+          );
           await asset.downloadAsync();
           if (!asset.localUri) {
             throw new Error("Asset localUri not available");
@@ -49,16 +51,40 @@ const loadDrugsJson = async (): Promise<Drug[]> => {
           sourceUri = asset.localUri;
           console.log("📁 Asset loaded via module:", sourceUri);
         } catch (moduleError) {
-          throw new Error(`Both asset loading methods failed: ${bundleError}, ${moduleError}`);
+          throw new Error(
+            `Both asset loading methods failed: ${bundleError}, ${moduleError}`
+          );
         }
       }
 
-      await FileSystem.copyAsync({
-        from: sourceUri,
-        to: LOCAL_JSON_PATH,
-      });
-
-      console.log("✅ Drugs data cached locally");
+      // Check if source file is actually readable before copying
+      try {
+        const sourceInfo = await FileSystem.getInfoAsync(sourceUri);
+        console.log("📋 Source file info:", sourceInfo);
+        
+        if (!sourceInfo.exists) {
+          throw new Error("Source file does not exist");
+        }
+        
+        // Try to copy the file
+        await FileSystem.copyAsync({
+          from: sourceUri,
+          to: LOCAL_JSON_PATH,
+        });
+        
+        console.log("✅ Drugs data cached locally via copy");
+      } catch (copyError) {
+        console.warn("⚠️ Copy failed, trying direct read/write...", copyError);
+        
+        // Fallback: read from asset and write to local file
+        try {
+          const jsonContent = await FileSystem.readAsStringAsync(sourceUri);
+          await FileSystem.writeAsStringAsync(LOCAL_JSON_PATH, jsonContent);
+          console.log("✅ Drugs data cached locally via read/write");
+        } catch (readWriteError) {
+          throw new Error(`Both copy and read/write failed: ${copyError}, ${readWriteError}`);
+        }
+      }
     } else {
       console.log("📂 Using cached drugs data");
     }
