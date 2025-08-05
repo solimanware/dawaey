@@ -1,4 +1,4 @@
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics, logEvent as firebaseLogEvent, setUserProperty as firebaseSetUserProperty, logSelectContent, logSearch as firebaseLogSearch, logViewItem } from "@react-native-firebase/analytics";
 import { useCallback, useEffect, useRef } from "react";
 
 // Custom event names for the Dawaey app
@@ -48,20 +48,13 @@ export const SCREEN_NAMES = {
 export const useAnalytics = () => {
   const lastScreenRef = useRef<string | null>(null);
   const sessionStartRef = useRef<number>(Date.now());
-
-  // Initialize analytics on app start
-  useEffect(() => {
-    logEvent(ANALYTICS_EVENTS.APP_LAUNCH, {
-      session_start: sessionStartRef.current,
-      timestamp: Date.now(),
-    });
-  }, [logEvent]);
+  const analytics = getAnalytics();
 
   // Log custom events
   const logEvent = useCallback(
     async (eventName: string, parameters?: Record<string, any>) => {
       try {
-        await analytics().logEvent(eventName, {
+        await firebaseLogEvent(analytics, eventName, {
           timestamp: Date.now(),
           session_duration: Date.now() - sessionStartRef.current,
           ...parameters,
@@ -70,8 +63,16 @@ export const useAnalytics = () => {
         console.warn("Analytics event failed:", eventName, error);
       }
     },
-    []
+    [analytics]
   );
+
+  // Initialize analytics on app start
+  useEffect(() => {
+    logEvent(ANALYTICS_EVENTS.APP_LAUNCH, {
+      session_start: sessionStartRef.current,
+      timestamp: Date.now(),
+    });
+  }, [logEvent]);
 
   // Log screen views
   const logScreenView = useCallback(
@@ -84,13 +85,14 @@ export const useAnalytics = () => {
           timestamp: Date.now(),
         };
 
-        await analytics().logEvent('screen_view', params);
+        // Use the custom logEvent function for screen tracking since modular API doesn't have a predefined screen_view
+        await logEvent("screen_view", params);
         lastScreenRef.current = screenName;
       } catch (error) {
         console.warn("Screen view tracking failed:", screenName, error);
       }
     },
-    []
+    [logEvent]
   );
 
   // Search-specific events
@@ -257,34 +259,34 @@ export const useAnalytics = () => {
   const setUserProperty = useCallback(
     async (property: string, value: string) => {
       try {
-        await analytics().setUserProperty(property, value);
+        await firebaseSetUserProperty(analytics, property, value);
       } catch (error) {
         console.warn("User property setting failed:", property, error);
       }
     },
-    []
+    [analytics]
   );
 
   // Predefined analytics events
-  const logSelectContent = useCallback(
+  const logSelectContentEvent = useCallback(
     async (contentType: string, itemId: string) => {
-      await analytics().logSelectContent({
+      await logSelectContent(analytics, {
         content_type: contentType,
         item_id: itemId,
       });
     },
-    []
+    [analytics]
   );
 
   const logSearchAnalytics = useCallback(async (searchTerm: string) => {
-    await analytics().logSearch({
+    await firebaseLogSearch(analytics, {
       search_term: searchTerm,
     });
-  }, []);
+  }, [analytics]);
 
-  const logViewItem = useCallback(
+  const logViewItemEvent = useCallback(
     async (itemId: string, itemName: string, category: string) => {
-      await analytics().logViewItem({
+      await logViewItem(analytics, {
         currency: "EGP", // Egyptian Pound for price context
         value: 0, // Could be medication price if available
         items: [
@@ -297,7 +299,7 @@ export const useAnalytics = () => {
         ],
       });
     },
-    []
+    [analytics]
   );
 
   return {
@@ -326,9 +328,9 @@ export const useAnalytics = () => {
     logError,
 
     // Predefined events
-    logSelectContent,
+    logSelectContent: logSelectContentEvent,
     logSearchAnalytics,
-    logViewItem,
+    logViewItem: logViewItemEvent,
 
     // Constants
     ANALYTICS_EVENTS,
