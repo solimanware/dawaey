@@ -85,6 +85,13 @@ export default function MedicationsScreen() {
     }
   };
 
+  const handleSearchReset = () => {
+    setInputValue("");
+    setSearchType(null);
+    setIsFuzzySearch(false);
+    setSearchQuery("");
+  };
+
   // Track search results display
   useEffect(() => {
     if (debouncedSearchQuery.length >= 2 && results.length > 0) {
@@ -111,6 +118,7 @@ export default function MedicationsScreen() {
         <SearchBar
           searchQuery={inputValue}
           onChangeText={handleInputChange}
+          onReset={handleSearchReset}
           glowAnim={glowAnim}
         />
       </View>

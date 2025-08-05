@@ -6,12 +6,14 @@ import { useTypewriter } from "../hooks";
 interface SearchBarProps {
   searchQuery: string;
   onChangeText: (text: string) => void;
+  onReset?: () => void;
   glowAnim: Animated.Value;
 }
 
 export const SearchBar = ({
   searchQuery,
   onChangeText,
+  onReset,
   glowAnim,
 }: SearchBarProps) => {
   const [shouldStartTypewriter, setShouldStartTypewriter] = useState(false);
@@ -105,7 +107,7 @@ export const SearchBar = ({
           autoComplete="off"
         />
         {searchQuery ? (
-          <TouchableOpacity onPress={() => onChangeText("")}>
+          <TouchableOpacity onPress={onReset || (() => onChangeText(""))}>
             <Ionicons name="close-circle" size={20} color="#663399" />
           </TouchableOpacity>
         ) : null}
