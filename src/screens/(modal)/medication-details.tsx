@@ -111,7 +111,7 @@ export default function MedicationDetailsModal() {
             <View className="flex-shrink-0 relative">
               {!imageError ? (
                 <View
-                  className="rounded-3xl p-1 shadow-lg"
+                  className="rounded-tl-3xl rounded-tr-3xl rounded-bl-lg rounded-br-2xl p-1 shadow-lg"
                   style={{
                     backgroundColor: "white",
                     shadowColor: primaryColor,
@@ -124,7 +124,7 @@ export default function MedicationDetailsModal() {
                   <Image
                     source={{ uri: drugImageUrl }}
                     style={{ width: 130, height: 130 }}
-                    className="rounded-3xl bg-gray-50"
+                    className="rounded-tl-3xl rounded-tr-3xl rounded-bl-lg rounded-br-2xl bg-gray-50"
                     contentFit="cover"
                     placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
                     transition={300}
@@ -133,7 +133,7 @@ export default function MedicationDetailsModal() {
                 </View>
               ) : (
                 <View
-                  className="w-32 h-32 rounded-3xl items-center justify-center shadow-lg"
+                  className="w-32 h-32 rounded-tl-3xl rounded-tr-3xl rounded-bl-lg rounded-br-2xl items-center justify-center shadow-lg"
                   style={{
                     backgroundColor: `${primaryColor}15`,
                     shadowColor: primaryColor,
@@ -331,7 +331,7 @@ export default function MedicationDetailsModal() {
               {drug.group && (
                 <TouchableOpacity
                   onPress={handleShowSimilars}
-                  className="bg-purple-500 rounded-xl p-4 flex-row items-center justify-between shadow-sm"
+                  className="bg-purple-500 rounded-xl p-4 flex-row items-center justify-between shadow-sm  mt-4"
                   style={{
                     shadowColor: "#8b5cf6",
                     shadowOffset: { width: 0, height: 2 },
