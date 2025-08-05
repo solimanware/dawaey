@@ -136,8 +136,6 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   // Create search index once - this is the key optimization
   const searchIndex = useMemo<SearchIndex[]>(() => {
     //console.log("🏗️ Building optimized search index...");
-    const startTime = performance.now();
-
     const index = drugs.map((drug) => ({
       id: drug.id,
       tradename: drug.tradename?.toLowerCase() ?? "",
@@ -149,10 +147,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       drug,
     }));
 
-    const endTime = performance.now();
-    //console.log(
-    //   `📊 Search index built in ${(endTime - startTime).toFixed(2)}ms for ${drugs.length} drugs`
-    // );
+    //console.log(`📊 Search index built for ${drugs.length} drugs`);
     return index;
   }, [drugs]);
 
@@ -184,13 +179,30 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         const fuzzyMatches: SearchResult[] = [];
 
         // Phase 1: Progressive exact matching with smart sampling
-        const progressiveResults: SearchResult[] = [];
         const totalItems = searchIndex.length;
-        const sampleSize = Math.min(5000, totalItems); // Process max 5k items first
-        
+        const sampleSize = Math.min(10000, totalItems); // Process max 10k items first for better coverage
+
+        // Debug logging for specific problematic searches
+        const isDebugSearch = searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
+        if (isDebugSearch) {
+          console.log("🔍 Debug: Searching for:", searchTerm);
+          console.log("🔍 Debug: Search index length:", searchIndex.length);
+        }
+
         // First pass: Quick scan of a subset for immediate results
         for (let i = 0; i < sampleSize && !cancelRef.current; i++) {
           const item = searchIndex[i];
+
+          // Debug logging for specific searches
+          if (isDebugSearch && (item.activeingredient.includes(searchTerm) || item.tradename.includes(searchTerm))) {
+            console.log("🔍 Debug: Found potential match:", {
+              tradename: item.drug.tradename,
+              activeingredient: item.drug.activeingredient,
+              searchTerm,
+              tradenameMatch: item.tradename.includes(searchTerm),
+              ingredientMatch: item.activeingredient.includes(searchTerm)
+            });
+          }
 
           // Exact tradename match (highest priority)
           if (item.tradename.includes(searchTerm)) {
@@ -202,35 +214,54 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
               matchedField: "tradename",
             });
           }
-          // Exact ingredient match
-          else if (item.activeingredient.includes(searchTerm)) {
+          // Exact ingredient match - removed else if to allow both matches
+          if (item.activeingredient.includes(searchTerm)) {
             exactMatches.push({
               drug: item.drug,
-              score: 0.6,
+              score: 0.9, // Increased score for active ingredient matches
               matchType: "exact",
               matchedField: "activeingredient",
             });
           }
           // Exact group match
-          else if (item.group.includes(searchTerm)) {
+          if (item.group.includes(searchTerm)) {
             exactMatches.push({
               drug: item.drug,
-              score: 0.5,
+              score: 0.7, // Increased score for group matches
               matchType: "exact",
               matchedField: "group",
             });
           }
 
           // Early termination if we have enough exact matches
-          if (exactMatches.length >= 8) {
+          if (exactMatches.length >= 15) {
             break;
           }
         }
 
         // If we didn't get enough results from sample, continue with remaining items
-        if (exactMatches.length < 5 && sampleSize < totalItems && !cancelRef.current) {
+        if (
+          exactMatches.length < 8 &&
+          sampleSize < totalItems &&
+          !cancelRef.current
+        ) {
+          if (isDebugSearch) {
+            console.log("🔍 Debug: Continuing search in remaining items, current matches:", exactMatches.length);
+          }
+          
           for (let i = sampleSize; i < totalItems && !cancelRef.current; i++) {
             const item = searchIndex[i];
+
+            // Debug logging for specific searches
+            if (isDebugSearch && (item.activeingredient.includes(searchTerm) || item.tradename.includes(searchTerm))) {
+              console.log("🔍 Debug: Found potential match in remaining items:", {
+                tradename: item.drug.tradename,
+                activeingredient: item.drug.activeingredient,
+                searchTerm,
+                tradenameMatch: item.tradename.includes(searchTerm),
+                ingredientMatch: item.activeingredient.includes(searchTerm)
+              });
+            }
 
             if (item.tradename.includes(searchTerm)) {
               const score = item.tradename.startsWith(searchTerm) ? 1.0 : 0.8;
@@ -240,23 +271,25 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
                 matchType: "exact",
                 matchedField: "tradename",
               });
-            } else if (item.activeingredient.includes(searchTerm)) {
+            }
+            if (item.activeingredient.includes(searchTerm)) {
               exactMatches.push({
                 drug: item.drug,
-                score: 0.6,
+                score: 0.9,
                 matchType: "exact",
                 matchedField: "activeingredient",
               });
-            } else if (item.group.includes(searchTerm)) {
+            }
+            if (item.group.includes(searchTerm)) {
               exactMatches.push({
                 drug: item.drug,
-                score: 0.5,
+                score: 0.7,
                 matchType: "exact",
                 matchedField: "group",
               });
             }
 
-            if (exactMatches.length >= 10) {
+            if (exactMatches.length >= 15) {
               break;
             }
           }
@@ -266,7 +299,6 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         const wildcardMatches: SearchResult[] = [];
         if (isWildcardPattern(searchTerm)) {
           //console.log(`🔥 Detected wildcard pattern: ${searchTerm}`);
-          const wildcardStartTime = performance.now();
           const wildcardRegex = convertWildcardToRegex(searchTerm);
 
           for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
@@ -328,18 +360,31 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
             }
           }
 
-          const wildcardEndTime = performance.now();
-          //console.log(
-          //   `🔥 Wildcard search completed in ${(wildcardEndTime - wildcardStartTime).toFixed(2)}ms with ${wildcardMatches.length} matches`
-          // );
+          //console.log(`🔥 Wildcard search completed with ${wildcardMatches.length} matches`);
         }
 
         // If we have good exact matches or wildcard matches, return them
         const primaryMatches = [...exactMatches, ...wildcardMatches];
-        if (primaryMatches.length >= 3) {
+        
+        // Debug logging for specific problematic searches
+        if (isDebugSearch) {
+          console.log("🔍 Debug: Primary matches found:", primaryMatches.length);
+          console.log("🔍 Debug: Exact matches:", exactMatches.length);
+          console.log("🔍 Debug: Wildcard matches:", wildcardMatches.length);
+          if (primaryMatches.length > 0) {
+            console.log("🔍 Debug: First few matches:", primaryMatches.slice(0, 3).map(m => ({ 
+              tradename: m.drug.tradename, 
+              activeingredient: m.drug.activeingredient,
+              matchedField: m.matchedField,
+              score: m.score 
+            })));
+          }
+        }
+        
+        if (primaryMatches.length >= 1) { // Lowered threshold to catch more results
           const sortedResults = primaryMatches
             .sort((a, b) => b.score - a.score)
-            .slice(0, 15);
+            .slice(0, 20); // Increased result limit
 
           setResults(sortedResults);
           setCachedResults(searchTerm, sortedResults);
@@ -348,20 +393,19 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           const searchEndTime = performance.now();
           const searchTime = searchEndTime - searchStartTime;
           recordSearchTime(searchTime);
-          const searchType =
-            wildcardMatches.length > 0 ? "wildcard + exact" : "exact";
-          //console.log(
-          //   `🔍 ${searchType} search completed in ${searchTime.toFixed(2)}ms with ${sortedResults.length} results`
-          // );
+          
+          if (isDebugSearch) {
+            console.log("🔍 Debug: Returning results:", sortedResults.length);
+          }
+          
           return;
         }
 
         // Phase 2: Sophisticated DiffMatchPatch fuzzy search as fallback
         if (primaryMatches.length < 3 && !cancelRef.current) {
           //console.log("🔮 Performing sophisticated fuzzy search as fallback...");
-          const fuzzyStartTime = performance.now();
           const resultMap = new Map<string, SearchResult>();
-          
+
           // Limit fuzzy search to a reasonable subset for performance
           const fuzzySearchLimit = Math.min(10000, searchIndex.length);
 
@@ -473,9 +517,8 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
           fuzzyMatches.push(...fuzzyResults);
 
-          const fuzzyEndTime = performance.now();
           //console.log(
-          //   `🔮 Sophisticated fuzzy search completed in ${(fuzzyEndTime - fuzzyStartTime).toFixed(2)}ms with ${fuzzyResults.length} matches`
+          //   `🔮 Sophisticated fuzzy search completed with ${fuzzyResults.length} matches`
           // );
         }
 
@@ -530,7 +573,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     return (query: string) => {
       cancelRef.current = true; // Cancel previous search
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => performOptimizedSearch(query), 100);
+      timeoutId = setTimeout(() => performOptimizedSearch(query), 0);
     };
   }, [performOptimizedSearch]);
 
