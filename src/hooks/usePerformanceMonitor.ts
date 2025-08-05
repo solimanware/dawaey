@@ -72,7 +72,7 @@ export const usePerformanceMonitor = () => {
         });
       }
 
-      // Log performance warnings and send analytics for issues  
+      // Log performance warnings and send analytics for issues
       if (searchTime > 500) {
         console.warn(`🐌 Slow search detected: ${searchTime.toFixed(2)}ms`);
         analytics.logEvent("performance_issue_detected", {

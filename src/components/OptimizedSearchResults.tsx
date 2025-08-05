@@ -41,7 +41,7 @@ export const OptimizedSearchResults = ({
     );
   }
 
-  if (results.length === 0) {
+  if (results.length === 0 && !isLoading) {
     return (
       <View className="flex-1 items-center justify-center py-8">
         <Text className="text-gray-500 text-center">

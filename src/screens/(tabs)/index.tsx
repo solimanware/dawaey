@@ -97,11 +97,11 @@ export default function MedicationsScreen() {
   // Track results changes and analytics (separate effect to avoid infinite loops)
   useEffect(() => {
     const currentResultsCount = results.length;
-    
+
     // Only process if results actually changed
     if (currentResultsCount !== previousResultsRef.current) {
       previousResultsRef.current = currentResultsCount;
-      
+
       // Track search results display
       if (debouncedSearchQuery.length >= 2 && currentResultsCount > 0) {
         analytics.logEvent(analytics.ANALYTICS_EVENTS.SEARCH_RESULTS_VIEWED, {
@@ -178,19 +178,23 @@ export default function MedicationsScreen() {
               <View className="flex-row items-center">
                 <View className="w-6 h-6 rounded-full bg-blue-500 items-center justify-center mr-3">
                   <Text className="text-white text-xs font-bold">
-                    {searchType === "alternatives" ? "🧪" : "📚"}
+                    {searchType === "alternatives" ? "🧪" : searchType === "similar" ? "📚" : "🔍"}
                   </Text>
                 </View>
                 <View className="flex-1">
                   <Text className="text-sm font-semibold text-blue-800 mb-0.5">
                     {searchType === "alternatives"
                       ? "Alternative Medications"
-                      : "Similar Medications"}
+                      : searchType === "similar"
+                      ? "Similar Medications"
+                      : "Related Medications"}
                   </Text>
                   <Text className="text-xs text-blue-600">
                     {searchType === "alternatives"
                       ? "Medications with the same active ingredient"
-                      : "Medications in the same drug group"}
+                      : searchType === "similar"
+                      ? "Medications in the same drug group"
+                      : "Related medications"}
                   </Text>
                 </View>
               </View>
