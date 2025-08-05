@@ -77,7 +77,7 @@ export default function MedicationDetailsModal() {
 
       router.dismiss();
       // Navigate to main screen with activeingredient search
-      router.push({
+      router.replace({
         pathname: "/(tabs)" as any,
         params: {
           searchQuery: drug.activeingredient,
@@ -102,7 +102,7 @@ export default function MedicationDetailsModal() {
 
       router.dismiss();
       // Navigate to main screen with group search
-      router.push({
+      router.replace({
         pathname: "/(tabs)" as any,
         params: {
           searchQuery: drug.group,
@@ -115,6 +115,14 @@ export default function MedicationDetailsModal() {
   const handleClose = () => {
     analytics.logModalEvent("medication_details", "closed", "user_action");
     router.dismiss();
+    // Reset search state by navigating to main screen with empty params
+    router.replace({
+      pathname: "/(tabs)" as any,
+      params: {
+        searchQuery: "",
+        searchType: "",
+      },
+    });
   };
 
   return (
