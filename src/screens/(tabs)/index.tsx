@@ -9,7 +9,7 @@ import {
 import "@/theme/global.css";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Text, View, TouchableOpacity } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MedicationsScreen() {
@@ -22,12 +22,7 @@ export default function MedicationsScreen() {
   const [searchType, setSearchType] = useState<string | null>(null);
 
   // Custom hooks
-  const {
-    drugs,
-    isLoading: isDrugsLoading,
-    error: drugsError,
-    retryLoad,
-  } = useDrugsData();
+  const { drugs, isLoading: isDrugsLoading, error: drugsError } = useDrugsData();
   const glowAnim = useGlowAnimation();
   const analytics = useAnalytics();
 
@@ -118,71 +113,6 @@ export default function MedicationsScreen() {
     analytics,
   ]);
 
-  // Show loading state while drugs data is loading
-  if (isDrugsLoading) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-50">
-        <View className="px-6 pt-4 pb-6 backdrop-blur-lg">
-          <Header />
-          <SearchBar
-            searchQuery={inputValue}
-            onChangeText={handleInputChange}
-            onReset={handleSearchReset}
-            glowAnim={glowAnim}
-          />
-        </View>
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#8B5CF6" />
-          <Text className="text-center text-gray-500 text-sm mt-4">
-            Loading medications database...
-          </Text>
-          <Text className="text-center text-gray-400 text-xs mt-2">
-            This may take a moment on first launch
-          </Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  // Show error state if data loading failed
-  if (drugsError) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-50">
-        <View className="px-6 pt-4 pb-6 backdrop-blur-lg">
-          <Header />
-          <SearchBar
-            searchQuery={inputValue}
-            onChangeText={handleInputChange}
-            onReset={handleSearchReset}
-            glowAnim={glowAnim}
-          />
-        </View>
-        <View className="flex-1 items-center justify-center px-6">
-          <View className="bg-red-50 rounded-xl p-6 border border-red-200 w-full max-w-sm">
-            <Text className="text-center text-red-600 text-lg font-semibold mb-3">
-              ⚠️ Unable to Load Database
-            </Text>
-            <Text className="text-center text-gray-600 text-sm mb-4 leading-5">
-              {drugsError}
-            </Text>
-            <TouchableOpacity
-              onPress={retryLoad}
-              className="bg-purple-600 py-3 px-6 rounded-lg mt-2"
-              activeOpacity={0.8}
-            >
-              <Text className="text-white text-center font-semibold">
-                Try Again
-              </Text>
-            </TouchableOpacity>
-            <Text className="text-center text-gray-400 text-xs mt-3">
-              Make sure you have a stable internet connection
-            </Text>
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* Header Section */}
@@ -196,8 +126,32 @@ export default function MedicationsScreen() {
         />
       </View>
 
-      {/* Search Results */}
-      {inputValue.length === 0 ? (
+      {/* Loading State */}
+      {isDrugsLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <View className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-4" />
+          <Text className="text-center text-gray-500 text-sm">
+            Loading medications database...
+          </Text>
+          <Text className="text-center text-gray-400 text-xs mt-2">
+            This may take a moment for the first time
+          </Text>
+        </View>
+      ) : drugsError ? (
+        /* Error State */
+        <View className="flex-1 items-center justify-center px-6">
+          <Text className="text-center text-red-500 text-lg font-semibold mb-2">
+            ⚠️ Unable to Load Data
+          </Text>
+          <Text className="text-center text-gray-500 text-sm mb-4">
+            {drugsError}
+          </Text>
+          <Text className="text-center text-gray-400 text-xs">
+            Please check your internet connection and restart the app
+          </Text>
+        </View>
+      ) : inputValue.length === 0 ? (
+        /* Default Empty State */
         <View className="flex-1 items-center justify-center">
           <Text className="text-center text-gray-500 text-sm">
             You can Search now...
