@@ -24,8 +24,11 @@ export const useSearch = (drugs: Drug[]) => {
 
   // Use useMemo for pure filtering - avoids unnecessary recomputation
   const filteredDrugs = useMemo(() => {
-    if (!debouncedSearchQuery.trim() || debouncedSearchQuery.trim().length < 3) {
-      return preprocessedDrugs;
+    if (
+      !debouncedSearchQuery.trim() ||
+      debouncedSearchQuery.trim().length < 3
+    ) {
+      return [];
     }
 
     const query = debouncedSearchQuery.toLowerCase();
