@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function MedicationsScreen() {
   // Input state for immediate UI updates
   const [inputValue, setInputValue] = useState("");
+  const [isFuzzySearch, setIsFuzzySearch] = useState(false);
 
   // Custom hooks
   const { drugs } = useDrugsData();
@@ -44,11 +45,23 @@ export default function MedicationsScreen() {
           </Text>
         </View>
       ) : (
-        <OptimizedSearchResults
-          results={results}
-          searchQuery={inputValue}
-          isLoading={isLoading}
-        />
+        <View className="flex-1 relative">
+          <OptimizedSearchResults
+            results={results}
+            searchQuery={inputValue}
+            isLoading={isLoading}
+            onFuzzySearchDetected={setIsFuzzySearch}
+          />
+          
+          {/* Fuzzy Search Indicator */}
+          {isFuzzySearch && (
+            <View className="absolute top-4 right-4 bg-purple-100 px-3 py-1 rounded-full border border-purple-200 shadow-sm z-10">
+              <Text className="text-xs text-purple-700 font-medium">
+                🔮 Smart Search
+              </Text>
+            </View>
+          )}
+        </View>
       )}
     </SafeAreaView>
   );

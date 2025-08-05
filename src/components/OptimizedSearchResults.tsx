@@ -1,5 +1,5 @@
 import { LegendList, LegendListRenderItemProps } from "@legendapp/list";
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "react-native";
 import { Drug } from "../hooks/useDrugsData";
 import { MedicationCard } from "./MedicationCard";
@@ -16,31 +16,28 @@ interface OptimizedSearchResultsProps {
   results: SearchResult[];
   searchQuery: string;
   isLoading?: boolean;
+  onFuzzySearchDetected?: (isFuzzySearch: boolean) => void;
 }
 
 export const OptimizedSearchResults = ({
   results,
   searchQuery,
   isLoading = false,
+  onFuzzySearchDetected,
 }: OptimizedSearchResultsProps) => {
+  const fuzzyMatches = results.filter((r) => r.matchType === "fuzzy");
+  const isFuzzySearch = fuzzyMatches.length > 0;
+
+  // Emit fuzzy search detection to parent - must be called at component level
+  useEffect(() => {
+    onFuzzySearchDetected?.(isFuzzySearch);
+  }, [isFuzzySearch, onFuzzySearchDetected]);
+
   const renderSearchResult = ({
     item,
   }: LegendListRenderItemProps<SearchResult>) => (
     <View>
-      {/* Show match details for fuzzy search in dev mode */}
-      {__DEV__ && item.matchType === "fuzzy" && (
-        <View className="px-4 py-1 bg-purple-50">
-          <Text className="text-xs text-purple-600">
-            🔮 Fuzzy match in {item.matchedField} (score: {item.score.toFixed(3)})
-            {item.matchedValue && ` - "${item.matchedValue}"`}
-          </Text>
-        </View>
-      )}
-      <MedicationCard
-        item={item.drug}
-        searchQuery={searchQuery}
-        isHighlighted={item.matchType === "exact"}
-      />
+      <MedicationCard item={item.drug} />
     </View>
   );
 
@@ -56,7 +53,7 @@ export const OptimizedSearchResults = ({
     return (
       <View className="flex-1 items-center justify-center py-8">
         <Text className="text-gray-500 text-center">
-          No medications found for "{searchQuery}"
+          No medications found for &quot;{searchQuery}&quot;
         </Text>
         <Text className="text-gray-400 text-sm text-center mt-2">
           Try a different search term or check spelling
@@ -64,9 +61,6 @@ export const OptimizedSearchResults = ({
       </View>
     );
   }
-
-  const exactMatches = results.filter((r) => r.matchType === "exact");
-  const fuzzyMatches = results.filter((r) => r.matchType === "fuzzy");
 
   return (
     <View className="flex-1">
@@ -81,13 +75,6 @@ export const OptimizedSearchResults = ({
         }
         recycleItems={true}
         maintainVisibleContentPosition
-        removeClippedSubviews={true}
-        maxToRenderPerBatch={8}
-        windowSize={4}
-        initialNumToRender={6}
-        // Performance optimizations
-        getItemType={(item) => item.matchType} // Help with recycling
-        drawDistance={300} // Render items 300px before they come into view
       />
     </View>
   );
