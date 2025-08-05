@@ -79,16 +79,20 @@ export const useTypewriter = ({
             `Finished typing word: "${currentWord}" (index: ${currentWordIndex})`
           );
 
-          // Check if this is the very last word of the very last cycle
-          const isLastWord = currentWordIndex === words.length - 1;
-          const isLastCycle = cycleCount >= cycles - 1;
+                    // Check if this is the final word in the array
+          const isLastWordInArray = currentWordIndex === words.length - 1;
           
           console.log(
-            `isLastWord: ${isLastWord}, isLastCycle: ${isLastCycle}, cycleCount: ${cycleCount}, cycles: ${cycles}`
+            `isLastWordInArray: ${isLastWordInArray}, currentWordIndex: ${currentWordIndex}, totalWords: ${words.length}`
           );
 
-          // Only complete when we're truly at the last word of the last cycle
-          if (isLastWord && isLastCycle) {
+          // For cycles = 1, complete when we reach the last word
+          // For cycles > 1, only complete on the last word of the final cycle
+          const shouldComplete = cycles === 1 
+            ? isLastWordInArray 
+            : isLastWordInArray && cycleCount >= cycles - 1;
+
+          if (shouldComplete) {
             // We've reached the final word, don't delete it
             console.log("Completing typewriter animation - reached final word");
             setIsComplete(true);
