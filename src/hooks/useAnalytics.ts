@@ -56,15 +56,52 @@ export const useAnalytics = () => {
   const sessionStartRef = useRef<number>(Date.now());
   const analytics = getAnalytics();
 
+  // Helper function to sanitize parameters - Firebase Analytics only accepts string, number, boolean, or arrays
+  const sanitizeParameters = (params?: Record<string, any>): Record<string, any> => {
+    if (!params) return {};
+    
+    const sanitized: Record<string, any> = {};
+    
+    Object.entries(params).forEach(([key, value]) => {
+      // Only include valid types and non-null/undefined values
+      if (value !== null && value !== undefined) {
+        const valueType = typeof value;
+        if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
+          sanitized[key] = value;
+        } else if (Array.isArray(value)) {
+          // Filter arrays to only include valid primitive types
+          const validArray = value.filter(item => 
+            item !== null && item !== undefined && 
+            (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean')
+          );
+          if (validArray.length > 0) {
+            sanitized[key] = validArray;
+          }
+        } else if (valueType === 'object') {
+          // Convert objects to strings (for complex data)
+          try {
+            sanitized[key] = JSON.stringify(value);
+          } catch (e) {
+            console.warn(`Failed to stringify parameter ${key}:`, e);
+          }
+        }
+      }
+    });
+    
+    return sanitized;
+  };
+
   // Log custom events
   const logEvent = useCallback(
     async (eventName: string, parameters?: Record<string, any>) => {
       try {
-        await firebaseLogEvent(analytics, eventName, {
+        const sanitizedParams = sanitizeParameters({
           timestamp: Date.now(),
           session_duration: Date.now() - sessionStartRef.current,
           ...parameters,
         });
+        
+        await firebaseLogEvent(analytics, eventName, sanitizedParams);
       } catch (error) {
         console.warn("Analytics event failed:", eventName, error);
       }
@@ -84,12 +121,15 @@ export const useAnalytics = () => {
   const logScreenView = useCallback(
     async (screenName: string, screenClass?: string) => {
       try {
-        const params = {
+        const params: Record<string, any> = {
           screen_name: screenName,
-          screen_class: screenClass || screenName,
-          previous_screen: lastScreenRef.current,
+          screen_class: screenClass ?? screenName,
           timestamp: Date.now(),
         };
+
+        if (lastScreenRef.current) {
+          params.previous_screen = lastScreenRef.current;
+        }
 
         // Use the custom logEvent function for screen tracking since modular API doesn't have a predefined screen_view
         await logEvent("screen_view", params);
@@ -106,8 +146,8 @@ export const useAnalytics = () => {
     async (searchQuery: string, searchType?: string, resultsCount?: number) => {
       await logEvent(ANALYTICS_EVENTS.SEARCH_PERFORMED, {
         search_term: searchQuery,
-        search_type: searchType || "general",
-        results_count: resultsCount || 0,
+        search_type: searchType ?? "general",
+        results_count: resultsCount ?? 0,
         query_length: searchQuery.length,
         has_special_chars: /[*+\-\(\)]/.test(searchQuery),
       });
@@ -160,7 +200,7 @@ export const useAnalytics = () => {
         company: medication.company,
         form: medication.form,
         has_price: !!medication.price,
-        context: context || "search_results",
+        context: context ?? "search_results",
       });
     },
     [logEvent]
@@ -180,15 +220,20 @@ export const useAnalytics = () => {
 
   const logMedicationImageEvent = useCallback(
     async (medicationId: number, success: boolean, loadTime?: number) => {
+      const params: Record<string, any> = {
+        medication_id: medicationId,
+        image_url: `https://soliman.ai/dawaey-app-pics/${medicationId}.jpg`,
+      };
+      
+      if (loadTime !== undefined) {
+        params.load_time = loadTime;
+      }
+      
       await logEvent(
         success
           ? ANALYTICS_EVENTS.MEDICATION_IMAGE_LOADED
           : ANALYTICS_EVENTS.MEDICATION_IMAGE_FAILED,
-        {
-          medication_id: medicationId,
-          load_time: loadTime,
-          image_url: `https://soliman.ai/dawaey-app-pics/${medicationId}.jpg`,
-        }
+        params
       );
     },
     [logEvent]
@@ -197,10 +242,15 @@ export const useAnalytics = () => {
   // Navigation events
   const logTabSwitch = useCallback(
     async (tabName: string, previousTab?: string) => {
-      await logEvent(ANALYTICS_EVENTS.TAB_SWITCHED, {
+      const params: Record<string, any> = {
         tab_name: tabName,
-        previous_tab: previousTab,
-      });
+      };
+      
+      if (previousTab) {
+        params.previous_tab = previousTab;
+      }
+      
+      await logEvent(ANALYTICS_EVENTS.TAB_SWITCHED, params);
     },
     [logEvent]
   );
@@ -211,14 +261,19 @@ export const useAnalytics = () => {
       action: "opened" | "closed",
       context?: string
     ) => {
+      const params: Record<string, any> = {
+        modal_name: modalName,
+      };
+      
+      if (context) {
+        params.context = context;
+      }
+      
       await logEvent(
         action === "opened"
           ? ANALYTICS_EVENTS.MODAL_OPENED
           : ANALYTICS_EVENTS.MODAL_CLOSED,
-        {
-          modal_name: modalName,
-          context: context,
-        }
+        params
       );
     },
     [logEvent]
@@ -237,8 +292,8 @@ export const useAnalytics = () => {
         search_term: metrics.query,
         search_time_ms: metrics.searchTime,
         results_count: metrics.resultsCount,
-        cache_hit: metrics.cacheHit || false,
-        search_type: metrics.searchType || "general",
+        cache_hit: metrics.cacheHit ?? false,
+        search_type: metrics.searchType ?? "general",
         performance_tier: getPerformanceTier(metrics.searchTime),
       });
     },
@@ -251,12 +306,20 @@ export const useAnalytics = () => {
       context: string,
       additionalData?: Record<string, any>
     ) => {
-      await logEvent(ANALYTICS_EVENTS.ERROR_OCCURRED, {
+      const params: Record<string, any> = {
         error_message: error.message,
-        error_stack: error.stack?.substring(0, 500), // Limit stack trace length
         context: context,
-        ...additionalData,
-      });
+      };
+      
+      if (error.stack) {
+        params.error_stack = error.stack.substring(0, 500); // Limit stack trace length
+      }
+      
+      if (additionalData) {
+        Object.assign(params, additionalData);
+      }
+      
+      await logEvent(ANALYTICS_EVENTS.ERROR_OCCURRED, params);
     },
     [logEvent]
   );
