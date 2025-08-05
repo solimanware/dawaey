@@ -11,19 +11,8 @@ export default function RootLayout() {
         name="(modal)/medication-details"
         options={{
           title: "Medication Details",
-          headerTintColor: "#000",
-          headerStyle: {
-            backgroundColor: "#fff",
-          },
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.dismiss()}>
-              <Ionicons name="close" size={24} color="#6b7280" />
-            </TouchableOpacity>
-          ),
-          presentation: "formSheet",
-          sheetAllowedDetents: [0.45, 0.95],
-          sheetInitialDetentIndex: 0,
-          sheetGrabberVisible: true,
+          headerShown: false,
+          presentation: "modal",
           contentStyle: {
             backgroundColor: "#fff",
           },

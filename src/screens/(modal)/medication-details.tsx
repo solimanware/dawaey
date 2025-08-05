@@ -82,9 +82,22 @@ export default function MedicationDetailsModal() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View className="flex-row items-center justify-between px-6 py-4 border-b border-gray-200">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-gray-900">Medication Details</Text>
+            <Text className="text-gray-600 mt-1">{drug.tradename}</Text>
+          </View>
+          <TouchableOpacity 
+            onPress={() => router.dismiss()}
+            className="p-2 rounded-full bg-gray-100"
+          >
+            <Ionicons name="close" size={20} color="#6b7280" />
+          </TouchableOpacity>
+        </View>
         {/* Hero Section */}
         <View
-          className="relative px-6 pt-8 pb-10"
+          className="relative px-6 pt-6 pb-10"
           style={{
             backgroundColor: "#ffffff",
           }}
@@ -111,7 +124,7 @@ export default function MedicationDetailsModal() {
             <View className="flex-shrink-0 relative">
               {!imageError ? (
                 <View
-                  className="rounded-tl-3xl rounded-tr-3xl rounded-bl-lg rounded-br-2xl p-1 shadow-lg"
+                  className="p-1 shadow-lg"
                   style={{
                     backgroundColor: "white",
                     shadowColor: primaryColor,
@@ -124,7 +137,7 @@ export default function MedicationDetailsModal() {
                   <Image
                     source={{ uri: drugImageUrl }}
                     style={{ width: 130, height: 130 }}
-                    className="rounded-tl-3xl rounded-tr-3xl rounded-bl-lg rounded-br-2xl bg-gray-50"
+                    className=" bg-gray-50"
                     contentFit="cover"
                     placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
                     transition={300}
