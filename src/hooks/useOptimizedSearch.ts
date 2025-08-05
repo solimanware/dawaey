@@ -26,6 +26,51 @@ const dmp = new DiffMatchPatch();
 dmp.Match_Threshold = 0.4;
 dmp.Match_Distance = 100;
 
+// Wildcard search utilities
+const isWildcardPattern = (query: string): boolean => {
+  return query.includes('*') && query.replace(/\*/g, '').length >= 2;
+};
+
+const convertWildcardToRegex = (pattern: string): RegExp => {
+  // Escape special regex characters except *
+  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+  // Replace * with .* (any characters, zero or more)
+  const regexPattern = escaped.replace(/\*/g, '.*');
+  // Create case-insensitive regex
+  return new RegExp(regexPattern, 'i');
+};
+
+const calculateWildcardScore = (
+  text: string,
+  query: string,
+  isTradenamе: boolean = true
+): number => {
+  // Remove * from query for length comparison
+  const queryWithoutWildcards = query.replace(/\*/g, '');
+  const queryLength = queryWithoutWildcards.length;
+  const textLength = text.length;
+
+  // Base score is higher for tradenames
+  const baseScore = isTradenamе ? 0.7 : 0.5;
+
+  // Length ratio bonus (closer lengths get higher scores)
+  const lengthRatio = Math.min(queryLength, textLength) / Math.max(queryLength, textLength);
+  const lengthBonus = lengthRatio * 0.2;
+
+  // Starts with bonus (if text starts with first part of pattern)
+  const firstPart = query.split('*')[0];
+  const startsWithBonus = firstPart.length > 0 && text.toLowerCase().startsWith(firstPart.toLowerCase()) ? 0.1 : 0;
+
+  // Character coverage bonus (how many query chars are in the text)
+  const queryChars = new Set(queryWithoutWildcards.toLowerCase().split(''));
+  const textChars = new Set(text.toLowerCase().split(''));
+  const intersection = [...queryChars].filter(char => textChars.has(char));
+  const coverage = intersection.length / queryChars.size;
+  const coverageBonus = coverage * 0.1;
+
+  return Math.min(1, baseScore + lengthBonus + startsWithBonus + coverageBonus);
+};
+
 // Sophisticated fuzzy match scoring (from useFuzzySearch)
 const calculateFuzzyScore = (
   text: string,
@@ -153,9 +198,48 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       }
     }
 
-    // If we have good exact matches, return them immediately
-    if (exactMatches.length >= 5) {
-      const sortedResults = exactMatches
+    // Phase 1.5: Wildcard search (if pattern contains *)
+    const wildcardMatches: SearchResult[] = [];
+    if (isWildcardPattern(searchTerm)) {
+      console.log(`🔥 Detected wildcard pattern: ${searchTerm}`);
+      const wildcardStartTime = performance.now();
+      const wildcardRegex = convertWildcardToRegex(searchTerm);
+      
+      for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
+        const item = searchIndex[i];
+        
+        // Test wildcard pattern against tradename
+        if (wildcardRegex.test(item.tradename)) {
+          const score = calculateWildcardScore(item.tradename, searchTerm, true);
+          wildcardMatches.push({
+            drug: item.drug,
+            score,
+            matchType: "fuzzy", // Treat as fuzzy since it's pattern matching
+            matchedField: "tradename",
+            matchedValue: item.drug.tradename
+          });
+        }
+        // Test wildcard pattern against active ingredient
+        else if (wildcardRegex.test(item.activeingredient)) {
+          const score = calculateWildcardScore(item.activeingredient, searchTerm, false);
+          wildcardMatches.push({
+            drug: item.drug,
+            score,
+            matchType: "fuzzy",
+            matchedField: "activeingredient",
+            matchedValue: item.drug.activeingredient
+          });
+        }
+      }
+      
+      const wildcardEndTime = performance.now();
+      console.log(`🔥 Wildcard search completed in ${(wildcardEndTime - wildcardStartTime).toFixed(2)}ms with ${wildcardMatches.length} matches`);
+    }
+
+    // If we have good exact matches or wildcard matches, return them
+    const primaryMatches = [...exactMatches, ...wildcardMatches];
+    if (primaryMatches.length >= 5) {
+      const sortedResults = primaryMatches
         .sort((a, b) => b.score - a.score)
         .slice(0, 15);
       
@@ -166,12 +250,13 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       const searchEndTime = performance.now();
       const searchTime = searchEndTime - searchStartTime;
       recordSearchTime(searchTime);
-      console.log(`🔍 Fast exact search completed in ${searchTime.toFixed(2)}ms with ${sortedResults.length} results`);
+      const searchType = wildcardMatches.length > 0 ? 'wildcard + exact' : 'exact';
+      console.log(`🔍 ${searchType} search completed in ${searchTime.toFixed(2)}ms with ${sortedResults.length} results`);
       return;
     }
 
     // Phase 2: Sophisticated DiffMatchPatch fuzzy search as fallback
-    if (exactMatches.length < 5 && !cancelRef.current) {
+    if (primaryMatches.length < 5 && !cancelRef.current) {
       console.log("🔮 Performing sophisticated fuzzy search as fallback...");
       const fuzzyStartTime = performance.now();
       const resultMap = new Map<string, SearchResult>();
@@ -257,7 +342,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     }
 
     if (!cancelRef.current) {
-      const allResults = [...exactMatches, ...fuzzyMatches]
+      const allResults = [...exactMatches, ...wildcardMatches, ...fuzzyMatches]
         .sort((a, b) => b.score - a.score)
         .slice(0, 15);
       
@@ -267,14 +352,14 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       const searchEndTime = performance.now();
       const searchTime = searchEndTime - searchStartTime;
       recordSearchTime(searchTime);
-      console.log(`🎯 Complete search finished in ${searchTime.toFixed(2)}ms with ${allResults.length} results (${exactMatches.length} exact, ${fuzzyMatches.length} fuzzy)`);
+      console.log(`🎯 Complete search finished in ${searchTime.toFixed(2)}ms with ${allResults.length} results (${exactMatches.length} exact, ${wildcardMatches.length} wildcard, ${fuzzyMatches.length} fuzzy)`);
     }
     
     setIsLoading(false);
   }, [searchIndex, getCachedResults, setCachedResults, recordSearchTime]);
 
   const debouncedSearch = useMemo(() => {
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: ReturnType<typeof setTimeout>;
     return (query: string) => {
       cancelRef.current = true; // Cancel previous search
       clearTimeout(timeoutId);
@@ -295,26 +380,3 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   };
 };
 
-// Legacy: Fast word-based scoring (kept for potential future use)
-const calculateWordMatchScore = (queryWords: string[], targetWords: string[]): number => {
-  if (queryWords.length === 0 || targetWords.length === 0) return 0;
-  
-  let matches = 0;
-  let exactMatches = 0;
-  
-  for (const queryWord of queryWords) {
-    for (const targetWord of targetWords) {
-      if (targetWord.startsWith(queryWord)) {
-        if (targetWord === queryWord) {
-          exactMatches++;
-        } else {
-          matches++;
-        }
-      } else if (targetWord.includes(queryWord) && queryWord.length > 2) {
-        matches += 0.5;
-      }
-    }
-  }
-  
-  return (exactMatches * 2 + matches) / (queryWords.length * 2);
-};

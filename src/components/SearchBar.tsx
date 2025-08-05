@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Animated, TextInput, TouchableOpacity, View } from "react-native";
+import { Animated, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useTypewriter } from "../hooks";
 
 interface SearchBarProps {
@@ -27,7 +27,7 @@ export const SearchBar = ({
 
   const placeholderText = useTypewriter({
     words: shouldStartTypewriter
-      ? ["Panadol", "Congestal", "Search any medication..."]
+      ? ["Panadol", "Congestal", "A*G*M*N (wildcard)", "Search any medication..."]
       : [],
     defaultText: "Search any medication...",
     typingSpeed: 120,
@@ -35,6 +35,9 @@ export const SearchBar = ({
     pauseDuration: 2000,
     cycles: 1,
   });
+
+  // Check if current search query is a wildcard pattern
+  const isWildcardPattern = searchQuery.includes('*') && searchQuery.replace(/\*/g, '').length >= 2;
 
   return (
     <View className="relative">
@@ -106,6 +109,15 @@ export const SearchBar = ({
           </TouchableOpacity>
         ) : null}
       </View>
+
+      {/* Wildcard Search Hint */}
+      {isWildcardPattern && (
+        <View className="mt-2 px-3">
+          <Text className="text-xs text-purple-600 font-medium">
+            🔥 Wildcard Search: Use * for unknown letters (e.g., A*G*M*N → Augmentin)
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
