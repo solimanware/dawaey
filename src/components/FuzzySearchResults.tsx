@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
-import { SearchResult } from "../hooks/useFuzzySearch";
+import { FuzzySearchResult } from "../types/search";
 
 interface FuzzySearchResultsProps {
-  results: SearchResult[];
+  results: FuzzySearchResult[];
   searchQuery: string;
   onSelectResult: (suggestion: string) => void;
 }

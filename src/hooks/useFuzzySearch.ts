@@ -1,19 +1,15 @@
 import DiffMatchPatch from "diff-match-patch";
 import { useEffect, useState } from "react";
+import { FuzzySearchResult } from "../types/search";
 import { Drug } from "./useDrugsData";
 
-export interface SearchResult {
-  drug: Drug;
-  score: number;
-  matchedField: "tradename" | "activeingredient";
-  matchedValue: string;
-}
+export type { FuzzySearchResult };
 
 export interface SearchState {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-  fuzzyMatches: SearchResult[];
-  topSuggestion: SearchResult | null;
+  fuzzyMatches: FuzzySearchResult[];
+  topSuggestion: FuzzySearchResult | null;
   isLoading: boolean;
 }
 
@@ -71,17 +67,17 @@ const performFuzzySearch = async (
   drugs: Drug[],
   query: string
 ): Promise<{
-  fuzzyMatches: SearchResult[];
-  topSuggestion: SearchResult | null;
+      fuzzyMatches: FuzzySearchResult[];
+      topSuggestion: FuzzySearchResult | null;
 }> => {
   return new Promise((resolve) => {
     // Use setTimeout to make it async and allow UI to update
     setTimeout(() => {
-      const resultMap = new Map<string, SearchResult>();
+      const resultMap = new Map<string, FuzzySearchResult>();
 
       for (const drug of drugs) {
         let bestScore = 0;
-        let bestResult: SearchResult | null = null;
+        let bestResult: FuzzySearchResult | null = null;
 
         // Check tradename
         const tradenameMatch = dmp.match_main(
@@ -153,8 +149,8 @@ const performFuzzySearch = async (
 
 export const useFuzzySearch = (drugs: Drug[]): SearchState => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [fuzzyMatches, setFuzzyMatches] = useState<SearchResult[]>([]);
-  const [topSuggestion, setTopSuggestion] = useState<SearchResult | null>(null);
+  const [fuzzyMatches, setFuzzyMatches] = useState<FuzzySearchResult[]>([]);
+  const [topSuggestion, setTopSuggestion] = useState<FuzzySearchResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

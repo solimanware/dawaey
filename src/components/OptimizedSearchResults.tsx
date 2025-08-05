@@ -1,16 +1,8 @@
 import { LegendList, LegendListRenderItemProps } from "@legendapp/list";
 import React, { useEffect } from "react";
 import { Text, View } from "react-native";
-import { Drug } from "../hooks/useDrugsData";
+import { SearchResult } from "../types/search";
 import { MedicationCard } from "./MedicationCard";
-
-interface SearchResult {
-  drug: Drug;
-  score: number;
-  matchType: "exact" | "fuzzy";
-  matchedField: "tradename" | "activeingredient";
-  matchedValue?: string;
-}
 
 interface OptimizedSearchResultsProps {
   results: SearchResult[];

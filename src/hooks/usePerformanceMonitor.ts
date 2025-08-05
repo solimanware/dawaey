@@ -35,7 +35,12 @@ export const usePerformanceMonitor = () => {
   }, []);
 
   const recordSearchTime = useCallback(
-    (searchTime: number, wasCacheHit: boolean = false, query?: string, resultsCount?: number) => {
+    (
+      searchTime: number,
+      wasCacheHit: boolean = false,
+      query?: string,
+      resultsCount?: number
+    ) => {
       const current = metrics.current;
 
       // Update search times
@@ -63,17 +68,17 @@ export const usePerformanceMonitor = () => {
           searchTime,
           resultsCount: resultsCount || 0,
           cacheHit: wasCacheHit,
-          searchType: 'general',
+          searchType: "general",
         });
       }
 
       // Log performance warnings and send analytics for issues
       if (searchTime > 200) {
         console.warn(`🐌 Slow search detected: ${searchTime.toFixed(2)}ms`);
-        analytics.logEvent('performance_issue_detected', {
-          issue_type: 'slow_search',
+        analytics.logEvent("performance_issue_detected", {
+          issue_type: "slow_search",
           search_time: searchTime,
-          query: query || 'unknown',
+          query: query || "unknown",
           cache_hit: wasCacheHit,
           average_time: current.averageSearchTime,
         });
@@ -83,7 +88,7 @@ export const usePerformanceMonitor = () => {
 
       // Send periodic performance summary (every 50 searches)
       if (current.totalSearches % 50 === 0) {
-        analytics.logEvent('performance_summary', {
+        analytics.logEvent("performance_summary", {
           total_searches: current.totalSearches,
           average_search_time: current.averageSearchTime,
           slow_searches: current.slowSearches,

@@ -148,10 +148,6 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
 };
 
 export const MedicationCard = ({ item }: MedicationCardProps) => {
-  // Parse palette colors from comma-separated string
-  const paletteColors = item.palette ? item.palette.split(",") : [];
-  const primaryColor = paletteColors[0] || "#2563eb";
-
   // Generate drug image URL based on ID
   const drugImageUrl = `https://soliman.ai/dawaey-app-pics/${item.id}.jpg`;
 
@@ -206,7 +202,6 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
         activeingredient: item.activeingredient,
         company: item.company,
         group: item.group,
-        info: item.info || "",
         form: item.form || item.type,
         type: item.type,
         price: item.price || "",
@@ -239,11 +234,8 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
               }}
             />
           ) : (
-            <View
-              className="w-20 h-20 rounded-xl items-center justify-center"
-              style={{ backgroundColor: `${primaryColor}20` }}
-            >
-              <Ionicons name="medical" size={32} color={primaryColor} />
+            <View className="w-20 h-20 rounded-xl items-center justify-center">
+              <Ionicons name="medical" size={32} />
             </View>
           )}
         </View>

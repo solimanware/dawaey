@@ -12,15 +12,15 @@ export default function ReferencesModal() {
   useFocusEffect(
     useCallback(() => {
       analytics.logScreenView(analytics.SCREEN_NAMES.REFERENCES);
-      analytics.logModalEvent('references', 'opened', 'info');
+      analytics.logModalEvent("references", "opened", "info");
       analytics.logEvent(analytics.ANALYTICS_EVENTS.REFERENCES_VIEWED, {
-        context: 'modal_opened',
+        context: "modal_opened",
       });
     }, [analytics])
   );
 
   const handleClose = () => {
-    analytics.logModalEvent('references', 'closed', 'user_action');
+    analytics.logModalEvent("references", "closed", "user_action");
     router.dismiss();
   };
 
