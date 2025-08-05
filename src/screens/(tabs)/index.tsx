@@ -37,7 +37,7 @@ export default function MedicationsScreen() {
   const debouncedSearchQuery = useDebounce(inputValue, 200);
 
   // Single optimized search hook
-  const { results, setSearchQuery, isLoading } = useOptimizedSearch(drugs);
+  const { results, setSearchQuery, isLoading, forceRefresh } = useOptimizedSearch(drugs);
 
   // Screen tracking
   useFocusEffect(
@@ -132,6 +132,7 @@ export default function MedicationsScreen() {
           searchQuery={inputValue}
           onChangeText={handleInputChange}
           onReset={handleSearchReset}
+          onForceRefresh={forceRefresh}
           glowAnim={glowAnim}
         />
       </View>

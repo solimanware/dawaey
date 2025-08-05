@@ -36,7 +36,7 @@ const isWildcardPattern = (query: string): boolean => {
 };
 
 const convertWildcardToRegex = (pattern: string): RegExp => {
-  // Escape special regex characters except * 
+  // Escape special regex characters except *
   // Note: We need to escape parentheses and other special chars for regex
   const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
   // Replace * with .* (any characters, zero or more)
@@ -130,13 +130,17 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const cancelRef = useRef<boolean>(false);
-  const { get: getCachedResults, set: setCachedResults } =
+  const { get: getCachedResults, set: setCachedResults, clear: clearCache } =
     useSearchCache<SearchResult>();
   const { recordSearchTime } = usePerformanceMonitor();
   const analytics = useAnalytics();
 
   // Create search index once - this is the key optimization
   const searchIndex = useMemo<SearchIndex[]>(() => {
+    if (!drugs || drugs.length === 0) {
+      return [];
+    }
+    
     //console.log("🏗️ Building optimized search index...");
     const index = drugs.map((drug) => ({
       id: drug.id,
@@ -157,6 +161,11 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     async (query: string) => {
       try {
         if (!query.trim() || query.trim().length < 2) {
+          setResults([]);
+          return;
+        }
+
+        if (searchIndex.length === 0) {
           setResults([]);
           return;
         }
@@ -541,10 +550,18 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     [debouncedSearch]
   );
 
+  const forceRefresh = useCallback(() => {
+    clearCache();
+    if (searchQuery.trim()) {
+      performOptimizedSearch(searchQuery);
+    }
+  }, [clearCache, searchQuery, performOptimizedSearch]);
+
   return {
     searchQuery,
     setSearchQuery: handleSearchChange,
     results,
     isLoading,
+    forceRefresh,
   };
 };

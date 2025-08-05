@@ -6,6 +6,7 @@ interface SearchBarProps {
   searchQuery: string;
   onChangeText: (text: string) => void;
   onReset?: () => void;
+  onForceRefresh?: () => void;
   glowAnim: Animated.Value;
 }
 
@@ -13,6 +14,7 @@ export const SearchBar = ({
   searchQuery,
   onChangeText,
   onReset,
+  onForceRefresh,
   glowAnim,
 }: SearchBarProps) => {
   const typewriterWords = [
@@ -82,7 +84,9 @@ export const SearchBar = ({
           elevation: 8,
         }}
       >
-        <Ionicons name="search" size={20} color="#663399" />
+        <TouchableOpacity onPress={onForceRefresh} disabled={!onForceRefresh}>
+          <Ionicons name="search" size={20} color="#663399" />
+        </TouchableOpacity>
         <TextInput
           placeholder={isComplete ? "Search any medication..." : typewriterText}
           className="flex-1 ml-3 text-gray-900"
