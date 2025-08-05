@@ -5,6 +5,7 @@ import { Drug } from "./useDrugsData";
 type PreprocessedDrug = Drug & {
   _tradename: string;
   _activeingredient: string;
+  _group: string;
 };
 
 export const useSearch = (drugs: Drug[]) => {
@@ -16,6 +17,7 @@ export const useSearch = (drugs: Drug[]) => {
       ...drug,
       _tradename: drug.tradename?.toLowerCase() ?? "",
       _activeingredient: drug.activeingredient?.toLowerCase() ?? "",
+      _group: drug.group?.toLowerCase() ?? "",
     }));
   }, [drugs]);
 
@@ -29,7 +31,8 @@ export const useSearch = (drugs: Drug[]) => {
     return preprocessedDrugs.filter(
       (drug) =>
         drug._tradename.includes(query) ||
-        drug._activeingredient.includes(query)
+        drug._activeingredient.includes(query) ||
+        drug._group.includes(query)
     );
   }, [preprocessedDrugs, searchQuery]);
 

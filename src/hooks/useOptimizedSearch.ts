@@ -8,7 +8,7 @@ interface SearchResult {
   drug: Drug;
   score: number;
   matchType: "exact" | "fuzzy";
-  matchedField: "tradename" | "activeingredient";
+  matchedField: "tradename" | "activeingredient" | "group";
   matchedValue?: string;
 }
 
@@ -16,8 +16,10 @@ interface SearchIndex {
   id: number;
   tradename: string;
   activeingredient: string;
+  group: string;
   tradenameWords: string[];
   ingredientWords: string[];
+  groupWords: string[];
   drug: Drug;
 }
 
@@ -145,8 +147,10 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       id: drug.id,
       tradename: drug.tradename?.toLowerCase() ?? "",
       activeingredient: drug.activeingredient?.toLowerCase() ?? "",
+      group: drug.group?.toLowerCase() ?? "",
       tradenameWords: drug.tradename?.toLowerCase().split(/\s+/) ?? [],
       ingredientWords: drug.activeingredient?.toLowerCase().split(/\s+/) ?? [],
+      groupWords: drug.group?.toLowerCase().split(/\s+/) ?? [],
       drug,
     }));
 
@@ -206,6 +210,15 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
             matchedField: "activeingredient",
           });
         }
+        // Exact group match
+        else if (item.group.includes(searchTerm)) {
+          exactMatches.push({
+            drug: item.drug,
+            score: 0.5,
+            matchType: "exact",
+            matchedField: "group",
+          });
+        }
 
         // Early termination if we have enough exact matches
         if (exactMatches.length >= 20) {
@@ -259,6 +272,24 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
                 matchType: "fuzzy",
                 matchedField: "activeingredient",
                 matchedValue: item.drug.activeingredient,
+              });
+            }
+          }
+          // Test wildcard pattern against group
+          else if (item.group) {
+            const groupFirstTwoWords = getFirstTwoWords(item.group);
+            if (wildcardRegex.test(groupFirstTwoWords)) {
+              const score = calculateWildcardScore(
+                groupFirstTwoWords,
+                searchTerm,
+                false
+              );
+              wildcardMatches.push({
+                drug: item.drug,
+                score,
+                matchType: "fuzzy",
+                matchedField: "group",
+                matchedValue: item.drug.group,
               });
             }
           }
@@ -356,6 +387,30 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
                   matchType: "fuzzy",
                   matchedField: "activeingredient",
                   matchedValue: drug.activeingredient,
+                };
+              }
+            }
+          }
+
+          // Check group with DiffMatchPatch
+          if (drug.group) {
+            const groupText = drug.group.toLowerCase();
+            const groupMatch = dmp.match_main(groupText, searchTerm, 0);
+            if (groupMatch !== -1) {
+              const score = calculateFuzzyScore(
+                groupText,
+                searchTerm,
+                groupMatch,
+                false
+              );
+              if (score > 0.2 && score > bestScore) {
+                bestScore = score;
+                bestResult = {
+                  drug,
+                  score,
+                  matchType: "fuzzy",
+                  matchedField: "group",
+                  matchedValue: drug.group,
                 };
               }
             }

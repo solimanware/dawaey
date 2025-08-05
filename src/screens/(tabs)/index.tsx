@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function MedicationsScreen() {
   // Navigation params for CTA searches
   const params = useLocalSearchParams();
-  
+
   // Input state for immediate UI updates
   const [inputValue, setInputValue] = useState("");
   const [isFuzzySearch, setIsFuzzySearch] = useState(false);
@@ -24,10 +24,10 @@ export default function MedicationsScreen() {
 
   // Handle initial search from navigation params
   useEffect(() => {
-    if (params.searchQuery && typeof params.searchQuery === 'string') {
+    if (params.searchQuery && typeof params.searchQuery === "string") {
       const query = params.searchQuery;
-      const type = params.searchType as string || null;
-      
+      const type = (params.searchType as string) || null;
+
       setInputValue(query);
       setSearchQuery(query);
       setSearchType(type);
@@ -73,27 +73,25 @@ export default function MedicationsScreen() {
               <View className="flex-row items-center">
                 <View className="w-6 h-6 rounded-full bg-blue-500 items-center justify-center mr-3">
                   <Text className="text-white text-xs font-bold">
-                    {searchType === 'alternatives' ? '🧪' : '📚'}
+                    {searchType === "alternatives" ? "🧪" : "📚"}
                   </Text>
                 </View>
                 <View className="flex-1">
                   <Text className="text-sm font-semibold text-blue-800 mb-0.5">
-                    {searchType === 'alternatives' 
-                      ? 'Alternative Medications' 
-                      : 'Similar Medications'
-                    }
+                    {searchType === "alternatives"
+                      ? "Alternative Medications"
+                      : "Similar Medications"}
                   </Text>
                   <Text className="text-xs text-blue-600">
-                    {searchType === 'alternatives' 
-                      ? 'Medications with the same active ingredient' 
-                      : 'Medications in the same drug group'
-                    }
+                    {searchType === "alternatives"
+                      ? "Medications with the same active ingredient"
+                      : "Medications in the same drug group"}
                   </Text>
                 </View>
               </View>
             </View>
           )}
-          
+
           {/* Fuzzy Search Indicator */}
           {isFuzzySearch && results.length > 0 && !searchType && (
             <View className=" mb-4 mx-6 bg-purple-100 px-3 py-1 rounded-full border border-purple-200 shadow-sm z-10">

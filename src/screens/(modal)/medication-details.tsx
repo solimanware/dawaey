@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useLocalSearchParams, router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Drug } from "../../hooks";
 
@@ -59,8 +59,8 @@ export default function MedicationDetailsModal() {
         pathname: "/(tabs)" as any,
         params: {
           searchQuery: drug.activeingredient,
-          searchType: "alternatives"
-        }
+          searchType: "alternatives",
+        },
       });
     }
   };
@@ -73,8 +73,8 @@ export default function MedicationDetailsModal() {
         pathname: "/(tabs)" as any,
         params: {
           searchQuery: drug.group,
-          searchType: "similars"
-        }
+          searchType: "similars",
+        },
       });
     }
   };
