@@ -2175,6 +2175,30 @@ PODS:
     - React-logger (= 0.79.5)
     - React-perflogger (= 0.79.5)
     - React-utils (= 0.79.5)
+  - RNCAsyncStorage (1.24.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNFBAnalytics (22.4.0):
     - FirebaseAnalytics/Core (= 11.15.0)
     - FirebaseAnalytics/IdentitySupport (= 11.15.0)
@@ -2495,6 +2519,7 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -2714,6 +2739,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBAnalytics:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
@@ -2835,6 +2862,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: c42e7abdd2228ae583bdabc3dcd8e5cda6bef944
   ReactCodegen: 28eb66b3670b0f91cae893a4b3b34813c305c34f
   ReactCommon: 3dbed0a44e9e5d7b77b0f35983633aa5d33c9694
+  RNCAsyncStorage: 5affb373b519f7887143d2ce6f4e049b74aaf2ee
   RNFBAnalytics: bff2eb8c8d68f23f9ca02549697fef65455fa246
   RNFBApp: d15dab17b5639fb7f95712d07c204912a534b8c6
   RNGestureHandler: 85b0463dbfed54eaba4360e31c0aa1a0fe83a6a6

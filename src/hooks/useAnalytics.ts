@@ -57,27 +57,37 @@ export const useAnalytics = () => {
   const analytics = getAnalytics();
 
   // Helper function to sanitize parameters - Firebase Analytics only accepts string, number, boolean, or arrays
-  const sanitizeParameters = (params?: Record<string, any>): Record<string, any> => {
+  const sanitizeParameters = (
+    params?: Record<string, any>
+  ): Record<string, any> => {
     if (!params) return {};
-    
+
     const sanitized: Record<string, any> = {};
-    
+
     Object.entries(params).forEach(([key, value]) => {
       // Only include valid types and non-null/undefined values
       if (value !== null && value !== undefined) {
         const valueType = typeof value;
-        if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
+        if (
+          valueType === "string" ||
+          valueType === "number" ||
+          valueType === "boolean"
+        ) {
           sanitized[key] = value;
         } else if (Array.isArray(value)) {
           // Filter arrays to only include valid primitive types
-          const validArray = value.filter(item => 
-            item !== null && item !== undefined && 
-            (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean')
+          const validArray = value.filter(
+            (item) =>
+              item !== null &&
+              item !== undefined &&
+              (typeof item === "string" ||
+                typeof item === "number" ||
+                typeof item === "boolean")
           );
           if (validArray.length > 0) {
             sanitized[key] = validArray;
           }
-        } else if (valueType === 'object') {
+        } else if (valueType === "object") {
           // Convert objects to strings (for complex data)
           try {
             sanitized[key] = JSON.stringify(value);
@@ -87,7 +97,7 @@ export const useAnalytics = () => {
         }
       }
     });
-    
+
     return sanitized;
   };
 
@@ -100,7 +110,7 @@ export const useAnalytics = () => {
           session_duration: Date.now() - sessionStartRef.current,
           ...parameters,
         });
-        
+
         await firebaseLogEvent(analytics, eventName, sanitizedParams);
       } catch (error) {
         console.warn("Analytics event failed:", eventName, error);
@@ -224,11 +234,11 @@ export const useAnalytics = () => {
         medication_id: medicationId,
         image_url: `https://soliman.ai/dawaey-app-pics/${medicationId}.jpg`,
       };
-      
+
       if (loadTime !== undefined) {
         params.load_time = loadTime;
       }
-      
+
       await logEvent(
         success
           ? ANALYTICS_EVENTS.MEDICATION_IMAGE_LOADED
@@ -245,11 +255,11 @@ export const useAnalytics = () => {
       const params: Record<string, any> = {
         tab_name: tabName,
       };
-      
+
       if (previousTab) {
         params.previous_tab = previousTab;
       }
-      
+
       await logEvent(ANALYTICS_EVENTS.TAB_SWITCHED, params);
     },
     [logEvent]
@@ -264,11 +274,11 @@ export const useAnalytics = () => {
       const params: Record<string, any> = {
         modal_name: modalName,
       };
-      
+
       if (context) {
         params.context = context;
       }
-      
+
       await logEvent(
         action === "opened"
           ? ANALYTICS_EVENTS.MODAL_OPENED
@@ -310,15 +320,15 @@ export const useAnalytics = () => {
         error_message: error.message,
         context: context,
       };
-      
+
       if (error.stack) {
         params.error_stack = error.stack.substring(0, 500); // Limit stack trace length
       }
-      
+
       if (additionalData) {
         Object.assign(params, additionalData);
       }
-      
+
       await logEvent(ANALYTICS_EVENTS.ERROR_OCCURRED, params);
     },
     [logEvent]

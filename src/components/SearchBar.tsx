@@ -15,7 +15,12 @@ export const SearchBar = ({
   onReset,
   glowAnim,
 }: SearchBarProps) => {
-  const typewriterWords = ["Panadol", "Confestal", "A*G*M*N", "Search any medication..."];
+  const typewriterWords = [
+    "Panadol",
+    "Confestal",
+    "A*G*M*N",
+    "Search any medication...",
+  ];
   const { text: typewriterText, isComplete } = useTypewriter({
     words: typewriterWords,
     loop: false,

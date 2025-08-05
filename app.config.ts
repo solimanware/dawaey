@@ -31,18 +31,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
-    "@react-native-firebase/app",
-    "@react-native-firebase/analytics",
+    "expo-asset",
     [
       "expo-splash-screen",
       {
         image: "./assets/images/splash-icon.png",
         imageWidth: 200,
-        resizeMode: "contain",
-        backgroundColor: "#ffffff",
+        resizeMode: "cover",
+        backgroundColor: "#FFBDFF",
       },
     ],
-    // Add expo-build-properties to set frameworks for iOS (required for firebase-ios-sdk 9+)
+    "@react-native-firebase/app",
     [
       "expo-build-properties",
       {
@@ -51,6 +50,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+    "expo-dev-client",
   ],
   experiments: {
     typedRoutes: true,

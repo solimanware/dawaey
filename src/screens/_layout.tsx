@@ -1,7 +1,17 @@
 import { Stack } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
+
+// Initialize Firebase
+import "@react-native-firebase/app";
 
 export default function RootLayout() {
+  useEffect(() => {
+    // Firebase is automatically initialized when importing @react-native-firebase/app
+    // The configuration comes from your google-services.json and GoogleService-Info.plist files
+
+    console.log("Firebase initialized successfully");
+  }, []);
+
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

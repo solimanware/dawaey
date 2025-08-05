@@ -9,7 +9,7 @@ import {
 import "@/theme/global.css";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MedicationsScreen() {
@@ -22,7 +22,7 @@ export default function MedicationsScreen() {
   const [searchType, setSearchType] = useState<string | null>(null);
 
   // Custom hooks
-  const { drugs } = useDrugsData();
+  const { drugs, isLoading: isDrugsLoading, error: drugsError } = useDrugsData();
   const glowAnim = useGlowAnimation();
   const analytics = useAnalytics();
 
@@ -90,7 +90,7 @@ export default function MedicationsScreen() {
     setInputValue("");
     setSearchType(null);
     setIsFuzzySearch(false);
-    
+
     // Immediately clear search query to prevent any debounced effects
     setSearchQuery("");
   };
@@ -112,6 +112,60 @@ export default function MedicationsScreen() {
     isFuzzySearch,
     analytics,
   ]);
+
+  // Show loading state while drugs data is loading
+  if (isDrugsLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <View className="px-6 pt-4 pb-6 backdrop-blur-lg">
+          <Header />
+          <SearchBar
+            searchQuery={inputValue}
+            onChangeText={handleInputChange}
+            onReset={handleSearchReset}
+            glowAnim={glowAnim}
+          />
+        </View>
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#8B5CF6" />
+          <Text className="text-center text-gray-500 text-sm mt-4">
+            Loading medications database...
+          </Text>
+          <Text className="text-center text-gray-400 text-xs mt-2">
+            This may take a moment on first launch
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Show error state if data loading failed
+  if (drugsError) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50">
+        <View className="px-6 pt-4 pb-6 backdrop-blur-lg">
+          <Header />
+          <SearchBar
+            searchQuery={inputValue}
+            onChangeText={handleInputChange}
+            onReset={handleSearchReset}
+            glowAnim={glowAnim}
+          />
+        </View>
+        <View className="flex-1 items-center justify-center px-6">
+          <Text className="text-center text-red-500 text-lg font-semibold mb-2">
+            Failed to load medications
+          </Text>
+          <Text className="text-center text-gray-500 text-sm mb-4">
+            {drugsError}
+          </Text>
+          <Text className="text-center text-gray-400 text-xs">
+            Please check your connection and restart the app
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">

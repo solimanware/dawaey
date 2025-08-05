@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		09063F705FEF471B843219B1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 95FCD69F466140F7BC2F0EF6 /* GoogleService-Info.plist */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		46DBBD416361D4334EA523EC /* Pods_dawaey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB9A479C878BBE384DC8C2E /* Pods_dawaey.framework */; };
-		8FADC41752CE9BE0CB2E845C /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22606F8EB6931FD29361297D /* ExpoModulesProvider.swift */; };
+		7373A397ADB4A32BD885E8C0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C84CD70B03D605326C588B18 /* PrivacyInfo.xcprivacy */; };
+		817B7F98947C444F94BB6348 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C0ABDADCB48C4118864BC31F /* GoogleService-Info.plist */; };
+		81BB940EC317942969166673 /* Pods_dawaey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C52442625E2D8FF57AA6BD7 /* Pods_dawaey.framework */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		DC619CB1AB2ECA91F5F4F4F0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 37ACE93C9574F4904EA7CF79 /* PrivacyInfo.xcprivacy */; };
+		BEC45D6DDE287DAD6CA3B293 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF31867888A2051A6A156D7 /* ExpoModulesProvider.swift */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -21,17 +21,17 @@
 		13B07F961A680F5B00A75B9A /* dawaey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dawaey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dawaey/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dawaey/Info.plist; sourceTree = "<group>"; };
-		22606F8EB6931FD29361297D /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dawaey/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		37ACE93C9574F4904EA7CF79 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = dawaey/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		6DB9A479C878BBE384DC8C2E /* Pods_dawaey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dawaey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7B8CD8927847BAC8F75BD864 /* Pods-dawaey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dawaey.release.xcconfig"; path = "Target Support Files/Pods-dawaey/Pods-dawaey.release.xcconfig"; sourceTree = "<group>"; };
-		95FCD69F466140F7BC2F0EF6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "dawaey/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5FF31867888A2051A6A156D7 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dawaey/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		7C52442625E2D8FF57AA6BD7 /* Pods_dawaey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dawaey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		909FEADEBB05673AD824D851 /* Pods-dawaey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dawaey.debug.xcconfig"; path = "Target Support Files/Pods-dawaey/Pods-dawaey.debug.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = dawaey/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		BEE3477A0178F98A16847F8B /* Pods-dawaey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dawaey.release.xcconfig"; path = "Target Support Files/Pods-dawaey/Pods-dawaey.release.xcconfig"; sourceTree = "<group>"; };
+		C0ABDADCB48C4118864BC31F /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "dawaey/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C84CD70B03D605326C588B18 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = dawaey/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = dawaey/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* dawaey-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "dawaey-Bridging-Header.h"; path = "dawaey/dawaey-Bridging-Header.h"; sourceTree = "<group>"; };
-		FEF6EA54DEFD054233E9AEAD /* Pods-dawaey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dawaey.debug.xcconfig"; path = "Target Support Files/Pods-dawaey/Pods-dawaey.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46DBBD416361D4334EA523EC /* Pods_dawaey.framework in Frameworks */,
+				81BB940EC317942969166673 /* Pods_dawaey.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,8 +55,8 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				95FCD69F466140F7BC2F0EF6 /* GoogleService-Info.plist */,
-				37ACE93C9574F4904EA7CF79 /* PrivacyInfo.xcprivacy */,
+				C0ABDADCB48C4118864BC31F /* GoogleService-Info.plist */,
+				C84CD70B03D605326C588B18 /* PrivacyInfo.xcprivacy */,
 			);
 			name = dawaey;
 			sourceTree = "<group>";
@@ -65,32 +65,15 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				6DB9A479C878BBE384DC8C2E /* Pods_dawaey.framework */,
+				7C52442625E2D8FF57AA6BD7 /* Pods_dawaey.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4595D269DAB7A9B802524B49 /* dawaey */ = {
+		4349C5BDB60B49B8788A8053 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				22606F8EB6931FD29361297D /* ExpoModulesProvider.swift */,
-			);
-			name = dawaey;
-			sourceTree = "<group>";
-		};
-		7380F2EAE75DCE3BB6B6996D /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				FEF6EA54DEFD054233E9AEAD /* Pods-dawaey.debug.xcconfig */,
-				7B8CD8927847BAC8F75BD864 /* Pods-dawaey.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		792ED316B5F6621B640443A4 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				4595D269DAB7A9B802524B49 /* dawaey */,
+				F151D47E1038CE83AE3C98B4 /* dawaey */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -109,8 +92,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				7380F2EAE75DCE3BB6B6996D /* Pods */,
-				792ED316B5F6621B640443A4 /* ExpoModulesProviders */,
+				D1FB1A47E3F5155F0E90E523 /* Pods */,
+				4349C5BDB60B49B8788A8053 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -134,6 +117,23 @@
 			path = dawaey/Supporting;
 			sourceTree = "<group>";
 		};
+		D1FB1A47E3F5155F0E90E523 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				909FEADEBB05673AD824D851 /* Pods-dawaey.debug.xcconfig */,
+				BEE3477A0178F98A16847F8B /* Pods-dawaey.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F151D47E1038CE83AE3C98B4 /* dawaey */ = {
+			isa = PBXGroup;
+			children = (
+				5FF31867888A2051A6A156D7 /* ExpoModulesProvider.swift */,
+			);
+			name = dawaey;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,14 +142,14 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "dawaey" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				69F160BA184CA034B0164427 /* [Expo] Configure project */,
+				930E9F00C40D6AD0020557CA /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				56293F95EDB51CA083E16097 /* [CP] Embed Pods Frameworks */,
-				7CB6AF2AD1B71DCA803E1EF7 /* [CP-User] [RNFB] Core Configuration */,
+				8662A6BDE02B67E94DE545C3 /* [CP] Embed Pods Frameworks */,
+				311F5D05653A90B7B4C85793 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -199,8 +199,8 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				09063F705FEF471B843219B1 /* GoogleService-Info.plist in Resources */,
-				DC619CB1AB2ECA91F5F4F4F0 /* PrivacyInfo.xcprivacy in Resources */,
+				817B7F98947C444F94BB6348 /* GoogleService-Info.plist in Resources */,
+				7373A397ADB4A32BD885E8C0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,44 +244,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		56293F95EDB51CA083E16097 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-dawaey/Pods-dawaey-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dawaey/Pods-dawaey-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		69F160BA184CA034B0164427 /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-dawaey/expo-configure-project.sh\"\n";
-		};
-		7CB6AF2AD1B71DCA803E1EF7 /* [CP-User] [RNFB] Core Configuration */ = {
+		311F5D05653A90B7B4C85793 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -313,6 +276,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities_Privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises_Privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
@@ -334,6 +298,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleUtilities_Privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FBLPromises_Privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
@@ -348,6 +313,43 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dawaey/Pods-dawaey-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8662A6BDE02B67E94DE545C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-dawaey/Pods-dawaey-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dawaey/Pods-dawaey-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		930E9F00C40D6AD0020557CA /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-dawaey/expo-configure-project.sh\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -356,7 +358,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				8FADC41752CE9BE0CB2E845C /* ExpoModulesProvider.swift in Sources */,
+				BEC45D6DDE287DAD6CA3B293 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +367,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FEF6EA54DEFD054233E9AEAD /* Pods-dawaey.debug.xcconfig */;
+			baseConfigurationReference = 909FEADEBB05673AD824D851 /* Pods-dawaey.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -380,6 +382,8 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = dawaey/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Dawaey - دوائي";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -393,7 +397,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = app.dawaey;
-				PRODUCT_NAME = "dawaey";
+				PRODUCT_NAME = dawaey;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "dawaey/dawaey-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -405,7 +409,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B8CD8927847BAC8F75BD864 /* Pods-dawaey.release.xcconfig */;
+			baseConfigurationReference = BEE3477A0178F98A16847F8B /* Pods-dawaey.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -415,6 +419,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5MANYL44HD;
 				INFOPLIST_FILE = dawaey/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Dawaey - دوائي";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -428,7 +434,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = app.dawaey;
-				PRODUCT_NAME = "dawaey";
+				PRODUCT_NAME = dawaey;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "dawaey/dawaey-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

@@ -497,14 +497,14 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   const handleSearchChange = useCallback(
     (query: string) => {
       setSearchQuery(query);
-      
+
       // Immediately clear results if query is empty - don't wait for debounced search
       if (!query.trim()) {
         setResults([]);
         setIsLoading(false);
         return;
       }
-      
+
       debouncedSearch(query);
     },
     [debouncedSearch]
