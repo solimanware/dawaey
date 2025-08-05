@@ -20,7 +20,6 @@ export default function MedicationsScreen() {
   const [inputValue, setInputValue] = useState("");
   const [isFuzzySearch, setIsFuzzySearch] = useState(false);
   const [searchType, setSearchType] = useState<string | null>(null);
-  const [isNavigationSearch, setIsNavigationSearch] = useState(false);
 
   // Ref to track previous results for analytics
   const previousResultsRef = useRef<number>(0);
@@ -49,18 +48,14 @@ export default function MedicationsScreen() {
 
   // Handle debounced search query changes
   useEffect(() => {
-    // Only process debounced search if we're not in a navigation search
-    // This prevents conflicts between manual typing and navigation params
-    if (!isNavigationSearch) {
-      setSearchQuery(debouncedSearchQuery);
+    setSearchQuery(debouncedSearchQuery);
 
-      // Track search queries (only for debounced queries)
-      if (debouncedSearchQuery.length >= 2) {
-        analytics.logSearch(debouncedSearchQuery, "manual_input");
-        analytics.logSearchAnalytics(debouncedSearchQuery);
-      }
+    // Track search queries (only for debounced queries)
+    if (debouncedSearchQuery.length >= 2) {
+      analytics.logSearch(debouncedSearchQuery, "manual_input");
+      analytics.logSearchAnalytics(debouncedSearchQuery);
     }
-  }, [debouncedSearchQuery, setSearchQuery, analytics, isNavigationSearch]);
+  }, [debouncedSearchQuery, setSearchQuery, analytics]);
 
   // Handle initial search from navigation params
   useEffect(() => {
@@ -68,41 +63,24 @@ export default function MedicationsScreen() {
       const query = params.searchQuery;
       const type = (params.searchType as string) || null;
 
-      console.log("🚀 Navigation search triggered:", { query, type });
-
-      // Mark as navigation search to prevent debounce conflicts
-      setIsNavigationSearch(true);
       setInputValue(query);
-      setSearchType(type);
-
-      // For navigation searches, bypass debouncing by calling setSearchQuery directly
-      // This ensures alternatives/similars searches work immediately without debounce conflicts
       setSearchQuery(query);
+      setSearchType(type);
 
       // Track search from navigation
       analytics.logSearch(query, type || "navigation");
       if (type) {
         analytics.logSearchType(type as "alternatives" | "similar", query);
       }
-
-      // Reset navigation search flag after a short delay to allow manual input again
-      const timeoutId = setTimeout(() => {
-        setIsNavigationSearch(false);
-      }, 300); // Wait a bit longer than debounce delay
-
-      return () => clearTimeout(timeoutId);
     }
   }, [params.searchQuery, params.searchType, setSearchQuery, analytics]);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
 
-    // Clear search type and navigation flag when user manually types
+    // Clear search type when user manually types
     if (searchType) {
       setSearchType(null);
-    }
-    if (isNavigationSearch) {
-      setIsNavigationSearch(false);
     }
   };
 
@@ -111,7 +89,6 @@ export default function MedicationsScreen() {
     setInputValue("");
     setSearchType(null);
     setIsFuzzySearch(false);
-    setIsNavigationSearch(false);
 
     // Immediately clear search query to prevent any debounced effects
     setSearchQuery("");
@@ -201,27 +178,19 @@ export default function MedicationsScreen() {
               <View className="flex-row items-center">
                 <View className="w-6 h-6 rounded-full bg-blue-500 items-center justify-center mr-3">
                   <Text className="text-white text-xs font-bold">
-                    {searchType === "alternatives"
-                      ? "🧪"
-                      : searchType === "similar"
-                        ? "📚"
-                        : "🔍"}
+                    {searchType === "alternatives" ? "🧪" : "📚"}
                   </Text>
                 </View>
                 <View className="flex-1">
                   <Text className="text-sm font-semibold text-blue-800 mb-0.5">
                     {searchType === "alternatives"
                       ? "Alternative Medications"
-                      : searchType === "similar"
-                        ? "Similar Medications"
-                        : "Related Medications"}
+                      : "Similar Medications"}
                   </Text>
                   <Text className="text-xs text-blue-600">
                     {searchType === "alternatives"
                       ? "Medications with the same active ingredient"
-                      : searchType === "similar"
-                        ? "Medications in the same drug group"
-                        : "Related medications"}
+                      : "Medications in the same drug group"}
                   </Text>
                 </View>
               </View>

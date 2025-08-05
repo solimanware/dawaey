@@ -106,7 +106,7 @@ export default function MedicationDetailsModal() {
         pathname: "/(tabs)" as any,
         params: {
           searchQuery: drug.group,
-          searchType: "similar",
+          searchType: "similars",
         },
       });
     }
