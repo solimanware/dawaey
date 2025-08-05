@@ -5,7 +5,7 @@ import {
   logSelectContent,
   logViewItem,
 } from "@react-native-firebase/analytics";
-import { useCallback, useEffect, useRef, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 // Custom event names for the Dawaey app
 export const ANALYTICS_EVENTS = {
@@ -230,21 +230,19 @@ export const useAnalytics = () => {
 
   const logMedicationImageEvent = useCallback(
     async (medicationId: number, success: boolean, loadTime?: number) => {
-      const params: Record<string, any> = {
-        medication_id: medicationId,
-        image_url: `https://soliman.ai/dawaey-app-pics/${medicationId}.jpg`,
-      };
+      // Only log image failures, not successful loads
+      if (!success) {
+        const params: Record<string, any> = {
+          medication_id: medicationId,
+          image_url: `https://soliman.ai/dawaey-app-pics/${medicationId}.jpg`,
+        };
 
-      if (loadTime !== undefined) {
-        params.load_time = loadTime;
+        if (loadTime !== undefined) {
+          params.load_time = loadTime;
+        }
+
+        await logEvent(ANALYTICS_EVENTS.MEDICATION_IMAGE_FAILED, params);
       }
-
-      await logEvent(
-        success
-          ? ANALYTICS_EVENTS.MEDICATION_IMAGE_LOADED
-          : ANALYTICS_EVENTS.MEDICATION_IMAGE_FAILED,
-        params
-      );
     },
     [logEvent]
   );
@@ -384,58 +382,61 @@ export const useAnalytics = () => {
     [analytics]
   );
 
-  return useMemo(() => ({
-    // Core functions
-    logEvent,
-    logScreenView,
-    setUserProperty,
+  return useMemo(
+    () => ({
+      // Core functions
+      logEvent,
+      logScreenView,
+      setUserProperty,
 
-    // Search tracking
-    logSearch,
-    logSearchType,
-    logFuzzySearch,
-    logWildcardSearch,
-    logSearchPerformance,
+      // Search tracking
+      logSearch,
+      logSearchType,
+      logFuzzySearch,
+      logWildcardSearch,
+      logSearchPerformance,
 
-    // Medication tracking
-    logMedicationView,
-    logMedicationDetailsOpened,
-    logMedicationImageEvent,
+      // Medication tracking
+      logMedicationView,
+      logMedicationDetailsOpened,
+      logMedicationImageEvent,
 
-    // Navigation tracking
-    logTabSwitch,
-    logModalEvent,
+      // Navigation tracking
+      logTabSwitch,
+      logModalEvent,
 
-    // Error tracking
-    logError,
+      // Error tracking
+      logError,
 
-    // Predefined events
-    logSelectContent: logSelectContentEvent,
-    logSearchAnalytics,
-    logViewItem: logViewItemEvent,
+      // Predefined events
+      logSelectContent: logSelectContentEvent,
+      logSearchAnalytics,
+      logViewItem: logViewItemEvent,
 
-    // Constants
-    ANALYTICS_EVENTS,
-    SCREEN_NAMES,
-  }), [
-    logEvent,
-    logScreenView,
-    setUserProperty,
-    logSearch,
-    logSearchType,
-    logFuzzySearch,
-    logWildcardSearch,
-    logSearchPerformance,
-    logMedicationView,
-    logMedicationDetailsOpened,
-    logMedicationImageEvent,
-    logTabSwitch,
-    logModalEvent,
-    logError,
-    logSelectContentEvent,
-    logSearchAnalytics,
-    logViewItemEvent,
-  ]);
+      // Constants
+      ANALYTICS_EVENTS,
+      SCREEN_NAMES,
+    }),
+    [
+      logEvent,
+      logScreenView,
+      setUserProperty,
+      logSearch,
+      logSearchType,
+      logFuzzySearch,
+      logWildcardSearch,
+      logSearchPerformance,
+      logMedicationView,
+      logMedicationDetailsOpened,
+      logMedicationImageEvent,
+      logTabSwitch,
+      logModalEvent,
+      logError,
+      logSelectContentEvent,
+      logSearchAnalytics,
+      logViewItemEvent,
+    ]
+  );
 };
 
 // Helper functions
