@@ -4,5 +4,8 @@ export type { Drug } from "./useDrugsData";
 export { useFuzzySearch } from "./useFuzzySearch";
 export type { SearchResult, SearchState } from "./useFuzzySearch";
 export { useGlowAnimation } from "./useGlowAnimation";
+export { useOptimizedSearch } from "./useOptimizedSearch";
+export { usePerformanceMonitor } from "./usePerformanceMonitor";
 export { useSearch } from "./useSearch";
+export { useSearchCache } from "./useSearchCache";
 export { useTypewriter } from "./useTypewriter";
