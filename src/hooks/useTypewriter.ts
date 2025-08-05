@@ -48,6 +48,7 @@ export const useTypewriter = ({
     const typeNextChar = () => {
       if (isDeleting) {
         // Deleting
+        console.log(`Deleting character from "${currentWord}", charIndex: ${currentCharIndex}`);
         if (currentCharIndex > 0) {
           setCurrentCharIndex((prev) => prev - 1);
           setDisplayText(currentWord.substring(0, currentCharIndex - 1));
@@ -79,18 +80,19 @@ export const useTypewriter = ({
             `Finished typing word: "${currentWord}" (index: ${currentWordIndex})`
           );
 
-                    // Check if this is the final word in the array
+          // Check if this is the final word in the array
           const isLastWordInArray = currentWordIndex === words.length - 1;
-          
+
           console.log(
             `isLastWordInArray: ${isLastWordInArray}, currentWordIndex: ${currentWordIndex}, totalWords: ${words.length}`
           );
 
           // For cycles = 1, complete when we reach the last word
           // For cycles > 1, only complete on the last word of the final cycle
-          const shouldComplete = cycles === 1 
-            ? isLastWordInArray 
-            : isLastWordInArray && cycleCount >= cycles - 1;
+          const shouldComplete =
+            cycles === 1
+              ? isLastWordInArray
+              : isLastWordInArray && cycleCount >= cycles - 1;
 
           if (shouldComplete) {
             // We've reached the final word, don't delete it
@@ -100,7 +102,9 @@ export const useTypewriter = ({
           }
 
           // Start deleting after pause for all other cases
+          console.log(`Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`);
           timeoutRef.current = setTimeout(() => {
+            console.log(`Deletion timer fired! Setting isDeleting=true for "${currentWord}"`);
             setIsDeleting(true);
           }, pauseDuration);
           return;
@@ -115,7 +119,10 @@ export const useTypewriter = ({
     // Start the animation
     if (!isComplete && cycleCount < cycles) {
       const speed = isDeleting ? deletingSpeed : typingSpeed;
+      console.log(`Setting timeout for next char: speed=${speed}ms, isDeleting=${isDeleting}, currentChar=${currentCharIndex}`);
       timeoutRef.current = setTimeout(typeNextChar, speed);
+    } else {
+      console.log(`Animation stopped: isComplete=${isComplete}, cycleCount=${cycleCount}, cycles=${cycles}`);
     }
 
     return () => {
