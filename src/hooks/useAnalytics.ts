@@ -3,7 +3,6 @@ import {
   setUserProperty as firebaseSetUserProperty,
   getAnalytics,
   logSelectContent,
-  logViewItem,
 } from "@react-native-firebase/analytics";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
@@ -366,7 +365,7 @@ export const useAnalytics = () => {
 
   const logViewItemEvent = useCallback(
     async (itemId: string, itemName: string, category: string) => {
-      await logViewItem(analytics, {
+      await logEvent("view_item", {
         currency: "EGP", // Egyptian Pound for price context
         value: 0, // Could be medication price if available
         items: [
@@ -379,7 +378,7 @@ export const useAnalytics = () => {
         ],
       });
     },
-    [analytics]
+    [logEvent]
   );
 
   return useMemo(
