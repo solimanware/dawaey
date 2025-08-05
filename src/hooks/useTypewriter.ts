@@ -99,6 +99,19 @@ export const useTypewriter = ({
           }
 
           // For all other words, start deleting after pause
+          // Don't set deletion timer if already deleting
+          if (isDeleting) {
+            console.log(`Already deleting, skipping deletion timer`);
+            return;
+          }
+          
+          // Clear any existing deletion timer first
+          if (deletionTimerRef.current) {
+            console.log(`Clearing existing deletion timer: ${deletionTimerRef.current}`);
+            clearTimeout(deletionTimerRef.current);
+            deletionTimerRef.current = null;
+          }
+          
           console.log(
             `Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`
           );
@@ -162,7 +175,9 @@ export const useTypewriter = ({
   useEffect(() => {
     return () => {
       if (deletionTimerRef.current) {
-        console.log(`Clearing deletion timer on unmount: ${deletionTimerRef.current}`);
+        console.log(
+          `Clearing deletion timer on unmount: ${deletionTimerRef.current}`
+        );
         clearTimeout(deletionTimerRef.current);
         deletionTimerRef.current = null;
       }

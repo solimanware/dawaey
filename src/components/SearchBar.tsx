@@ -23,8 +23,6 @@ export const SearchBar = ({
     !hasTypewriterCompleted
   );
 
-  console.log(`SearchBar state: shouldRunTypewriter=${shouldRunTypewriter}, hasTypewriterCompleted=${hasTypewriterCompleted}`);
-
   const typewriterResult = useTypewriter({
     words: shouldRunTypewriter
       ? ["Panadol", "Confestal", "A*G*M*N", "Search any medication..."]
@@ -36,13 +34,9 @@ export const SearchBar = ({
     cycles: 1,
   });
 
-  console.log(`Typewriter result: displayText="${typewriterResult.displayText}", isComplete=${typewriterResult.isComplete}`);
-
   // Mark typewriter as completed when it finishes
   useEffect(() => {
-    console.log(`Checking completion: isComplete=${typewriterResult.isComplete}, shouldRunTypewriter=${shouldRunTypewriter}`);
     if (typewriterResult.isComplete && shouldRunTypewriter) {
-      console.log("MARKING TYPEWRITER AS COMPLETED!");
       hasTypewriterCompleted = true;
       setShouldRunTypewriter(false);
     }
