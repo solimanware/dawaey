@@ -24,6 +24,7 @@ export const useTypewriter = ({
   const [cycleCount, setCycleCount] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const timeoutRef = useRef<number | null>(null);
+  const deletionTimerRef = useRef<number | null>(null);
   const [hasStarted, setHasStarted] = useState(false);
 
   useEffect(() => {
@@ -101,12 +102,15 @@ export const useTypewriter = ({
           console.log(
             `Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`
           );
-          timeoutRef.current = setTimeout(() => {
+          const deletionTimerId = setTimeout(() => {
             console.log(
               `Deletion timer fired! Setting isDeleting=true for "${currentWord}"`
             );
             setIsDeleting(true);
+            deletionTimerRef.current = null;
           }, pauseDuration);
+          deletionTimerRef.current = deletionTimerId;
+          console.log(`Deletion timer set with ID: ${deletionTimerId}`);
           return;
         }
       }
@@ -130,11 +134,14 @@ export const useTypewriter = ({
     }
 
     return () => {
+      // Only clear the animation timer, not the deletion timer
       if (timeoutRef.current) {
-        console.log(`Clearing timeout ID: ${timeoutRef.current}`);
+        console.log(`Clearing animation timeout ID: ${timeoutRef.current}`);
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
+      // Note: deletionTimerRef is intentionally NOT cleared here
+      // because we don't want useEffect re-runs to cancel deletion timers
     };
   }, [
     currentWordIndex,
@@ -150,6 +157,17 @@ export const useTypewriter = ({
     cycles,
     hasStarted,
   ]);
+
+  // Separate cleanup for deletion timer on unmount only
+  useEffect(() => {
+    return () => {
+      if (deletionTimerRef.current) {
+        console.log(`Clearing deletion timer on unmount: ${deletionTimerRef.current}`);
+        clearTimeout(deletionTimerRef.current);
+        deletionTimerRef.current = null;
+      }
+    };
+  }, []);
 
   return {
     displayText,
