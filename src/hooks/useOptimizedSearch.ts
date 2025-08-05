@@ -1,4 +1,5 @@
 import { useMemo, useState, useCallback, useRef } from "react";
+import DiffMatchPatch from "diff-match-patch";
 import { Drug } from "./useDrugsData";
 import { useSearchCache } from "./useSearchCache";
 import { usePerformanceMonitor } from "./usePerformanceMonitor";
@@ -8,6 +9,7 @@ interface SearchResult {
   score: number;
   matchType: "exact" | "fuzzy";
   matchedField: "tradename" | "activeingredient";
+  matchedValue?: string;
 }
 
 interface SearchIndex {
@@ -18,6 +20,55 @@ interface SearchIndex {
   ingredientWords: string[];
   drug: Drug;
 }
+
+// Memoize DiffMatchPatch instance for fuzzy search performance
+const dmp = new DiffMatchPatch();
+dmp.Match_Threshold = 0.4;
+dmp.Match_Distance = 100;
+
+// Sophisticated fuzzy match scoring (from useFuzzySearch)
+const calculateFuzzyScore = (
+  text: string,
+  query: string,
+  matchPosition: number,
+  isTradenamе: boolean = true
+): number => {
+  const distance = Math.abs(matchPosition);
+  const maxLength = Math.max(text.length, query.length);
+  const minLength = Math.min(text.length, query.length);
+
+  // Position score (earlier matches are better)
+  const positionScore = Math.max(0, 1 - distance / text.length);
+
+  // Length similarity
+  const lengthRatio = minLength / maxLength;
+
+  // Starts with bonus
+  const startsWithBonus = text.toLowerCase().startsWith(query.toLowerCase())
+    ? 0.3
+    : 0;
+
+  // Character overlap
+  const queryChars = new Set(query.toLowerCase().split(""));
+  const textChars = new Set(text.toLowerCase().split(""));
+  const intersection = [...queryChars].filter((char) => textChars.has(char));
+  const overlap = intersection.length / queryChars.size;
+
+  // Base score is higher for tradenames
+  const baseScore = isTradenamе ? 0.1 : 0.05;
+
+  // Weighted combination
+  const score = Math.min(
+    1,
+    positionScore * 0.4 +
+      lengthRatio * 0.2 +
+      overlap * 0.3 +
+      startsWithBonus +
+      baseScore
+  );
+
+  return score;
+};
 
 export const useOptimizedSearch = (drugs: Drug[]) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -119,40 +170,90 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       return;
     }
 
-    // Phase 2: Fuzzy matching only if needed
+    // Phase 2: Sophisticated DiffMatchPatch fuzzy search as fallback
     if (exactMatches.length < 5 && !cancelRef.current) {
-      console.log("🔮 Performing fuzzy search as fallback...");
-      const queryWords = searchTerm.split(/\s+/);
+      console.log("🔮 Performing sophisticated fuzzy search as fallback...");
+      const fuzzyStartTime = performance.now();
+      const resultMap = new Map<string, SearchResult>();
       
       for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
-        const item = searchIndex[i];
-        
-        // Word-based fuzzy matching (faster than character-level)
-        const tradenameScore = calculateWordMatchScore(queryWords, item.tradenameWords);
-        const ingredientScore = calculateWordMatchScore(queryWords, item.ingredientWords);
-        
-        if (tradenameScore > 0.3) {
-          fuzzyMatches.push({
-            drug: item.drug,
-            score: tradenameScore,
-            matchType: "fuzzy",
-            matchedField: "tradename"
-          });
-        } else if (ingredientScore > 0.2) {
-          fuzzyMatches.push({
-            drug: item.drug,
-            score: ingredientScore,
-            matchType: "fuzzy",
-            matchedField: "activeingredient"
-          });
+        const drug = searchIndex[i].drug;
+        let bestScore = 0;
+        let bestResult: SearchResult | null = null;
+
+        // Check tradename with DiffMatchPatch
+        const tradenameMatch = dmp.match_main(
+          drug.tradename.toLowerCase(),
+          searchTerm,
+          0
+        );
+        if (tradenameMatch !== -1) {
+          const score = calculateFuzzyScore(
+            drug.tradename,
+            searchTerm,
+            tradenameMatch,
+            true
+          );
+          if (score > 0.25 && score > bestScore) {
+            bestScore = score;
+            bestResult = {
+              drug,
+              score,
+              matchType: "fuzzy",
+              matchedField: "tradename",
+              matchedValue: drug.tradename,
+            };
+          }
         }
 
-        // Early termination for fuzzy search too
-        if (fuzzyMatches.length >= 10) {
-          console.log(`🔮 Fuzzy search early termination: Found ${fuzzyMatches.length} matches after ${i + 1} iterations`);
+        // Check active ingredient with DiffMatchPatch
+        if (drug.activeingredient) {
+          const ingredientMatch = dmp.match_main(
+            drug.activeingredient.toLowerCase(),
+            searchTerm,
+            0
+          );
+          if (ingredientMatch !== -1) {
+            const score = calculateFuzzyScore(
+              drug.activeingredient,
+              searchTerm,
+              ingredientMatch,
+              false
+            );
+            if (score > 0.2 && score > bestScore) {
+              bestScore = score;
+              bestResult = {
+                drug,
+                score,
+                matchType: "fuzzy",
+                matchedField: "activeingredient",
+                matchedValue: drug.activeingredient,
+              };
+            }
+          }
+        }
+
+        // Only add the best result for each drug
+        if (bestResult) {
+          resultMap.set(drug.id.toString(), bestResult);
+        }
+
+        // Early termination for fuzzy search - check every 100 iterations
+        if (i % 100 === 0 && resultMap.size >= 10) {
+          console.log(`🔮 Fuzzy search early termination: Found ${resultMap.size} matches after ${i + 1} iterations`);
           break;
         }
       }
+
+      // Convert map to array and sort by score
+      const fuzzyResults = Array.from(resultMap.values())
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
+      
+      fuzzyMatches.push(...fuzzyResults);
+      
+      const fuzzyEndTime = performance.now();
+      console.log(`🔮 Sophisticated fuzzy search completed in ${(fuzzyEndTime - fuzzyStartTime).toFixed(2)}ms with ${fuzzyResults.length} matches`);
     }
 
     if (!cancelRef.current) {
@@ -194,7 +295,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   };
 };
 
-// Fast word-based scoring algorithm
+// Legacy: Fast word-based scoring (kept for potential future use)
 const calculateWordMatchScore = (queryWords: string[], targetWords: string[]): number => {
   if (queryWords.length === 0 || targetWords.length === 0) return 0;
   

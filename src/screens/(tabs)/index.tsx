@@ -1,13 +1,5 @@
-import {
-  Header,
-  OptimizedSearchResults,
-  SearchBar,
-} from "@/components";
-import {
-  useDrugsData,
-  useGlowAnimation,
-  useOptimizedSearch,
-} from "@/hooks";
+import { Header, OptimizedSearchResults, SearchBar } from "@/components";
+import { useDrugsData, useGlowAnimation, useOptimizedSearch } from "@/hooks";
 import "@/theme/global.css";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -22,11 +14,7 @@ export default function MedicationsScreen() {
   const glowAnim = useGlowAnimation();
 
   // Single optimized search hook
-  const {
-    results,
-    setSearchQuery,
-    isLoading,
-  } = useOptimizedSearch(drugs);
+  const { results, setSearchQuery, isLoading } = useOptimizedSearch(drugs);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
@@ -56,7 +44,7 @@ export default function MedicationsScreen() {
           </Text>
         </View>
       ) : (
-        <OptimizedSearchResults 
+        <OptimizedSearchResults
           results={results}
           searchQuery={inputValue}
           isLoading={isLoading}
