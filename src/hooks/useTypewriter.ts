@@ -109,13 +109,15 @@ export const useTypewriter = ({
             `Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`
           );
           setIsPaused(true);
-          timeoutRef.current = setTimeout(() => {
+          const timerId = setTimeout(() => {
             console.log(
               `Deletion timer fired! Setting isDeleting=true for "${currentWord}"`
             );
             setIsDeleting(true);
             setIsPaused(false);
           }, pauseDuration);
+          timeoutRef.current = timerId;
+          console.log(`Deletion timer set with ID: ${timerId}`);
           return;
         }
       }
@@ -140,7 +142,9 @@ export const useTypewriter = ({
 
     return () => {
       if (timeoutRef.current) {
+        console.log(`Clearing timeout ID: ${timeoutRef.current}`);
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     };
   }, [
@@ -156,7 +160,7 @@ export const useTypewriter = ({
     pauseDuration,
     cycles,
     hasStarted,
-    isPaused,
+    // Note: isPaused is intentionally excluded to prevent clearing the deletion timer
   ]);
 
   return {
