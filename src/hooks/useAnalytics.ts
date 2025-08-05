@@ -1,4 +1,10 @@
-import { getAnalytics, logEvent as firebaseLogEvent, setUserProperty as firebaseSetUserProperty, logSelectContent, logSearch as firebaseLogSearch, logViewItem } from "@react-native-firebase/analytics";
+import {
+  logEvent as firebaseLogEvent,
+  setUserProperty as firebaseSetUserProperty,
+  getAnalytics,
+  logSelectContent,
+  logViewItem,
+} from "@react-native-firebase/analytics";
 import { useCallback, useEffect, useRef } from "react";
 
 // Custom event names for the Dawaey app
@@ -278,11 +284,14 @@ export const useAnalytics = () => {
     [analytics]
   );
 
-  const logSearchAnalytics = useCallback(async (searchTerm: string) => {
-    await firebaseLogSearch(analytics, {
-      search_term: searchTerm,
-    });
-  }, [analytics]);
+  const logSearchAnalytics = useCallback(
+    async (searchTerm: string) => {
+      await logEvent("search", {
+        search_term: searchTerm,
+      });
+    },
+    [logEvent]
+  );
 
   const logViewItemEvent = useCallback(
     async (itemId: string, itemName: string, category: string) => {
