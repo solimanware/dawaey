@@ -70,7 +70,7 @@ const loadDrugsJson = async (): Promise<Drug[]> => {
     console.log(`📊 Loaded ${data.length} drugs from cache`);
     return data as Drug[];
   } catch (error) {
-    console.error("❌ Failed to load drugs data");
+    console.error("❌ Failed to load drugs data:", error);
     return [];
   }
 };
