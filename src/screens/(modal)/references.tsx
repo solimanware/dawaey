@@ -1,10 +1,29 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import React from "react";
+import { router, useFocusEffect } from "expo-router";
+import React, { useCallback } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAnalytics } from "../../hooks";
 
 export default function ReferencesModal() {
+  const analytics = useAnalytics();
+
+  // Screen tracking
+  useFocusEffect(
+    useCallback(() => {
+      analytics.logScreenView(analytics.SCREEN_NAMES.REFERENCES);
+      analytics.logModalEvent('references', 'opened', 'info');
+      analytics.logEvent(analytics.ANALYTICS_EVENTS.REFERENCES_VIEWED, {
+        context: 'modal_opened',
+      });
+    }, [analytics])
+  );
+
+  const handleClose = () => {
+    analytics.logModalEvent('references', 'closed', 'user_action');
+    router.dismiss();
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1 px-6">
@@ -17,7 +36,7 @@ export default function ReferencesModal() {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => router.dismiss()}
+            onPress={handleClose}
             className="p-2 rounded-full bg-gray-100"
           >
             <Ionicons name="close" size={20} color="#6b7280" />

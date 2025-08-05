@@ -1,12 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAnalytics } from "../../hooks";
 
 export default function ProfileScreen() {
+  const analytics = useAnalytics();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+
+  // Screen tracking
+  useFocusEffect(
+    useCallback(() => {
+      analytics.logScreenView(analytics.SCREEN_NAMES.PROFILE);
+      analytics.logEvent(analytics.ANALYTICS_EVENTS.PROFILE_VIEWED, {
+        context: 'screen_opened',
+      });
+    }, [analytics])
+  );
 
   const menuItems = [
     {
@@ -125,6 +138,12 @@ export default function ProfileScreen() {
                 <TouchableOpacity
                   key={index}
                   className={`flex-row items-center py-3 ${index !== menuItems.length - 1 ? "border-b border-gray-100" : ""}`}
+                  onPress={() => {
+                    analytics.logEvent('profile_menu_item_pressed', {
+                      menu_item: item.title,
+                      icon: item.icon,
+                    });
+                  }}
                 >
                   <View
                     className={`w-10 h-10 ${item.bgColor} rounded-full items-center justify-center mr-4`}
@@ -170,7 +189,13 @@ export default function ProfileScreen() {
                 </View>
                 <Switch
                   value={notificationsEnabled}
-                  onValueChange={setNotificationsEnabled}
+                  onValueChange={(value) => {
+                    setNotificationsEnabled(value);
+                    analytics.logEvent(analytics.ANALYTICS_EVENTS.SETTINGS_CHANGED, {
+                      setting: 'notifications',
+                      enabled: value,
+                    });
+                  }}
                   trackColor={{ false: "#f3f4f6", true: "#3b82f6" }}
                   thumbColor={notificationsEnabled ? "#ffffff" : "#9ca3af"}
                 />
@@ -186,7 +211,13 @@ export default function ProfileScreen() {
                 </View>
                 <Switch
                   value={darkModeEnabled}
-                  onValueChange={setDarkModeEnabled}
+                  onValueChange={(value) => {
+                    setDarkModeEnabled(value);
+                    analytics.logEvent(analytics.ANALYTICS_EVENTS.SETTINGS_CHANGED, {
+                      setting: 'dark_mode',
+                      enabled: value,
+                    });
+                  }}
                   trackColor={{ false: "#f3f4f6", true: "#3b82f6" }}
                   thumbColor={darkModeEnabled ? "#ffffff" : "#9ca3af"}
                 />
@@ -197,6 +228,13 @@ export default function ProfileScreen() {
                 <TouchableOpacity
                   key={index}
                   className={`flex-row items-center justify-between py-3 ${index !== settingsItems.length - 1 ? "border-b border-gray-100" : ""}`}
+                  onPress={() => {
+                    analytics.logEvent('profile_settings_item_pressed', {
+                      setting_item: item.title,
+                      icon: item.icon,
+                      has_value: !!item.value,
+                    });
+                  }}
                 >
                   <View className="flex-row items-center">
                     <View className="w-10 h-10 bg-gray-50 rounded-full items-center justify-center mr-4">
@@ -227,7 +265,14 @@ export default function ProfileScreen() {
 
           {/* Logout */}
           <View className="px-6 mt-6 mb-8">
-            <TouchableOpacity className="bg-red-50 rounded-xl p-4 flex-row items-center justify-center">
+            <TouchableOpacity 
+              className="bg-red-50 rounded-xl p-4 flex-row items-center justify-center"
+              onPress={() => {
+                analytics.logEvent('user_sign_out', {
+                  source: 'profile_screen',
+                });
+              }}
+            >
               <Ionicons name="log-out" size={20} color="#dc2626" />
               <Text className="text-red-600 font-semibold ml-2">Sign Out</Text>
             </TouchableOpacity>

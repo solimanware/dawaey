@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 import {
   ScrollView,
   Text,
@@ -8,8 +10,21 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAnalytics } from "../../hooks";
 
 export default function PharmaciesScreen() {
+  const analytics = useAnalytics();
+
+  // Screen tracking
+  useFocusEffect(
+    useCallback(() => {
+      analytics.logScreenView(analytics.SCREEN_NAMES.PHARMACIES);
+      analytics.logEvent(analytics.ANALYTICS_EVENTS.PHARMACY_SEARCHED, {
+        context: 'screen_opened',
+      });
+    }, [analytics])
+  );
+
   const pharmacies = [
     {
       name: "HealthCare Pharmacy",
@@ -133,6 +148,14 @@ export default function PharmaciesScreen() {
               <TouchableOpacity
                 key={index}
                 className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100"
+                onPress={() => {
+                  analytics.logEvent('pharmacy_viewed', {
+                    pharmacy_name: pharmacy.name,
+                    distance: pharmacy.distance,
+                    rating: pharmacy.rating,
+                    is_open: pharmacy.isOpen,
+                  });
+                }}
               >
                 <View className="flex-row justify-between items-start mb-3">
                   <View className="flex-1">
@@ -173,13 +196,38 @@ export default function PharmaciesScreen() {
                     {pharmacy.openUntil}
                   </Text>
                   <View className="flex-row">
-                    <TouchableOpacity className="p-2 bg-gray-100 rounded-full mr-2">
+                    <TouchableOpacity 
+                      className="p-2 bg-gray-100 rounded-full mr-2"
+                      onPress={() => {
+                        analytics.logEvent('pharmacy_call_pressed', {
+                          pharmacy_name: pharmacy.name,
+                          phone: pharmacy.phone,
+                        });
+                      }}
+                    >
                       <Ionicons name="call" size={16} color="#64748b" />
                     </TouchableOpacity>
-                    <TouchableOpacity className="p-2 bg-gray-100 rounded-full mr-2">
+                    <TouchableOpacity 
+                      className="p-2 bg-gray-100 rounded-full mr-2"
+                      onPress={() => {
+                        analytics.logEvent('pharmacy_navigate_pressed', {
+                          pharmacy_name: pharmacy.name,
+                          distance: pharmacy.distance,
+                        });
+                      }}
+                    >
                       <Ionicons name="navigate" size={16} color="#64748b" />
                     </TouchableOpacity>
-                    <TouchableOpacity className="p-2 bg-green-500 rounded-full">
+                    <TouchableOpacity 
+                      className="p-2 bg-green-500 rounded-full"
+                      onPress={() => {
+                        analytics.logEvent('pharmacy_details_opened', {
+                          pharmacy_name: pharmacy.name,
+                          rating: pharmacy.rating,
+                          is_open: pharmacy.isOpen,
+                        });
+                      }}
+                    >
                       <Ionicons name="storefront" size={16} color="white" />
                     </TouchableOpacity>
                   </View>

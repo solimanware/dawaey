@@ -9,7 +9,7 @@ export const Header = () => {
         <Text className="text-2xl font-bold text-violet-900">Medications</Text>
         <Text className="text-violet-700 mt-1">Find your medicines</Text>
       </View>
-      <TouchableOpacity 
+      <TouchableOpacity
         className="p-3 bg-violet-500 rounded-full"
         onPress={() => router.push({ pathname: "/(modal)/references" as any })}
       >

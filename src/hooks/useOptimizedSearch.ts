@@ -1,6 +1,7 @@
 import DiffMatchPatch from "diff-match-patch";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Drug } from "./useDrugsData";
+import { useAnalytics } from "./useAnalytics";
 import { usePerformanceMonitor } from "./usePerformanceMonitor";
 import { useSearchCache } from "./useSearchCache";
 
@@ -137,10 +138,11 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   const { get: getCachedResults, set: setCachedResults } =
     useSearchCache<SearchResult>();
   const { recordSearchTime } = usePerformanceMonitor();
+  const analytics = useAnalytics();
 
   // Create search index once - this is the key optimization
   const searchIndex = useMemo<SearchIndex[]>(() => {
-    console.log("🏗️ Building optimized search index...");
+    //console.log("🏗️ Building optimized search index...");
     const startTime = performance.now();
 
     const index = drugs.map((drug) => ({
@@ -155,33 +157,34 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     }));
 
     const endTime = performance.now();
-    console.log(
-      `📊 Search index built in ${(endTime - startTime).toFixed(2)}ms for ${drugs.length} drugs`
-    );
+    //console.log(
+    //   `📊 Search index built in ${(endTime - startTime).toFixed(2)}ms for ${drugs.length} drugs`
+    // );
     return index;
   }, [drugs]);
 
   const performOptimizedSearch = useCallback(
     async (query: string) => {
-      if (!query.trim() || query.trim().length < 2) {
-        setResults([]);
-        return;
-      }
+      try {
+        if (!query.trim() || query.trim().length < 2) {
+          setResults([]);
+          return;
+        }
 
-      const searchTerm = query.toLowerCase().trim();
+        const searchTerm = query.toLowerCase().trim();
 
-      // Check cache first
-      const cacheStartTime = performance.now();
-      const cachedResults = getCachedResults(searchTerm);
-      if (cachedResults) {
-        const cacheTime = performance.now() - cacheStartTime;
-        recordSearchTime(cacheTime, true);
-        setResults(cachedResults);
-        return;
-      }
+        // Check cache first
+        const cacheStartTime = performance.now();
+        const cachedResults = getCachedResults(searchTerm);
+        if (cachedResults) {
+          const cacheTime = performance.now() - cacheStartTime;
+          recordSearchTime(cacheTime, true, query, cachedResults.length);
+          setResults(cachedResults);
+          return;
+        }
 
-      setIsLoading(true);
-      cancelRef.current = false;
+        setIsLoading(true);
+        cancelRef.current = false;
 
       const searchStartTime = performance.now();
       const exactMatches: SearchResult[] = [];
@@ -222,9 +225,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
         // Early termination if we have enough exact matches
         if (exactMatches.length >= 20) {
-          console.log(
-            `⚡ Early termination: Found ${exactMatches.length} exact matches after ${i + 1} iterations`
-          );
+          //console.log(
+          //   `⚡ Early termination: Found ${exactMatches.length} exact matches after ${i + 1} iterations`
+          // );
           break;
         }
       }
@@ -232,7 +235,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       // Phase 1.5: Wildcard search (if pattern contains *)
       const wildcardMatches: SearchResult[] = [];
       if (isWildcardPattern(searchTerm)) {
-        console.log(`🔥 Detected wildcard pattern: ${searchTerm}`);
+        //console.log(`🔥 Detected wildcard pattern: ${searchTerm}`);
         const wildcardStartTime = performance.now();
         const wildcardRegex = convertWildcardToRegex(searchTerm);
 
@@ -296,9 +299,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         }
 
         const wildcardEndTime = performance.now();
-        console.log(
-          `🔥 Wildcard search completed in ${(wildcardEndTime - wildcardStartTime).toFixed(2)}ms with ${wildcardMatches.length} matches`
-        );
+        //console.log(
+        //   `🔥 Wildcard search completed in ${(wildcardEndTime - wildcardStartTime).toFixed(2)}ms with ${wildcardMatches.length} matches`
+        // );
       }
 
       // If we have good exact matches or wildcard matches, return them
@@ -317,15 +320,15 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         recordSearchTime(searchTime);
         const searchType =
           wildcardMatches.length > 0 ? "wildcard + exact" : "exact";
-        console.log(
-          `🔍 ${searchType} search completed in ${searchTime.toFixed(2)}ms with ${sortedResults.length} results`
-        );
+        //console.log(
+        //   `🔍 ${searchType} search completed in ${searchTime.toFixed(2)}ms with ${sortedResults.length} results`
+        // );
         return;
       }
 
       // Phase 2: Sophisticated DiffMatchPatch fuzzy search as fallback
       if (primaryMatches.length < 5 && !cancelRef.current) {
-        console.log("🔮 Performing sophisticated fuzzy search as fallback...");
+        //console.log("🔮 Performing sophisticated fuzzy search as fallback...");
         const fuzzyStartTime = performance.now();
         const resultMap = new Map<string, SearchResult>();
 
@@ -423,9 +426,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
           // Early termination for fuzzy search - check every 100 iterations
           if (i % 100 === 0 && resultMap.size >= 10) {
-            console.log(
-              `🔮 Fuzzy search early termination: Found ${resultMap.size} matches after ${i + 1} iterations`
-            );
+            //console.log(
+            //   `🔮 Fuzzy search early termination: Found ${resultMap.size} matches after ${i + 1} iterations`
+            // );
             break;
           }
         }
@@ -438,9 +441,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         fuzzyMatches.push(...fuzzyResults);
 
         const fuzzyEndTime = performance.now();
-        console.log(
-          `🔮 Sophisticated fuzzy search completed in ${(fuzzyEndTime - fuzzyStartTime).toFixed(2)}ms with ${fuzzyResults.length} matches`
-        );
+        //console.log(
+        //   `🔮 Sophisticated fuzzy search completed in ${(fuzzyEndTime - fuzzyStartTime).toFixed(2)}ms with ${fuzzyResults.length} matches`
+        // );
       }
 
       if (!cancelRef.current) {
@@ -457,15 +460,29 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
         const searchEndTime = performance.now();
         const searchTime = searchEndTime - searchStartTime;
-        recordSearchTime(searchTime);
-        console.log(
-          `🎯 Complete search finished in ${searchTime.toFixed(2)}ms with ${allResults.length} results (${exactMatches.length} exact, ${wildcardMatches.length} wildcard, ${fuzzyMatches.length} fuzzy)`
-        );
+        recordSearchTime(searchTime, false, query, allResults.length);
+        //console.log(
+        //   `🎯 Complete search finished in ${searchTime.toFixed(2)}ms with ${allResults.length} results (${exactMatches.length} exact, ${wildcardMatches.length} wildcard, ${fuzzyMatches.length} fuzzy)`
+        // );
       }
-
-      setIsLoading(false);
+      } catch (error) {
+        console.error('Search error:', error);
+        analytics.logError(
+          error instanceof Error ? error : new Error('Unknown search error'), 
+          'optimized_search',
+          {
+            query,
+            search_term: query.toLowerCase().trim(),
+            drugs_count: drugs.length,
+            search_index_length: searchIndex.length,
+          }
+        );
+        setResults([]);
+      } finally {
+        setIsLoading(false);
+      }
     },
-    [searchIndex, getCachedResults, setCachedResults, recordSearchTime]
+    [searchIndex, getCachedResults, setCachedResults, recordSearchTime, analytics, drugs.length]
   );
 
   const debouncedSearch = useMemo(() => {

@@ -1,7 +1,5 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Stack, router } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
-import { TouchableOpacity } from "react-native";
 
 export default function RootLayout() {
   return (

@@ -11,9 +11,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {
+    bundleIdentifier: "app.dawaey",
     supportsTablet: true,
   },
   android: {
+    package: "app.dawaey",
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",

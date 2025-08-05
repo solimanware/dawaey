@@ -1,14 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Drug } from "../../hooks";
+import { Drug, useAnalytics } from "../../hooks";
 
 export default function MedicationDetailsModal() {
   const params = useLocalSearchParams();
   const [imageError, setImageError] = useState(false);
+  const analytics = useAnalytics();
 
   // Parse the drug data from params
   const drug: Drug = {
@@ -21,6 +22,19 @@ export default function MedicationDetailsModal() {
     price: params.price as string,
     form: params.form as string,
   };
+
+  // Screen tracking and modal analytics
+  useFocusEffect(
+    useCallback(() => {
+      analytics.logScreenView(analytics.SCREEN_NAMES.MEDICATION_DETAILS);
+      analytics.logModalEvent(
+        "medication_details",
+        "opened",
+        "medication_card"
+      );
+      analytics.logMedicationView(drug, "details_modal");
+    }, [analytics, drug])
+  );
 
   // Use default primary color for styling
   const primaryColor = "#2563eb";
@@ -53,6 +67,14 @@ export default function MedicationDetailsModal() {
   // Handle CTA button actions
   const handleShowAlternatives = () => {
     if (drug.activeingredient) {
+      // Track alternative medications search
+      analytics.logSearchType("alternatives", drug.tradename);
+      analytics.logEvent(analytics.ANALYTICS_EVENTS.ALTERNATIVES_SEARCHED, {
+        original_medication: drug.tradename,
+        active_ingredient: drug.activeingredient,
+        source: "medication_details",
+      });
+
       router.dismiss();
       // Navigate to main screen with activeingredient search
       router.push({
@@ -67,6 +89,17 @@ export default function MedicationDetailsModal() {
 
   const handleShowSimilars = () => {
     if (drug.group) {
+      // Track similar medications search
+      analytics.logSearchType("similar", drug.tradename);
+      analytics.logEvent(
+        analytics.ANALYTICS_EVENTS.SIMILAR_MEDICATIONS_SEARCHED,
+        {
+          original_medication: drug.tradename,
+          drug_group: drug.group,
+          source: "medication_details",
+        }
+      );
+
       router.dismiss();
       // Navigate to main screen with group search
       router.push({
@@ -79,17 +112,23 @@ export default function MedicationDetailsModal() {
     }
   };
 
+  const handleClose = () => {
+    analytics.logModalEvent("medication_details", "closed", "user_action");
+    router.dismiss();
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View className="flex-row items-center justify-between px-6 py-4 border-b border-gray-200">
           <View className="flex-1">
-            <Text className="text-2xl font-bold text-gray-900">Medication Details</Text>
-            <Text className="text-gray-600 mt-1">{drug.tradename}</Text>
+            <Text className="text-2xl font-bold text-gray-900">
+              Medication Details
+            </Text>
           </View>
-          <TouchableOpacity 
-            onPress={() => router.dismiss()}
+          <TouchableOpacity
+            onPress={handleClose}
             className="p-2 rounded-full bg-gray-100"
           >
             <Ionicons name="close" size={20} color="#6b7280" />

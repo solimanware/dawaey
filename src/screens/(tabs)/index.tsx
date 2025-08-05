@@ -1,8 +1,13 @@
 import { Header, OptimizedSearchResults, SearchBar } from "@/components";
-import { useDrugsData, useGlowAnimation, useOptimizedSearch } from "@/hooks";
+import {
+  useAnalytics,
+  useDrugsData,
+  useGlowAnimation,
+  useOptimizedSearch,
+} from "@/hooks";
 import "@/theme/global.css";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -18,9 +23,17 @@ export default function MedicationsScreen() {
   // Custom hooks
   const { drugs } = useDrugsData();
   const glowAnim = useGlowAnimation();
+  const analytics = useAnalytics();
 
   // Single optimized search hook
   const { results, setSearchQuery, isLoading } = useOptimizedSearch(drugs);
+
+  // Screen tracking
+  useFocusEffect(
+    useCallback(() => {
+      analytics.logScreenView(analytics.SCREEN_NAMES.SEARCH);
+    }, [analytics])
+  );
 
   // Handle initial search from navigation params
   useEffect(() => {
@@ -31,17 +44,47 @@ export default function MedicationsScreen() {
       setInputValue(query);
       setSearchQuery(query);
       setSearchType(type);
+
+      // Track search from navigation
+      analytics.logSearch(query, type || "navigation");
+      if (type) {
+        analytics.logSearchType(type as "alternatives" | "similar", query);
+      }
     }
-  }, [params.searchQuery, params.searchType, setSearchQuery]);
+  }, [params.searchQuery, params.searchType, setSearchQuery, analytics]);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
     setSearchQuery(text);
+
     // Clear search type when user manually types
     if (searchType) {
       setSearchType(null);
     }
+
+    // Track search queries (debounced through search hook)
+    if (text.length >= 2) {
+      analytics.logSearch(text, "manual_input");
+      analytics.logSearchAnalytics(text);
+
+      // Track wildcard patterns
+      if (text.includes("*") && text.replace(/\*/g, "").length >= 2) {
+        analytics.logWildcardSearch(text, results.length);
+      }
+    }
   };
+
+  // Track search results display
+  useEffect(() => {
+    if (inputValue.length >= 2 && results.length > 0) {
+      analytics.logEvent(analytics.ANALYTICS_EVENTS.SEARCH_RESULTS_VIEWED, {
+        search_term: inputValue,
+        results_count: results.length,
+        search_type: searchType || "manual",
+        has_fuzzy_match: isFuzzySearch,
+      });
+    }
+  }, [results.length, inputValue, searchType, isFuzzySearch, analytics]);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
@@ -107,7 +150,12 @@ export default function MedicationsScreen() {
             results={results}
             searchQuery={inputValue}
             isLoading={isLoading}
-            onFuzzySearchDetected={setIsFuzzySearch}
+            onFuzzySearchDetected={(isFuzzy) => {
+              setIsFuzzySearch(isFuzzy);
+              if (isFuzzy && results.length > 0) {
+                analytics.logFuzzySearch(inputValue, results[0].drug.tradename);
+              }
+            }}
           />
         </View>
       )}

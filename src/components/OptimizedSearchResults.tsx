@@ -69,7 +69,6 @@ export const OptimizedSearchResults = ({
         data={results}
         renderItem={renderSearchResult}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
         keyExtractor={(item: SearchResult) =>
           `${item.drug.id}-${item.matchType}-${item.score}`
         }

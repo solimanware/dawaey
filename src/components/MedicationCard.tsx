@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { useAnalytics } from "../hooks";
 import { Drug } from "../hooks/useDrugsData";
 
 interface MedicationCardProps {
@@ -19,17 +20,17 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
   const totalIngredientsText = ingredients.join(" + ");
   const shouldAnimate = totalIngredientsText.length > 30;
 
-  console.log("🔍 Seamless Marquee Debug:", {
-    totalIngredientsText,
-    textLength: totalIngredientsText.length,
-    containerWidth,
-    singleContentWidth,
-    shouldAnimate,
-  });
+  //console.log("🔍 Seamless Marquee Debug:", {
+  //   totalIngredientsText,
+  //   textLength: totalIngredientsText.length,
+  //   containerWidth,
+  //   singleContentWidth,
+  //   shouldAnimate,
+  // });
 
   useEffect(() => {
     if (shouldAnimate && containerWidth > 50 && singleContentWidth > 0) {
-      console.log("🚀 Starting seamless marquee with exact calculations");
+      //console.log("🚀 Starting seamless marquee with exact calculations");
 
       const startSeamlessMarquee = () => {
         // Clear any existing animation
@@ -110,7 +111,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         }}
         onLayout={(event) => {
           const width = event.nativeEvent.layout.width;
-          console.log("📏 Container width measured:", width);
+          //console.log("📏 Container width measured:", width);
           setContainerWidth(width);
         }}
       >
@@ -119,7 +120,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
           style={{ position: "absolute", opacity: 0, top: -1000 }}
           onLayout={(event) => {
             const width = event.nativeEvent.layout.width;
-            console.log("📐 Single content width measured:", width);
+            //console.log("📐 Single content width measured:", width);
             setSingleContentWidth(width);
           }}
         >
@@ -157,6 +158,9 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   // Track image loading state
   const [imageError, setImageError] = useState(false);
 
+  // Analytics hook
+  const analytics = useAnalytics();
+
   // Safely format price
   const formatPrice = (price: string): string => {
     if (!price || price === "") {
@@ -181,13 +185,19 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
   const activeIngredients = getActiveIngredients();
   const totalIngredientsText = activeIngredients.join(" + ");
 
-  console.log("💊 MedicationCard Debug:", {
-    tradename: item.tradename,
-    totalIngredientsText,
-    textLength: totalIngredientsText.length,
-  });
+  //console.log("💊 MedicationCard Debug:", {
+  //   tradename: item.tradename,
+  //   totalIngredientsText,
+  //   textLength: totalIngredientsText.length,
+  // });
 
   const handlePress = () => {
+    // Track medication card interaction
+    analytics.logMedicationView(item, "search_card");
+    analytics.logMedicationDetailsOpened(item, "search_card");
+    analytics.logSelectContent("medication", item.id.toString());
+    analytics.logViewItem(item.id.toString(), item.tradename, "medication");
+
     router.push({
       pathname: "/(modal)/medication-details" as any,
       params: {
@@ -220,7 +230,13 @@ export const MedicationCard = ({ item }: MedicationCardProps) => {
               contentFit="cover"
               placeholder={{ blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4" }}
               transition={200}
-              onError={() => setImageError(true)}
+              onLoad={() => {
+                analytics.logMedicationImageEvent(item.id, true);
+              }}
+              onError={() => {
+                setImageError(true);
+                analytics.logMedicationImageEvent(item.id, false);
+              }}
             />
           ) : (
             <View

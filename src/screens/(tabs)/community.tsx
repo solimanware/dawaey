@@ -1,5 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 import {
   ScrollView,
   Text,
@@ -8,8 +10,18 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAnalytics } from "../../hooks";
 
 export default function CommunityScreen() {
+  const analytics = useAnalytics();
+
+  // Screen tracking
+  useFocusEffect(
+    useCallback(() => {
+      analytics.logScreenView(analytics.SCREEN_NAMES.COMMUNITY);
+    }, [analytics])
+  );
+
   const posts = [
     {
       id: 1,
@@ -175,7 +187,16 @@ export default function CommunityScreen() {
 
                 {/* Post Actions */}
                 <View className="flex-row items-center justify-between pt-3 border-t border-gray-100">
-                  <TouchableOpacity className="flex-row items-center">
+                  <TouchableOpacity 
+                    className="flex-row items-center"
+                    onPress={() => {
+                      analytics.logEvent('community_post_liked', {
+                        post_id: post.id,
+                        author_type: post.authorType,
+                        was_already_liked: post.isLiked,
+                      });
+                    }}
+                  >
                     <Ionicons
                       name={post.isLiked ? "heart" : "heart-outline"}
                       size={20}
@@ -183,7 +204,16 @@ export default function CommunityScreen() {
                     />
                     <Text className="ml-2 text-gray-600">{post.likes}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center">
+                  <TouchableOpacity 
+                    className="flex-row items-center"
+                    onPress={() => {
+                      analytics.logEvent('community_post_comment_opened', {
+                        post_id: post.id,
+                        author_type: post.authorType,
+                        comment_count: post.comments,
+                      });
+                    }}
+                  >
                     <Ionicons
                       name="chatbubble-outline"
                       size={20}
@@ -191,11 +221,26 @@ export default function CommunityScreen() {
                     />
                     <Text className="ml-2 text-gray-600">{post.comments}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center">
+                  <TouchableOpacity 
+                    className="flex-row items-center"
+                    onPress={() => {
+                      analytics.logEvent('community_post_shared', {
+                        post_id: post.id,
+                        author_type: post.authorType,
+                      });
+                    }}
+                  >
                     <Ionicons name="share-outline" size={20} color="#64748b" />
                     <Text className="ml-2 text-gray-600">Share</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      analytics.logEvent('community_post_bookmarked', {
+                        post_id: post.id,
+                        author_type: post.authorType,
+                      });
+                    }}
+                  >
                     <Ionicons
                       name="bookmark-outline"
                       size={20}
