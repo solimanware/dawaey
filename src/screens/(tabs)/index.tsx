@@ -1,6 +1,7 @@
 import { Header, OptimizedSearchResults, SearchBar } from "@/components";
 import {
   useAnalytics,
+  useDebounce,
   useDrugsData,
   useGlowAnimation,
   useOptimizedSearch,
@@ -25,6 +26,9 @@ export default function MedicationsScreen() {
   const glowAnim = useGlowAnimation();
   const analytics = useAnalytics();
 
+  // Debounce the input value for search (200ms delay)
+  const debouncedSearchQuery = useDebounce(inputValue, 200);
+
   // Single optimized search hook
   const { results, setSearchQuery, isLoading } = useOptimizedSearch(drugs);
 
@@ -34,6 +38,22 @@ export default function MedicationsScreen() {
       analytics.logScreenView(analytics.SCREEN_NAMES.SEARCH);
     }, [analytics])
   );
+
+  // Handle debounced search query changes
+  useEffect(() => {
+    setSearchQuery(debouncedSearchQuery);
+
+    // Track search queries (only for debounced queries)
+    if (debouncedSearchQuery.length >= 2) {
+      analytics.logSearch(debouncedSearchQuery, "manual_input");
+      analytics.logSearchAnalytics(debouncedSearchQuery);
+
+      // Track wildcard patterns
+      if (debouncedSearchQuery.includes("*") && debouncedSearchQuery.replace(/\*/g, "").length >= 2) {
+        analytics.logWildcardSearch(debouncedSearchQuery, results.length);
+      }
+    }
+  }, [debouncedSearchQuery, setSearchQuery, analytics, results.length]);
 
   // Handle initial search from navigation params
   useEffect(() => {
@@ -55,36 +75,24 @@ export default function MedicationsScreen() {
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
-    setSearchQuery(text);
 
     // Clear search type when user manually types
     if (searchType) {
       setSearchType(null);
     }
-
-    // Track search queries (debounced through search hook)
-    if (text.length >= 2) {
-      analytics.logSearch(text, "manual_input");
-      analytics.logSearchAnalytics(text);
-
-      // Track wildcard patterns
-      if (text.includes("*") && text.replace(/\*/g, "").length >= 2) {
-        analytics.logWildcardSearch(text, results.length);
-      }
-    }
   };
 
   // Track search results display
   useEffect(() => {
-    if (inputValue.length >= 2 && results.length > 0) {
+    if (debouncedSearchQuery.length >= 2 && results.length > 0) {
       analytics.logEvent(analytics.ANALYTICS_EVENTS.SEARCH_RESULTS_VIEWED, {
-        search_term: inputValue,
+        search_term: debouncedSearchQuery,
         results_count: results.length,
         search_type: searchType || "manual",
         has_fuzzy_match: isFuzzySearch,
       });
     }
-  }, [results.length, inputValue, searchType, isFuzzySearch, analytics]);
+  }, [results.length, debouncedSearchQuery, searchType, isFuzzySearch, analytics]);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
