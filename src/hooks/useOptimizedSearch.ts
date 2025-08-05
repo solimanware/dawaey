@@ -182,8 +182,8 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         const totalItems = searchIndex.length;
         const sampleSize = Math.min(10000, totalItems); // Process max 10k items first for better coverage
 
-        // Debug logging for specific problematic searches (disabled in production)
-        const isDebugSearch = false; // searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
+        // Debug logging for specific problematic searches
+        const isDebugSearch = searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
 
         // First pass: Quick scan of a subset for immediate results
         for (let i = 0; i < sampleSize && !cancelRef.current; i++) {
