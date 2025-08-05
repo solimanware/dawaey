@@ -130,8 +130,11 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const cancelRef = useRef<boolean>(false);
-  const { get: getCachedResults, set: setCachedResults, clear: clearCache } =
-    useSearchCache<SearchResult>();
+  const {
+    get: getCachedResults,
+    set: setCachedResults,
+    clear: clearCache,
+  } = useSearchCache<SearchResult>();
   const { recordSearchTime } = usePerformanceMonitor();
   const analytics = useAnalytics();
 
@@ -140,7 +143,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     if (!drugs || drugs.length === 0) {
       return [];
     }
-    
+
     //console.log("🏗️ Building optimized search index...");
     const index = drugs.map((drug) => ({
       id: drug.id,
