@@ -19,25 +19,45 @@ const LOCAL_JSON_PATH = `${FileSystem.documentDirectory}${FILE_NAME}`;
 const loadDrugsJson = async (): Promise<Drug[]> => {
   try {
     console.log("📋 Loading drugs data...");
-    
+
     // Check if file already copied to local storage
     const fileInfo = await FileSystem.getInfoAsync(LOCAL_JSON_PATH);
     if (!fileInfo.exists) {
       console.log("📥 Copying drugs data to local storage...");
-      
-      // Copy from asset to documentDirectory for faster access
-      const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
-      await asset.downloadAsync(); // Ensures it's available
 
-      if (!asset.localUri) {
-        throw new Error("Asset URI not available");
+      // Copy from asset to documentDirectory for faster access
+      console.log("🔍 Loading asset from bundle...");
+      
+      // First try to get the asset using bundleDirectory
+      let sourceUri: string;
+      try {
+        const asset = Asset.fromURI(
+          FileSystem.bundleDirectory + "assets/data/drugs.json"
+        );
+        await asset.downloadAsync();
+        sourceUri = asset.localUri || asset.uri;
+        console.log("📁 Asset loaded from bundle:", sourceUri);
+      } catch (bundleError) {
+        console.warn("⚠️ Bundle method failed, trying alternative...");
+        // Fallback: try with module require
+        try {
+          const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
+          await asset.downloadAsync();
+          if (!asset.localUri) {
+            throw new Error("Asset localUri not available");
+          }
+          sourceUri = asset.localUri;
+          console.log("📁 Asset loaded via module:", sourceUri);
+        } catch (moduleError) {
+          throw new Error(`Both asset loading methods failed: ${bundleError}, ${moduleError}`);
+        }
       }
 
       await FileSystem.copyAsync({
-        from: asset.localUri,
+        from: sourceUri,
         to: LOCAL_JSON_PATH,
       });
-      
+
       console.log("✅ Drugs data cached locally");
     } else {
       console.log("📂 Using cached drugs data");
@@ -50,7 +70,7 @@ const loadDrugsJson = async (): Promise<Drug[]> => {
     console.log(`📊 Loaded ${data.length} drugs from cache`);
     return data as Drug[];
   } catch (error) {
-    console.error("❌ Failed to load drugs data", error);
+    console.error("❌ Failed to load drugs data");
     return [];
   }
 };
