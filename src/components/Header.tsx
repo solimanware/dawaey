@@ -11,7 +11,7 @@ export const Header = () => {
       </View>
       <TouchableOpacity 
         className="p-3 bg-violet-500 rounded-full"
-        onPress={() => router.push("/(modal)/references")}
+        onPress={() => router.push({ pathname: "/(modal)/references" as any })}
       >
         <Ionicons name="help-outline" size={24} color="white" />
       </TouchableOpacity>
