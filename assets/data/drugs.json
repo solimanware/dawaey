@@ -87984,15 +87984,6 @@
     "price": "3.5"
   },
   {
-    "id": 9777,
-    "type": "UNKNOWN",
-    "activeingredient": "SALEH MANSOUR+MOHAMED AMIN+AHMED REFAEY+TAMER SHAABAN",
-    "company": "TAGAMO3 SAIDALY (TAJ)",
-    "group": "72025",
-    "tradename": "DRUG EYE TEAM",
-    "price": "72025"
-  },
-  {
     "id": 9778,
     "type": "RECTAL",
     "activeingredient": "MECLIZINE HYDROCHLORIDE",
@@ -123685,15 +123676,6 @@
     "group": "ANTI-EPILEPTIC",
     "tradename": "ANDOVIMPAMIDE 200 MG 10 TABS. (N/A YET)",
     "price": "92.5"
-  },
-  {
-    "id": 13744,
-    "type": "ORAL.SOLID",
-    "activeingredient": "",
-    "company": "",
-    "group": ".",
-    "tradename": "DDRRUUGG EEYYEE",
-    "price": "2012"
   },
   {
     "id": 13745,

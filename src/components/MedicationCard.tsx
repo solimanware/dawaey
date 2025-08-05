@@ -73,10 +73,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
             key={`${ingredient}-${index}`}
             className="bg-white px-2 py-1 rounded-full border-[1px] border-primary-300"
           >
-            <Text
-              className="text-sm text-gray-700"
-              numberOfLines={1}
-            >
+            <Text className="text-sm text-gray-700" numberOfLines={1}>
               {ingredient}
             </Text>
           </View>
@@ -93,7 +90,7 @@ const AnimatedMarquee = ({ ingredients }: { ingredients: string[] }) => {
         className="mr-2 bg-white px-2 py-1 rounded-full border-[1px] border-primary-300"
         style={{ flexShrink: 0 }}
       >
-        <Text 
+        <Text
           className="text-sm text-gray-700"
           numberOfLines={1}
           ellipsizeMode="tail"

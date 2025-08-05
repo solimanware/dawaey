@@ -27,7 +27,7 @@ export default function MedicationDetailsModal() {
   const primaryColor = paletteColors[0] || "#2563eb";
 
   // Generate drug image URL based on ID
-  const drugImageUrl = `https://soliman.ai/z-drug-index/assets/drug-pics/${drug.id}.jpg`;
+  const drugImageUrl = `https://soliman.ai/dawaey-app-pics/${drug.id}.jpg`;
 
   // Safely format price
   const formatPrice = (price: string): string => {
@@ -55,37 +55,37 @@ export default function MedicationDetailsModal() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
-        <View 
+        <View
           className="relative px-6 pt-8 pb-10"
           style={{
-            backgroundColor: '#ffffff',
+            backgroundColor: "#ffffff",
           }}
         >
           {/* Gradient Overlay */}
-          <View 
+          <View
             className="absolute inset-0"
             style={{
               backgroundColor: `${primaryColor}05`,
             }}
           />
           {/* Decorative Background Elements */}
-          <View 
+          <View
             className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-30"
             style={{ backgroundColor: `${primaryColor}15` }}
           />
-          <View 
+          <View
             className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-20"
             style={{ backgroundColor: `${primaryColor}10` }}
           />
-          
-          <View className="flex-row items-start space-x-5">
+
+          <View className="flex-col items-center space-x-5">
             {/* Drug Image */}
             <View className="flex-shrink-0 relative">
               {!imageError ? (
-                <View 
+                <View
                   className="rounded-3xl p-1 shadow-lg"
-                  style={{ 
-                    backgroundColor: 'white',
+                  style={{
+                    backgroundColor: "white",
                     shadowColor: primaryColor,
                     shadowOffset: { width: 0, height: 8 },
                     shadowOpacity: 0.15,
@@ -106,7 +106,7 @@ export default function MedicationDetailsModal() {
               ) : (
                 <View
                   className="w-32 h-32 rounded-3xl items-center justify-center shadow-lg"
-                  style={{ 
+                  style={{
                     backgroundColor: `${primaryColor}15`,
                     shadowColor: primaryColor,
                     shadowOffset: { width: 0, height: 8 },
@@ -115,7 +115,7 @@ export default function MedicationDetailsModal() {
                     elevation: 12,
                   }}
                 >
-                  <View 
+                  <View
                     className="w-16 h-16 rounded-2xl items-center justify-center"
                     style={{ backgroundColor: `${primaryColor}25` }}
                   >
@@ -123,14 +123,6 @@ export default function MedicationDetailsModal() {
                   </View>
                 </View>
               )}
-              
-              {/* Quality Badge */}
-              <View 
-                className="absolute -top-2 -right-2 w-8 h-8 rounded-full items-center justify-center shadow-sm"
-                style={{ backgroundColor: primaryColor }}
-              >
-                <Ionicons name="checkmark" size={16} color="white" />
-              </View>
             </View>
 
             {/* Drug Information */}
@@ -139,12 +131,12 @@ export default function MedicationDetailsModal() {
               <Text className="text-2xl font-black text-gray-900 mb-1 leading-tight">
                 {drug.tradename}
               </Text>
-              
+
               {/* Active Ingredient Preview */}
               {drug.activeingredient && (
                 <Text className="text-sm text-gray-500 mb-4 font-medium">
-                  {drug.activeingredient.split('+')[0].trim()}
-                  {drug.activeingredient.includes('+') ? ' + more' : ''}
+                  {drug.activeingredient.split("+")[0].trim()}
+                  {drug.activeingredient.includes("+") ? " + more" : ""}
                 </Text>
               )}
 
@@ -154,7 +146,7 @@ export default function MedicationDetailsModal() {
                   Price
                 </Text>
                 <View className="flex-row items-baseline">
-                  <Text 
+                  <Text
                     className="text-4xl font-black tracking-tight"
                     style={{ color: primaryColor }}
                   >
@@ -168,19 +160,19 @@ export default function MedicationDetailsModal() {
 
               {/* Form Badge */}
               <View className="flex-row">
-                <View 
+                <View
                   className="px-4 py-2.5 rounded-2xl flex-row items-center shadow-sm"
-                  style={{ 
+                  style={{
                     backgroundColor: `${primaryColor}12`,
                     borderWidth: 1,
                     borderColor: `${primaryColor}25`,
                   }}
                 >
-                  <View 
+                  <View
                     className="w-2 h-2 rounded-full mr-2"
                     style={{ backgroundColor: primaryColor }}
                   />
-                  <Text 
+                  <Text
                     className="font-bold text-sm tracking-wide"
                     style={{ color: primaryColor }}
                   >

@@ -23,7 +23,7 @@ export default function MedicationsScreen() {
   const [inputValue, setInputValue] = useState("");
 
   // Debounced search query for actual search functionality
-  const debouncedSearchQuery = useDebounce(inputValue, 300);
+  const debouncedSearchQuery = useDebounce(inputValue, 200);
 
   // Custom hooks
   const { drugs } = useDrugsData();

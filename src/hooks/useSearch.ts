@@ -21,10 +21,7 @@ export const useSearch = (drugs: Drug[]) => {
 
   // Use useMemo for pure filtering - avoids unnecessary recomputation
   const filteredDrugs = useMemo(() => {
-    if (
-      !searchQuery.trim() ||
-      searchQuery.trim().length < 3
-    ) {
+    if (!searchQuery.trim() || searchQuery.trim().length < 3) {
       return [];
     }
 
