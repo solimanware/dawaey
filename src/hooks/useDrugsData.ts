@@ -13,21 +13,44 @@ export type Drug = {
   form?: string;
 };
 
+const FILE_NAME = "drugs.json";
+const LOCAL_JSON_PATH = `${FileSystem.documentDirectory}${FILE_NAME}`;
+
 const loadDrugsJson = async (): Promise<Drug[]> => {
   try {
-    const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
-    await asset.downloadAsync(); // Makes sure it's on device
-    const json = await FileSystem.readAsStringAsync(asset.localUri || "");
-    const data = JSON.parse(json);
+    console.log("📋 Loading drugs data...");
+    
+    // Check if file already copied to local storage
+    const fileInfo = await FileSystem.getInfoAsync(LOCAL_JSON_PATH);
+    if (!fileInfo.exists) {
+      console.log("📥 Copying drugs data to local storage...");
+      
+      // Copy from asset to documentDirectory for faster access
+      const asset = Asset.fromModule(require("../../assets/data/drugs.json"));
+      await asset.downloadAsync(); // Ensures it's available
 
-    // Transform the data to ensure compatibility and add missing fields
-    return (data as any[]).map(
-      (drug): Drug => ({
-        ...drug,
-      })
-    );
+      if (!asset.localUri) {
+        throw new Error("Asset URI not available");
+      }
+
+      await FileSystem.copyAsync({
+        from: asset.localUri,
+        to: LOCAL_JSON_PATH,
+      });
+      
+      console.log("✅ Drugs data cached locally");
+    } else {
+      console.log("📂 Using cached drugs data");
+    }
+
+    // Read from local cached file for better performance
+    const jsonString = await FileSystem.readAsStringAsync(LOCAL_JSON_PATH);
+    const data = JSON.parse(jsonString);
+
+    console.log(`📊 Loaded ${data.length} drugs from cache`);
+    return data as Drug[];
   } catch (error) {
-    console.error("Failed to load drugs data:", error);
+    console.error("❌ Failed to load drugs data", error);
     return [];
   }
 };
