@@ -1,4 +1,3 @@
-export { EnhancedSearchResults } from "./EnhancedSearchResults";
 export { FuzzySearchResults } from "./FuzzySearchResults";
 export { Header } from "./Header";
 export { MedicationCard } from "./MedicationCard";

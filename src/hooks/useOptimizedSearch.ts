@@ -244,7 +244,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           }
           // Test wildcard pattern against first two words of active ingredient
           else if (item.activeingredient) {
-            const ingredientFirstTwoWords = getFirstTwoWords(item.activeingredient);
+            const ingredientFirstTwoWords = getFirstTwoWords(
+              item.activeingredient
+            );
             if (wildcardRegex.test(ingredientFirstTwoWords)) {
               const score = calculateWildcardScore(
                 ingredientFirstTwoWords,
@@ -302,7 +304,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           let bestResult: SearchResult | null = null;
 
           // Check first two words of tradename with DiffMatchPatch
-          const tradenameFirstTwoWords = getFirstTwoWords(drug.tradename).toLowerCase();
+          const tradenameFirstTwoWords = getFirstTwoWords(
+            drug.tradename
+          ).toLowerCase();
           const tradenameMatch = dmp.match_main(
             tradenameFirstTwoWords,
             searchTerm,
@@ -329,7 +333,9 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
           // Check first two words of active ingredient with DiffMatchPatch
           if (drug.activeingredient) {
-            const ingredientFirstTwoWords = getFirstTwoWords(drug.activeingredient).toLowerCase();
+            const ingredientFirstTwoWords = getFirstTwoWords(
+              drug.activeingredient
+            ).toLowerCase();
             const ingredientMatch = dmp.match_main(
               ingredientFirstTwoWords,
               searchTerm,

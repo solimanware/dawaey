@@ -1,7 +1,7 @@
-import { Tabs } from "expo-router";
 import React from "react";
 import { useColorScheme } from "react-native";
 
+import { Stack } from "expo-router";
 import { TabBarBackground } from "../../components/TabBarBackground";
 import {
   TAB_BAR_COLORS,
@@ -9,7 +9,6 @@ import {
   TAB_BAR_LABEL_STYLE,
   getTabBarStyle,
 } from "../../constants/tabBarStyles";
-import { TAB_CONFIGS, createTabIcon } from "../../constants/tabsConfig";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -25,17 +24,21 @@ export default function TabLayout() {
   };
 
   return (
-    <Tabs screenOptions={tabBarOptions}>
-      {TAB_CONFIGS.map((config) => (
-        <Tabs.Screen
-          key={config.name}
-          name={config.name}
-          options={{
-            title: config.title,
-            tabBarIcon: createTabIcon(config),
-          }}
-        />
-      ))}
-    </Tabs>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
+
+    // <Tabs screenOptions={tabBarOptions}>
+    //   {TAB_CONFIGS.map((config) => (
+    //     <Tabs.Screen
+    //       key={config.name}
+    //       name={config.name}
+    //       options={{
+    //         title: config.title,
+    //         tabBarIcon: createTabIcon(config),
+    //       }}
+    //     />
+    //   ))}
+    // </Tabs>
   );
 }

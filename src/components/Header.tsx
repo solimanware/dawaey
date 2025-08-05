@@ -9,7 +9,7 @@ export const Header = () => {
         <Text className="text-violet-700 mt-1">Find your medicines</Text>
       </View>
       <TouchableOpacity className="p-3 bg-violet-500 rounded-full">
-        <Ionicons name="notifications-outline" size={24} color="white" />
+        <Ionicons name="help-outline" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );

@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Drug } from "../../hooks";
 
@@ -22,9 +22,8 @@ export default function MedicationDetailsModal() {
     form: params.form as string,
   };
 
-  // Parse palette colors from comma-separated string
-  const paletteColors = drug.palette ? drug.palette.split(",") : [];
-  const primaryColor = paletteColors[0] || "#2563eb";
+  // Use default primary color for styling
+  const primaryColor = "#2563eb";
 
   // Generate drug image URL based on ID
   const drugImageUrl = `https://soliman.ai/dawaey-app-pics/${drug.id}.jpg`;
@@ -50,6 +49,35 @@ export default function MedicationDetailsModal() {
   };
 
   const activeIngredients = getActiveIngredients();
+
+  // Handle CTA button actions
+  const handleShowAlternatives = () => {
+    if (drug.activeingredient) {
+      router.dismiss();
+      // Navigate to main screen with activeingredient search
+      router.push({
+        pathname: "/(tabs)" as any,
+        params: {
+          searchQuery: drug.activeingredient,
+          searchType: "alternatives"
+        }
+      });
+    }
+  };
+
+  const handleShowSimilars = () => {
+    if (drug.group) {
+      router.dismiss();
+      // Navigate to main screen with group search
+      router.push({
+        pathname: "/(tabs)" as any,
+        params: {
+          searchQuery: drug.group,
+          searchType: "similars"
+        }
+      });
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -261,6 +289,76 @@ export default function MedicationDetailsModal() {
             </View>
           )}
         </View>
+
+        {/* CTA Buttons Section */}
+        {(drug.activeingredient || drug.group) && (
+          <View className="px-6 mt-6 mb-8">
+            <Text className="text-lg font-semibold text-gray-900 mb-4">
+              Find Related Medications
+            </Text>
+            <View className="space-y-3">
+              {/* Show Alternatives Button */}
+              {drug.activeingredient && (
+                <TouchableOpacity
+                  onPress={handleShowAlternatives}
+                  className="bg-blue-500 rounded-xl p-4 flex-row items-center justify-between shadow-sm"
+                  style={{
+                    shadowColor: "#3b82f6",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 8,
+                    elevation: 4,
+                  }}
+                >
+                  <View className="flex-row items-center flex-1">
+                    <View className="w-10 h-10 bg-white/20 rounded-lg items-center justify-center mr-3">
+                      <Ionicons name="flask" size={20} color="white" />
+                    </View>
+                    <View className="flex-1">
+                      <Text className="text-white font-semibold text-base mb-1">
+                        Show Alternatives
+                      </Text>
+                      <Text className="text-blue-100 text-sm">
+                        Find medications with same active ingredient
+                      </Text>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="white" />
+                </TouchableOpacity>
+              )}
+
+              {/* Show Similars Button */}
+              {drug.group && (
+                <TouchableOpacity
+                  onPress={handleShowSimilars}
+                  className="bg-purple-500 rounded-xl p-4 flex-row items-center justify-between shadow-sm"
+                  style={{
+                    shadowColor: "#8b5cf6",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 8,
+                    elevation: 4,
+                  }}
+                >
+                  <View className="flex-row items-center flex-1">
+                    <View className="w-10 h-10 bg-white/20 rounded-lg items-center justify-center mr-3">
+                      <Ionicons name="library" size={20} color="white" />
+                    </View>
+                    <View className="flex-1">
+                      <Text className="text-white font-semibold text-base mb-1">
+                        Show Similar Medications
+                      </Text>
+                      <Text className="text-purple-100 text-sm">
+                        Find medications in the same drug group
+                      </Text>
+                    </View>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color="white" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        )}
 
         {/* Bottom Spacing */}
         <View className="p-safe" />
