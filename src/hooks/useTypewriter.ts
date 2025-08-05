@@ -25,7 +25,6 @@ export const useTypewriter = ({
   const [isComplete, setIsComplete] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const [hasStarted, setHasStarted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (isComplete) {
@@ -90,34 +89,24 @@ export const useTypewriter = ({
             `isLastWordInArray: ${isLastWordInArray}, currentWordIndex: ${currentWordIndex}, totalWords: ${words.length}`
           );
 
-          // For cycles = 1, complete when we reach the last word
-          // For cycles > 1, only complete on the last word of the final cycle
-          const shouldComplete =
-            cycles === 1
-              ? isLastWordInArray
-              : isLastWordInArray && cycleCount >= cycles - 1;
-
-          if (shouldComplete) {
+          // Only complete when we reach the very last word ("Search any medication...")
+          if (isLastWordInArray) {
             // We've reached the final word, don't delete it
             console.log("Completing typewriter animation - reached final word");
             setIsComplete(true);
             return;
           }
 
-          // Start deleting after pause for all other cases
+          // For all other words, start deleting after pause
           console.log(
             `Starting deletion timer for "${currentWord}" with ${pauseDuration}ms delay`
           );
-          setIsPaused(true);
-          const timerId = setTimeout(() => {
+          timeoutRef.current = setTimeout(() => {
             console.log(
               `Deletion timer fired! Setting isDeleting=true for "${currentWord}"`
             );
             setIsDeleting(true);
-            setIsPaused(false);
           }, pauseDuration);
-          timeoutRef.current = timerId;
-          console.log(`Deletion timer set with ID: ${timerId}`);
           return;
         }
       }
@@ -128,7 +117,7 @@ export const useTypewriter = ({
     };
 
     // Start the animation
-    if (!isComplete && cycleCount < cycles && !isPaused) {
+    if (!isComplete && cycleCount < cycles) {
       const speed = isDeleting ? deletingSpeed : typingSpeed;
       console.log(
         `Setting timeout for next char: speed=${speed}ms, isDeleting=${isDeleting}, currentChar=${currentCharIndex}`
@@ -136,7 +125,7 @@ export const useTypewriter = ({
       timeoutRef.current = setTimeout(typeNextChar, speed);
     } else {
       console.log(
-        `Animation stopped: isComplete=${isComplete}, cycleCount=${cycleCount}, cycles=${cycles}, isPaused=${isPaused}`
+        `Animation stopped: isComplete=${isComplete}, cycleCount=${cycleCount}, cycles=${cycles}`
       );
     }
 
@@ -160,7 +149,6 @@ export const useTypewriter = ({
     pauseDuration,
     cycles,
     hasStarted,
-    // Note: isPaused is intentionally excluded to prevent clearing the deletion timer
   ]);
 
   return {
