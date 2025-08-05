@@ -182,25 +182,25 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         const totalItems = searchIndex.length;
         const sampleSize = Math.min(10000, totalItems); // Process max 10k items first for better coverage
 
-        // Debug logging for specific problematic searches
-        const isDebugSearch = searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
-        if (isDebugSearch) {
-          console.log("🔍 Debug: Searching for:", searchTerm);
-          console.log("🔍 Debug: Search index length:", searchIndex.length);
-        }
+        // Debug logging for specific problematic searches (disabled in production)
+        const isDebugSearch = false; // searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
 
         // First pass: Quick scan of a subset for immediate results
         for (let i = 0; i < sampleSize && !cancelRef.current; i++) {
           const item = searchIndex[i];
 
           // Debug logging for specific searches
-          if (isDebugSearch && (item.activeingredient.includes(searchTerm) || item.tradename.includes(searchTerm))) {
+          if (
+            isDebugSearch &&
+            (item.activeingredient.includes(searchTerm) ||
+              item.tradename.includes(searchTerm))
+          ) {
             console.log("🔍 Debug: Found potential match:", {
               tradename: item.drug.tradename,
               activeingredient: item.drug.activeingredient,
               searchTerm,
               tradenameMatch: item.tradename.includes(searchTerm),
-              ingredientMatch: item.activeingredient.includes(searchTerm)
+              ingredientMatch: item.activeingredient.includes(searchTerm),
             });
           }
 
@@ -246,21 +246,31 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           !cancelRef.current
         ) {
           if (isDebugSearch) {
-            console.log("🔍 Debug: Continuing search in remaining items, current matches:", exactMatches.length);
+            console.log(
+              "🔍 Debug: Continuing search in remaining items, current matches:",
+              exactMatches.length
+            );
           }
-          
+
           for (let i = sampleSize; i < totalItems && !cancelRef.current; i++) {
             const item = searchIndex[i];
 
             // Debug logging for specific searches
-            if (isDebugSearch && (item.activeingredient.includes(searchTerm) || item.tradename.includes(searchTerm))) {
-              console.log("🔍 Debug: Found potential match in remaining items:", {
-                tradename: item.drug.tradename,
-                activeingredient: item.drug.activeingredient,
-                searchTerm,
-                tradenameMatch: item.tradename.includes(searchTerm),
-                ingredientMatch: item.activeingredient.includes(searchTerm)
-              });
+            if (
+              isDebugSearch &&
+              (item.activeingredient.includes(searchTerm) ||
+                item.tradename.includes(searchTerm))
+            ) {
+              console.log(
+                "🔍 Debug: Found potential match in remaining items:",
+                {
+                  tradename: item.drug.tradename,
+                  activeingredient: item.drug.activeingredient,
+                  searchTerm,
+                  tradenameMatch: item.tradename.includes(searchTerm),
+                  ingredientMatch: item.activeingredient.includes(searchTerm),
+                }
+              );
             }
 
             if (item.tradename.includes(searchTerm)) {
@@ -365,23 +375,30 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
         // If we have good exact matches or wildcard matches, return them
         const primaryMatches = [...exactMatches, ...wildcardMatches];
-        
+
         // Debug logging for specific problematic searches
         if (isDebugSearch) {
-          console.log("🔍 Debug: Primary matches found:", primaryMatches.length);
+          console.log(
+            "🔍 Debug: Primary matches found:",
+            primaryMatches.length
+          );
           console.log("🔍 Debug: Exact matches:", exactMatches.length);
           console.log("🔍 Debug: Wildcard matches:", wildcardMatches.length);
           if (primaryMatches.length > 0) {
-            console.log("🔍 Debug: First few matches:", primaryMatches.slice(0, 3).map(m => ({ 
-              tradename: m.drug.tradename, 
-              activeingredient: m.drug.activeingredient,
-              matchedField: m.matchedField,
-              score: m.score 
-            })));
+            console.log(
+              "🔍 Debug: First few matches:",
+              primaryMatches.slice(0, 3).map((m) => ({
+                tradename: m.drug.tradename,
+                activeingredient: m.drug.activeingredient,
+                matchedField: m.matchedField,
+                score: m.score,
+              }))
+            );
           }
         }
-        
-        if (primaryMatches.length >= 1) { // Lowered threshold to catch more results
+
+        if (primaryMatches.length >= 1) {
+          // Lowered threshold to catch more results
           const sortedResults = primaryMatches
             .sort((a, b) => b.score - a.score)
             .slice(0, 20); // Increased result limit
@@ -393,11 +410,11 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           const searchEndTime = performance.now();
           const searchTime = searchEndTime - searchStartTime;
           recordSearchTime(searchTime);
-          
+
           if (isDebugSearch) {
             console.log("🔍 Debug: Returning results:", sortedResults.length);
           }
-          
+
           return;
         }
 
