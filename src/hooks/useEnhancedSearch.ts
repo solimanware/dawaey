@@ -24,6 +24,7 @@ export interface EnhancedSearchState {
 
 export const useEnhancedSearch = (drugs: Drug[]): EnhancedSearchState => {
   const [inputQuery, setInputQuery] = useState("");
+  const [currentMode, setCurrentMode] = useState<"optimized" | "wildcard">("optimized");
   
   // Determine search mode based on query
   const isWildcard = useMemo(() => {
@@ -35,8 +36,8 @@ export const useEnhancedSearch = (drugs: Drug[]): EnhancedSearchState => {
   const wildcardSearch = useWildcardSearch(drugs);
 
   // Determine which search to use and get results
-  const { results, isLoading, searchMode } = useMemo(() => {
-    if (isWildcard) {
+  const { results, isLoading } = useMemo(() => {
+    if (isWildcard && inputQuery.trim()) {
       // Use wildcard search - map results to enhanced format
       const wildcardResults: EnhancedSearchResult[] = wildcardSearch.results.map(result => ({
         drug: result.drug,
@@ -50,9 +51,8 @@ export const useEnhancedSearch = (drugs: Drug[]): EnhancedSearchState => {
       return {
         results: wildcardResults,
         isLoading: wildcardSearch.isLoading,
-        searchMode: "wildcard" as const,
       };
-    } else {
+    } else if (!isWildcard && inputQuery.trim()) {
       // Use optimized search - map results to enhanced format  
       const optimizedResults: EnhancedSearchResult[] = optimizedSearch.results.map(result => ({
         drug: result.drug,
@@ -65,28 +65,37 @@ export const useEnhancedSearch = (drugs: Drug[]): EnhancedSearchState => {
       return {
         results: optimizedResults,
         isLoading: optimizedSearch.isLoading,
-        searchMode: "optimized" as const,
+      };
+    } else {
+      // Empty query - return empty results
+      return {
+        results: [],
+        isLoading: false,
       };
     }
-  }, [isWildcard, wildcardSearch.results, wildcardSearch.isLoading, optimizedSearch.results, optimizedSearch.isLoading]);
+  }, [isWildcard, inputQuery, wildcardSearch.results, wildcardSearch.isLoading, optimizedSearch.results, optimizedSearch.isLoading]);
 
   // Handle search query changes
   const handleSearchChange = useCallback((query: string) => {
     setInputQuery(query);
     
-    // Update the appropriate search hook
-    if (isWildcardQuery(query)) {
+    const willBeWildcard = isWildcardQuery(query);
+    const newMode = willBeWildcard ? "wildcard" : "optimized";
+    setCurrentMode(newMode);
+    
+    console.log(`🔍 Enhanced search mode: ${newMode} for query: "${query}"`);
+    
+    // Only update the appropriate search hook based on the new query
+    if (willBeWildcard) {
+      console.log(`🔮 Switching to wildcard search for: "${query}"`);
       wildcardSearch.setSearchQuery(query);
-      // Clear optimized search when switching to wildcard
-      if (optimizedSearch.searchQuery !== "") {
-        optimizedSearch.setSearchQuery("");
-      }
+      // Immediately clear optimized search results
+      optimizedSearch.setSearchQuery("");
     } else {
+      console.log(`⚡ Switching to optimized search for: "${query}"`);
       optimizedSearch.setSearchQuery(query);
-      // Clear wildcard search when switching to optimized
-      if (wildcardSearch.searchQuery !== "") {
-        wildcardSearch.setSearchQuery("");
-      }
+      // Immediately clear wildcard search results
+      wildcardSearch.setSearchQuery("");
     }
   }, [optimizedSearch, wildcardSearch]);
 
@@ -95,7 +104,7 @@ export const useEnhancedSearch = (drugs: Drug[]): EnhancedSearchState => {
     setSearchQuery: handleSearchChange,
     results,
     isLoading,
-    searchMode,
+    searchMode: currentMode,
     isWildcardQuery: isWildcard,
   };
 };

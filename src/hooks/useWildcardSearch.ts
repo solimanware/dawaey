@@ -30,7 +30,17 @@ const createWildcardRegex = (pattern: string): RegExp => {
 
 // Check if query contains wildcards
 const isWildcardQuery = (query: string): boolean => {
-  return query.includes('*') && query.length >= 3;
+  const hasWildcard = query.includes('*');
+  const isLongEnough = query.length >= 3;
+  const hasEnoughNonWildcards = query.replace(/\*/g, '').length >= 2; // At least 2 actual letters
+  
+  const isWildcard = hasWildcard && isLongEnough && hasEnoughNonWildcards;
+  
+  if (hasWildcard) {
+    console.log(`🔍 Checking wildcard query "${query}": hasWildcard=${hasWildcard}, length=${query.length}, nonWildcards=${query.replace(/\*/g, '').length}, isWildcard=${isWildcard}`);
+  }
+  
+  return isWildcard;
 };
 
 // Calculate score based on how well the pattern matches
@@ -70,14 +80,23 @@ const performWildcardSearch = (
   pattern: string
 ): WildcardSearchResult[] => {
   if (!isWildcardQuery(pattern)) {
+    console.log(`🔮 Pattern "${pattern}" is not a valid wildcard query`);
     return [];
   }
 
   const regex = createWildcardRegex(pattern.toLowerCase());
+  console.log(`🔮 Created regex: ${regex} for pattern: "${pattern}"`);
+  
   const results: WildcardSearchResult[] = [];
   const seen = new Set<number>(); // Track drugs we've already added
+  let matchCount = 0;
+  let checkedCount = 0;
 
   for (const drug of drugs) {
+    checkedCount++;
+    if (checkedCount <= 10) { // Only log first 10 for debugging
+      console.log(`🔮 Checking drug ${checkedCount}: "${drug.tradename}"`);
+    }
     let bestResult: WildcardSearchResult | null = null;
     let bestScore = 0;
 
@@ -85,6 +104,11 @@ const performWildcardSearch = (
     if (drug.tradename) {
       const match = drug.tradename.toLowerCase().match(regex);
       if (match) {
+        matchCount++;
+        if (matchCount <= 5) { // Log first 5 matches for debugging
+          console.log(`🔮 MATCH found in tradename: "${drug.tradename}" -> "${match[0]}" at index ${match.index}`);
+        }
+        
         const score = calculateWildcardScore(
           drug.tradename,
           pattern,
@@ -138,10 +162,18 @@ const performWildcardSearch = (
     }
   }
 
+  console.log(`🔮 Wildcard search summary: ${results.length} unique matches found from ${matchCount} total matches out of ${checkedCount} drugs checked`);
+  
   // Sort by score (highest first) and limit results
-  return results
+  const sortedResults = results
     .sort((a, b) => b.score - a.score)
     .slice(0, 15);
+    
+  if (sortedResults.length > 0) {
+    console.log(`🔮 Top result: "${sortedResults[0].drug.tradename}" (score: ${sortedResults[0].score.toFixed(3)})`);
+  }
+  
+  return sortedResults;
 };
 
 export const useWildcardSearch = (drugs: Drug[]): WildcardSearchState => {
@@ -157,9 +189,17 @@ export const useWildcardSearch = (drugs: Drug[]): WildcardSearchState => {
       return [];
     }
 
+    const trimmedQuery = searchQuery.trim();
+    console.log(`🔮 Wildcard search for: "${trimmedQuery}"`);
+    
     setIsLoading(true);
-    const searchResults = performWildcardSearch(drugs, searchQuery.trim());
+    const searchResults = performWildcardSearch(drugs, trimmedQuery);
     setIsLoading(false);
+    
+    console.log(`🔮 Wildcard search results: ${searchResults.length} matches`);
+    if (searchResults.length > 0) {
+      console.log(`🔮 Top wildcard match: ${searchResults[0].drug.tradename}`);
+    }
     
     return searchResults;
   }, [drugs, searchQuery, isWildcard]);

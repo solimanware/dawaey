@@ -1,5 +1,5 @@
-import { Header, EnhancedSearchResults, SearchBar } from "@/components";
-import { useDrugsData, useGlowAnimation, useEnhancedSearch } from "@/hooks";
+import { EnhancedSearchResults, Header, SearchBar } from "@/components";
+import { useDrugsData, useEnhancedSearch, useGlowAnimation } from "@/hooks";
 import "@/theme/global.css";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -14,7 +14,13 @@ export default function MedicationsScreen() {
   const glowAnim = useGlowAnimation();
 
   // Enhanced search hook with wildcard support
-  const { results, setSearchQuery, isLoading, searchMode: currentSearchMode, isWildcardQuery } = useEnhancedSearch(drugs);
+  const {
+    results,
+    setSearchQuery,
+    isLoading,
+    searchMode: currentSearchMode,
+    isWildcardQuery,
+  } = useEnhancedSearch(drugs);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
