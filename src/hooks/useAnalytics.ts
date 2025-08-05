@@ -5,7 +5,7 @@ import {
   logSelectContent,
   logViewItem,
 } from "@react-native-firebase/analytics";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useMemo } from "react";
 
 // Custom event names for the Dawaey app
 export const ANALYTICS_EVENTS = {
@@ -384,7 +384,7 @@ export const useAnalytics = () => {
     [analytics]
   );
 
-  return {
+  return useMemo(() => ({
     // Core functions
     logEvent,
     logScreenView,
@@ -417,7 +417,25 @@ export const useAnalytics = () => {
     // Constants
     ANALYTICS_EVENTS,
     SCREEN_NAMES,
-  };
+  }), [
+    logEvent,
+    logScreenView,
+    setUserProperty,
+    logSearch,
+    logSearchType,
+    logFuzzySearch,
+    logWildcardSearch,
+    logSearchPerformance,
+    logMedicationView,
+    logMedicationDetailsOpened,
+    logMedicationImageEvent,
+    logTabSwitch,
+    logModalEvent,
+    logError,
+    logSelectContentEvent,
+    logSearchAnalytics,
+    logViewItemEvent,
+  ]);
 };
 
 // Helper functions

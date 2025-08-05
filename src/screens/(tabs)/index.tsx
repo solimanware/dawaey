@@ -8,7 +8,7 @@ import {
 } from "@/hooks";
 import "@/theme/global.css";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -21,8 +21,15 @@ export default function MedicationsScreen() {
   const [isFuzzySearch, setIsFuzzySearch] = useState(false);
   const [searchType, setSearchType] = useState<string | null>(null);
 
+  // Ref to track previous results for analytics
+  const previousResultsRef = useRef<number>(0);
+
   // Custom hooks
-  const { drugs, isLoading: isDrugsLoading, error: drugsError } = useDrugsData();
+  const {
+    drugs,
+    isLoading: isDrugsLoading,
+    error: drugsError,
+  } = useDrugsData();
   const glowAnim = useGlowAnimation();
   const analytics = useAnalytics();
 
@@ -47,16 +54,8 @@ export default function MedicationsScreen() {
     if (debouncedSearchQuery.length >= 2) {
       analytics.logSearch(debouncedSearchQuery, "manual_input");
       analytics.logSearchAnalytics(debouncedSearchQuery);
-
-      // Track wildcard patterns
-      if (
-        debouncedSearchQuery.includes("*") &&
-        debouncedSearchQuery.replace(/\*/g, "").length >= 2
-      ) {
-        analytics.logWildcardSearch(debouncedSearchQuery, results.length);
-      }
     }
-  }, [debouncedSearchQuery, setSearchQuery, analytics, results.length]);
+  }, [debouncedSearchQuery, setSearchQuery, analytics]);
 
   // Handle initial search from navigation params
   useEffect(() => {
@@ -95,23 +94,34 @@ export default function MedicationsScreen() {
     setSearchQuery("");
   };
 
-  // Track search results display
+  // Track results changes and analytics (separate effect to avoid infinite loops)
   useEffect(() => {
-    if (debouncedSearchQuery.length >= 2 && results.length > 0) {
-      analytics.logEvent(analytics.ANALYTICS_EVENTS.SEARCH_RESULTS_VIEWED, {
-        search_term: debouncedSearchQuery,
-        results_count: results.length,
-        search_type: searchType || "manual",
-        has_fuzzy_match: isFuzzySearch,
-      });
+    const currentResultsCount = results.length;
+    
+    // Only process if results actually changed
+    if (currentResultsCount !== previousResultsRef.current) {
+      previousResultsRef.current = currentResultsCount;
+      
+      // Track search results display
+      if (debouncedSearchQuery.length >= 2 && currentResultsCount > 0) {
+        analytics.logEvent(analytics.ANALYTICS_EVENTS.SEARCH_RESULTS_VIEWED, {
+          search_term: debouncedSearchQuery,
+          results_count: currentResultsCount,
+          search_type: searchType || "manual",
+          has_fuzzy_match: isFuzzySearch,
+        });
+      }
+
+      // Track wildcard patterns with current results count
+      if (
+        debouncedSearchQuery.length >= 2 &&
+        debouncedSearchQuery.includes("*") &&
+        debouncedSearchQuery.replace(/\*/g, "").length >= 2
+      ) {
+        analytics.logWildcardSearch(debouncedSearchQuery, currentResultsCount);
+      }
     }
-  }, [
-    results.length,
-    debouncedSearchQuery,
-    searchType,
-    isFuzzySearch,
-    analytics,
-  ]);
+  }, [results, debouncedSearchQuery, searchType, isFuzzySearch, analytics]);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">

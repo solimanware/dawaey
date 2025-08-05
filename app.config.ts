@@ -31,14 +31,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
-    "expo-asset",
     [
       "expo-splash-screen",
       {
         image: "./assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "cover",
-        backgroundColor: "#FEE1FD",
+        backgroundColor: "#FECCFF",
       },
     ],
     "@react-native-firebase/app",

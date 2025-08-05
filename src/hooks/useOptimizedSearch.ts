@@ -481,7 +481,6 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       setCachedResults,
       recordSearchTime,
       analytics,
-      drugs.length,
     ]
   );
 
