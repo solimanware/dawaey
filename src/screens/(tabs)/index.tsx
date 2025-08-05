@@ -69,12 +69,12 @@ export default function MedicationsScreen() {
       const type = (params.searchType as string) || null;
 
       console.log("🚀 Navigation search triggered:", { query, type });
-      
+
       // Mark as navigation search to prevent debounce conflicts
       setIsNavigationSearch(true);
       setInputValue(query);
       setSearchType(type);
-      
+
       // For navigation searches, bypass debouncing by calling setSearchQuery directly
       // This ensures alternatives/similars searches work immediately without debounce conflicts
       setSearchQuery(query);

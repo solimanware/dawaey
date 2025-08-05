@@ -34,13 +34,31 @@ const isWildcardPattern = (query: string): boolean => {
   return query.includes("*") && query.replace(/\*/g, "").length >= 2;
 };
 
-const convertWildcardToRegex = (pattern: string): RegExp => {
-  // Escape special regex characters except *
-  const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
-  // Replace * with .* (any characters, zero or more)
-  const regexPattern = escaped.replace(/\*/g, ".*");
-  // Create case-insensitive regex
-  return new RegExp(regexPattern, "i");
+const convertWildcardToRegex = (pattern: string): RegExp | null => {
+  try {
+    // Limit pattern length to prevent browser regex errors
+    if (pattern.length > 100) {
+      console.warn("Wildcard pattern too long, skipping regex:", pattern.length);
+      return null;
+    }
+    
+    // Escape special regex characters except *
+    const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
+    // Replace * with .* (any characters, zero or more)
+    const regexPattern = escaped.replace(/\*/g, ".*");
+    
+    // Additional safety check for regex length
+    if (regexPattern.length > 200) {
+      console.warn("Generated regex pattern too long, skipping:", regexPattern.length);
+      return null;
+    }
+    
+    // Create case-insensitive regex
+    return new RegExp(regexPattern, "i");
+  } catch (error) {
+    console.warn("Failed to create wildcard regex:", error instanceof Error ? error.message : String(error));
+    return null;
+  }
 };
 
 const calculateWildcardScore = (
@@ -159,6 +177,12 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           return;
         }
 
+        // Prevent extremely long queries that can cause regex errors
+        if (query.trim().length > 150) {
+          console.warn("Search query too long, truncating:", query.length);
+          query = query.trim().substring(0, 150);
+        }
+
         const searchTerm = query.toLowerCase().trim();
 
         // Check cache first
@@ -183,7 +207,8 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         const sampleSize = Math.min(10000, totalItems); // Process max 10k items first for better coverage
 
         // Debug logging for specific problematic searches
-        const isDebugSearch = searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
+        const isDebugSearch =
+          searchTerm.includes("caffeine") && searchTerm.includes("paracetamol");
 
         // First pass: Quick scan of a subset for immediate results
         for (let i = 0; i < sampleSize && !cancelRef.current; i++) {
@@ -311,12 +336,14 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           //console.log(`🔥 Detected wildcard pattern: ${searchTerm}`);
           const wildcardRegex = convertWildcardToRegex(searchTerm);
 
-          for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
-            const item = searchIndex[i];
+          // Only proceed if regex was successfully created
+          if (wildcardRegex) {
+            for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
+              const item = searchIndex[i];
 
-            // Test wildcard pattern against first two words of tradename
-            const tradenameFirstTwoWords = getFirstTwoWords(item.tradename);
-            if (wildcardRegex.test(tradenameFirstTwoWords)) {
+              // Test wildcard pattern against first two words of tradename
+              const tradenameFirstTwoWords = getFirstTwoWords(item.tradename);
+              if (wildcardRegex.test(tradenameFirstTwoWords)) {
               const score = calculateWildcardScore(
                 tradenameFirstTwoWords,
                 searchTerm,
@@ -370,7 +397,10 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
             }
           }
 
-          //console.log(`🔥 Wildcard search completed with ${wildcardMatches.length} matches`);
+            //console.log(`🔥 Wildcard search completed with ${wildcardMatches.length} matches`);
+          } else {
+            console.warn("Skipping wildcard search due to regex creation failure");
+          }
         }
 
         // If we have good exact matches or wildcard matches, return them
@@ -435,11 +465,18 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
             const tradenameFirstTwoWords = getFirstTwoWords(
               drug.tradename
             ).toLowerCase();
-            const tradenameMatch = dmp.match_main(
-              tradenameFirstTwoWords,
-              searchTerm,
-              0
-            );
+            
+            let tradenameMatch = -1;
+            try {
+              tradenameMatch = dmp.match_main(
+                tradenameFirstTwoWords,
+                searchTerm,
+                0
+              );
+            } catch (error) {
+              // Skip this match if DiffMatchPatch fails (e.g., pattern too long)
+              console.warn("DiffMatchPatch error for tradename:", error instanceof Error ? error.message : String(error));
+            }
             if (tradenameMatch !== -1) {
               const score = calculateFuzzyScore(
                 tradenameFirstTwoWords,
@@ -464,11 +501,17 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
               const ingredientFirstTwoWords = getFirstTwoWords(
                 drug.activeingredient
               ).toLowerCase();
-              const ingredientMatch = dmp.match_main(
-                ingredientFirstTwoWords,
-                searchTerm,
-                0
-              );
+              
+              let ingredientMatch = -1;
+              try {
+                ingredientMatch = dmp.match_main(
+                  ingredientFirstTwoWords,
+                  searchTerm,
+                  0
+                );
+              } catch (error) {
+                console.warn("DiffMatchPatch error for ingredient:", error instanceof Error ? error.message : String(error));
+              }
               if (ingredientMatch !== -1) {
                 const score = calculateFuzzyScore(
                   ingredientFirstTwoWords,
@@ -492,7 +535,13 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
             // Check group with DiffMatchPatch
             if (drug.group) {
               const groupText = drug.group.toLowerCase();
-              const groupMatch = dmp.match_main(groupText, searchTerm, 0);
+              
+              let groupMatch = -1;
+              try {
+                groupMatch = dmp.match_main(groupText, searchTerm, 0);
+              } catch (error) {
+                console.warn("DiffMatchPatch error for group:", error instanceof Error ? error.message : String(error));
+              }
               if (groupMatch !== -1) {
                 const score = calculateFuzzyScore(
                   groupText,
