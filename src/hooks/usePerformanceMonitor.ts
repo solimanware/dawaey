@@ -55,9 +55,9 @@ export const usePerformanceMonitor = () => {
         searchTimes.current.reduce((a, b) => a + b, 0) /
         searchTimes.current.length;
 
-      if (searchTime > 100) {
+      if (searchTime > 200) {
         current.slowSearches++;
-      } else if (searchTime < 50) {
+      } else if (searchTime < 100) {
         current.fastSearches++;
       }
 
@@ -72,8 +72,8 @@ export const usePerformanceMonitor = () => {
         });
       }
 
-      // Log performance warnings and send analytics for issues
-      if (searchTime > 200) {
+      // Log performance warnings and send analytics for issues  
+      if (searchTime > 500) {
         console.warn(`🐌 Slow search detected: ${searchTime.toFixed(2)}ms`);
         analytics.logEvent("performance_issue_detected", {
           issue_type: "slow_search",

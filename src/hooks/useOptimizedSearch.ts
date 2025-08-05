@@ -183,8 +183,13 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         const exactMatches: SearchResult[] = [];
         const fuzzyMatches: SearchResult[] = [];
 
-        // Phase 1: Fast exact matching (most performance-critical)
-        for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
+        // Phase 1: Progressive exact matching with smart sampling
+        const progressiveResults: SearchResult[] = [];
+        const totalItems = searchIndex.length;
+        const sampleSize = Math.min(5000, totalItems); // Process max 5k items first
+        
+        // First pass: Quick scan of a subset for immediate results
+        for (let i = 0; i < sampleSize && !cancelRef.current; i++) {
           const item = searchIndex[i];
 
           // Exact tradename match (highest priority)
@@ -217,11 +222,43 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
           }
 
           // Early termination if we have enough exact matches
-          if (exactMatches.length >= 20) {
-            //console.log(
-            //   `⚡ Early termination: Found ${exactMatches.length} exact matches after ${i + 1} iterations`
-            // );
+          if (exactMatches.length >= 8) {
             break;
+          }
+        }
+
+        // If we didn't get enough results from sample, continue with remaining items
+        if (exactMatches.length < 5 && sampleSize < totalItems && !cancelRef.current) {
+          for (let i = sampleSize; i < totalItems && !cancelRef.current; i++) {
+            const item = searchIndex[i];
+
+            if (item.tradename.includes(searchTerm)) {
+              const score = item.tradename.startsWith(searchTerm) ? 1.0 : 0.8;
+              exactMatches.push({
+                drug: item.drug,
+                score,
+                matchType: "exact",
+                matchedField: "tradename",
+              });
+            } else if (item.activeingredient.includes(searchTerm)) {
+              exactMatches.push({
+                drug: item.drug,
+                score: 0.6,
+                matchType: "exact",
+                matchedField: "activeingredient",
+              });
+            } else if (item.group.includes(searchTerm)) {
+              exactMatches.push({
+                drug: item.drug,
+                score: 0.5,
+                matchType: "exact",
+                matchedField: "group",
+              });
+            }
+
+            if (exactMatches.length >= 10) {
+              break;
+            }
           }
         }
 
@@ -299,7 +336,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
 
         // If we have good exact matches or wildcard matches, return them
         const primaryMatches = [...exactMatches, ...wildcardMatches];
-        if (primaryMatches.length >= 5) {
+        if (primaryMatches.length >= 3) {
           const sortedResults = primaryMatches
             .sort((a, b) => b.score - a.score)
             .slice(0, 15);
@@ -320,12 +357,15 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
         }
 
         // Phase 2: Sophisticated DiffMatchPatch fuzzy search as fallback
-        if (primaryMatches.length < 5 && !cancelRef.current) {
+        if (primaryMatches.length < 3 && !cancelRef.current) {
           //console.log("🔮 Performing sophisticated fuzzy search as fallback...");
           const fuzzyStartTime = performance.now();
           const resultMap = new Map<string, SearchResult>();
+          
+          // Limit fuzzy search to a reasonable subset for performance
+          const fuzzySearchLimit = Math.min(10000, searchIndex.length);
 
-          for (let i = 0; i < searchIndex.length && !cancelRef.current; i++) {
+          for (let i = 0; i < fuzzySearchLimit && !cancelRef.current; i++) {
             const drug = searchIndex[i].drug;
             let bestScore = 0;
             let bestResult: SearchResult | null = null;
@@ -417,8 +457,8 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
               resultMap.set(drug.id.toString(), bestResult);
             }
 
-            // Early termination for fuzzy search - check every 100 iterations
-            if (i % 100 === 0 && resultMap.size >= 10) {
+            // Early termination for fuzzy search - check every 50 iterations
+            if (i % 50 === 0 && resultMap.size >= 8) {
               //console.log(
               //   `🔮 Fuzzy search early termination: Found ${resultMap.size} matches after ${i + 1} iterations`
               // );
@@ -481,6 +521,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
       setCachedResults,
       recordSearchTime,
       analytics,
+      drugs.length,
     ]
   );
 
@@ -489,7 +530,7 @@ export const useOptimizedSearch = (drugs: Drug[]) => {
     return (query: string) => {
       cancelRef.current = true; // Cancel previous search
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => performOptimizedSearch(query), 150);
+      timeoutId = setTimeout(() => performOptimizedSearch(query), 100);
     };
   }, [performOptimizedSearch]);
 
