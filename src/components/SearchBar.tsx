@@ -10,25 +10,19 @@ interface SearchBarProps {
   glowAnim: Animated.Value;
 }
 
+// Global flag to track if typewriter has completed in this app session
+let hasTypewriterCompleted = false;
+
 export const SearchBar = ({
   searchQuery,
   onChangeText,
   onReset,
   glowAnim,
 }: SearchBarProps) => {
-  const [shouldStartTypewriter, setShouldStartTypewriter] = useState(false);
-
-  // Start typewriter effect after a small delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShouldStartTypewriter(true);
-    }, 1000); // 1 second delay
-
-    return () => clearTimeout(timer);
-  }, []);
+  const [shouldRunTypewriter, setShouldRunTypewriter] = useState(!hasTypewriterCompleted);
 
   const placeholderText = useTypewriter({
-    words: shouldStartTypewriter
+    words: shouldRunTypewriter
       ? ["Panadol", "Confestal", "A*G*M*N", "Search any medication..."]
       : [],
     defaultText: "Search any medication...",
@@ -37,6 +31,14 @@ export const SearchBar = ({
     pauseDuration: 2000,
     cycles: 1,
   });
+
+  // Mark typewriter as completed when it finishes
+  useEffect(() => {
+    if (placeholderText === "Search any medication..." && shouldRunTypewriter) {
+      hasTypewriterCompleted = true;
+      setShouldRunTypewriter(false);
+    }
+  }, [placeholderText, shouldRunTypewriter]);
 
   // Check if current search query is a wildcard pattern
   const isWildcardPattern =

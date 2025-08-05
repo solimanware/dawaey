@@ -32,7 +32,8 @@ export const useTypewriter = ({
     }
 
     if (words.length === 0) {
-      setDisplayText(defaultText);
+      // Don't set default text immediately when words array is empty
+      // This prevents the default text from showing before typewriter starts
       return;
     }
 
